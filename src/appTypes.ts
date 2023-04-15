@@ -29,7 +29,6 @@ export type BlogInsertModelType = {
     isMembership: boolean,
     createdAt : string
 }
-
 export type PostInputModelType = {
     title : 	string, //    maxLength: 30
     shortDescription: string, //maxLength: 100
@@ -45,7 +44,6 @@ export type PostViewModelType = {
     blogName:	string,
     createdAt : string
 }
-
 export type PostInsertModelType = {
     title:	string,
     shortDescription:	string,
@@ -54,3 +52,21 @@ export type PostInsertModelType = {
     blogName:	string,
     createdAt : string
 }
+
+export type sortDirectionType = string
+
+export type getAllPostsForSpecificBlogType = {
+    blogId : string
+    pageNumber : number
+    pageSize : number
+    sortBy : string
+    sortDirection:  sortDirectionType
+}
+export type PaginatorBlogViewModelType = {
+        pagesCount: number,
+        page: number,
+        pageSize: number,
+        totalCount: number,
+        items: BlogViewModelType[]
+
+    }

@@ -1,4 +1,10 @@
-import {BlogInsertModelType, PostInsertModelType, BlogViewModelType, PostViewModelType} from "../appTypes";
+import {
+    BlogInsertModelType,
+    PostInsertModelType,
+    BlogViewModelType,
+    PostViewModelType,
+    getAllPostsForSpecificBlogType, PaginatorBlogViewModelType
+} from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 import {createNewBlogId, mongoBlogSlicing} from "../common";
 import {client} from "../db";
@@ -94,6 +100,27 @@ export async function updateBlog(req: Request, res: Response) {
         res.sendStatus(404)
     }
 
+}
+
+export async function getAllPostsForSpecificBlogDB(PagCriteria : getAllPostsForSpecificBlogType) {
+    const foundBlog = await blogsCollection.findOne({_id: new ObjectId(PagCriteria.blogId)})
+    if (!foundBlog) {
+        return {status: 404, items: null}
+    } else {
+        const totalCount = await blogsCollection.find({}).count({})
+        const pageSize = PagCriteria.pageSize
+        const pagesCount = Math.ceil(totalCount / pageSize)
+        const page = PagCriteria.pageNumber
+        const foundItems = await blogsCollection.find({}).skip((page - 1) * pageSize).limit(pageSize).toArray()
+        const SealedFoundItems: PaginatorBlogViewModelType = {
+            pagesCount: pagesCount,
+            page: page,
+            pageSize: pageSize,
+            totalCount: totalCount,
+            items: foundItems
+        }
+        return {status: 200, items: SealedFoundItems}
+    }
 }
 
 
