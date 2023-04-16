@@ -138,16 +138,25 @@ export async function createPostForSpecificBlogDB (newPostToCreate : PostInputMo
         return {status: 404, newlyCreatedPost: null}
     } else {
 
-        const PostToCreate = await postsCollection.insertOne({
+        const PostToCreate = {
             title:	newPostToCreate.title,
             shortDescription:	newPostToCreate.shortDescription,
             content:	newPostToCreate.content,
             blogId:	newPostToCreate.blogId,
             blogName: foundBlog.name,
             createdAt : new Date().toISOString()
-        })
-        const CreatedPost = await postsCollection.findOne({_id : new ObjectId(PostToCreate.insertedId)}, {projection : {acknowledged : 0, insertedId : 0}})
+        }
 
-        return {status: 201, newlyCreatedPost: CreatedPost}
+        const InsertedPost = await postsCollection.insertOne(PostToCreate)
+
+        return {status: 201, newlyCreatedPost: {
+                id: InsertedPost.insertedId,
+                title:	PostToCreate.title,
+                shortDescription:	PostToCreate.shortDescription,
+                content:	PostToCreate.content,
+                blogId:	PostToCreate.blogId,
+                blogName: PostToCreate.blogName,
+                createdAt : PostToCreate.createdAt
+            }}
     }
 }
