@@ -105,7 +105,7 @@ export async function updateBlog(req: Request, res: Response) {
 
 export async function getAllPostsForSpecificBlogDB(PagCriteria : getAllPostsForSpecificBlogType) {
     const foundBlog = await blogsCollection.findOne({_id: new ObjectId(PagCriteria.blogId)})
-    if (!foundBlog) {
+    if (foundBlog === null) {
         return {status: 404, items: null}
     } else {
         const totalCount = await postsCollection.find({blogId : foundBlog._id.toString()}).count({})
