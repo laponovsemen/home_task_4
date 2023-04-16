@@ -1,4 +1,4 @@
-import {PostInputModelType, PostInsertModelType, PostViewModelType} from "../appTypes";
+import {BlogViewModelType, PostInputModelType, PostInsertModelType, PostViewModelType} from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 
 import {client} from "../db";
@@ -37,7 +37,7 @@ export async function deletePostById(req: Request, res: Response) {
 }
 
 export async function createPost(req: Request, res: Response) {
-    const blog = await client.db("forum").collection("blogs").findOne({_id : new ObjectId(req.body.blogId)})
+    const blog = await client.db("forum").collection<BlogViewModelType>("blogs").findOne({_id : new ObjectId(req.body.blogId)})
     if(blog) {
         const newPost: PostInsertModelType = {
             title: req.body.title,
@@ -66,7 +66,7 @@ export async function createPost(req: Request, res: Response) {
 }
 
 export async function updatePost(req: Request, res: Response) {
-    const postToUpdate = await client.db("forum").collection("posts").findOne({_id: new ObjectId(req.params.id)})
+    const postToUpdate = await client.db("forum").collection<PostViewModelType>("posts").findOne({_id: new ObjectId(req.params.id)})
     if (postToUpdate) {
         const updatedPost = {
             title: req.body.title,
@@ -77,7 +77,7 @@ export async function updatePost(req: Request, res: Response) {
             content : req.body.content,
         }
         await client.db("forum")
-            .collection("posts")
+            .collection<PostInsertModelType>("posts")
             .updateOne({_id: new ObjectId(req.params.id)},
                 {$set: {title : updatedPost.title,
                         shortDescription : updatedPost.shortDescription,
@@ -102,7 +102,7 @@ export const PostValidationErrors = async (req: Request, res: Response, next: Ne
         })
     }
 
-    const foundBlog = await client.db("forum").collection<PostViewModelType>("blogs").findOne({_id : new ObjectId(req.body.blogId)})
+    const foundBlog = await client.db("forum").collection<PostViewModelType>("blogs").findOne({_id : req.body.blogId})
     if(foundBlog === null){
         result.errorsMessages.push({message: "No blogs with such id in database", field: "blogId"})
     }

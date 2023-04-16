@@ -2,6 +2,7 @@
 import request from "supertest"
 import {app} from "../../src/settings";
 import {before} from "node:test";
+import {ObjectId} from "mongodb";
 
 
 
@@ -248,4 +249,28 @@ describe("TESTING OF UPDATING BLOG BY ID", () => {
             .expect(400)
         expect(result.body).toEqual({errorsMessages : [{message : "the websiteUrl field is not URL", field: "websiteUrl"}]})
     })
+})
+
+describe("TESTING OF CREATING POST FOR SPECIFIED BLOG", () => {
+
+    it("should return status code 400 if wrong data", async () => {
+        await request(app).delete("/testing/all-data").expect(204)
+        const createdBlog = await request(app).post("/blogs").set(auth, basic).send({
+            name : "blog name", //maxLength: 15
+            description : "blog description",// maxLength: 500
+            websiteUrl : "https://samurai.it-incubator.io/"
+
+        }).expect(201)
+        const blogId = createdBlog.body.id
+        console.log(blogId)
+        const createdPostforSpecificBlog = await request(app)
+            .post(`/blogs/${blogId}/posts`)
+            .set(auth, basic)
+            .send({
+                title:"length_31-DrmM8lHeNjSykwSzQ7Her",
+                content:"valid"
+            }).expect(400)
+        expect(createdPostforSpecificBlog).toEqual({})
+    })
+
 })
