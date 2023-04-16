@@ -17,6 +17,6 @@ export async function createPostForSpecificBlog(req: Request, res: Response) {
     if(result.status === 404){
         res.sendStatus(result.status)
     } else {
-        res.send(result.newlyCreatedPost).status(result.status)
+        res.status(201).send(result.newlyCreatedPost)
     }
 }
