@@ -3,7 +3,7 @@ import {
     PostInsertModelType,
     BlogViewModelType,
     PostViewModelType,
-    getAllPostsForSpecificBlogType, PaginatorBlogViewModelType
+    getAllPostsForSpecificBlogType, PaginatorBlogViewModelType, PostInputModelType
 } from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 import {createNewBlogId, mongoBlogSlicing} from "../common";
@@ -122,6 +122,8 @@ export async function getAllPostsForSpecificBlogDB(PagCriteria : getAllPostsForS
         return {status: 200, items: SealedFoundItems}
     }
 }
+
+
 
 
 

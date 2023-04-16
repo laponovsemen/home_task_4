@@ -6,7 +6,8 @@ import {
     BlogWebsiteUrlValidation,
 } from "./blogValidators";
 import {basicAuthGuardMiddleware, ValidationErrors} from "../common";
-import {createPostForSpecificBlog, getAllPostsForSpecificBlog} from "./blogsDomain";
+import {getAllPostsForSpecificBlog} from "./blogsDomain";
+import {createPostForSpecificBlog} from "../posts/postsDomain";
 
 export const blogsRouter = Router({})
 

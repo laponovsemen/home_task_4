@@ -1,4 +1,4 @@
-import {PostInsertModelType, PostViewModelType} from "../appTypes";
+import {PostInputModelType, PostInsertModelType, PostViewModelType} from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 
 import {client} from "../db";
@@ -6,7 +6,7 @@ import {mongoBlogSlicing, mongoPostSlicing} from "../common";
 import {blogsCollection} from "../blogs/blogsRepositoryMongoDB";
 import {ObjectId} from "mongodb";
 import {validationResult} from "express-validator";
-
+export const postsCollection = client.db("forum").collection<PostInsertModelType>("blogs")
 export async function getPostById(req: Request, res: Response) {
     const blogId = req.params.id
     if(blogId) {
@@ -110,5 +110,23 @@ export const PostValidationErrors = async (req: Request, res: Response, next: Ne
         res.status(400).send(result)
     } else {
         next()
+    }
+}
+
+export async function createPostForSpecificBlogDB (newPostToCreate : PostInsertModelType) {
+    const foundBlog = await blogsCollection.findOne({_id: new ObjectId(newPostToCreate.blogId)})
+    if (!foundBlog) {
+        return {status: 404, newlyCreatedPost: null}
+    } else {
+
+        const createdPost = await postsCollection.insertOne({
+            title:	newPostToCreate.title,
+            shortDescription:	newPostToCreate.shortDescription,
+            content:	newPostToCreate.content,
+            blogId:	newPostToCreate.blogId,
+            blogName: foundBlog.name,
+            createdAt : new Date().toISOString()
+        })
+        return {status: 201, newlyCreatedPost: createdPost}
     }
 }

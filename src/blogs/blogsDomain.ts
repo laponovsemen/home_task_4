@@ -1,6 +1,7 @@
 import {NextFunction,Response, Request} from "express";
-import {getAllPostsForSpecificBlogDB} from "./blogsRepositoryMongoDB";
-import {getAllPostsForSpecificBlogType, sortDirectionType} from "../appTypes";
+import {blogsCollection, getAllPostsForSpecificBlogDB} from "./blogsRepositoryMongoDB";
+import {getAllPostsForSpecificBlogType, PostInputModelType, sortDirectionType} from "../appTypes";
+import {ObjectId} from "mongodb";
 
 
 export async function getAllPostsForSpecificBlog(req: Request, res: Response) {
@@ -19,13 +20,10 @@ export async function getAllPostsForSpecificBlog(req: Request, res: Response) {
     }
     const result = await getAllPostsForSpecificBlogDB(PaginationCriteria)
     if (result.status === 404){
-        res.sendStatus(404)
+        res.sendStatus(result.status)
     } else {
-        res.send(result.items).status(200)
+        res.send(result.items).status(result.status)
     }
 }
 
 
-export async function createPostForSpecificBlog() {
-
-}
