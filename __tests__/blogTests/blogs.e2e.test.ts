@@ -281,3 +281,28 @@ describe("TESTING OF CREATING POST FOR SPECIFIED BLOG", () => {
     })
 
 })
+
+describe("TESTING OF GETTING ALL POSTS FOR SPECIFIED BLOG", () => {
+
+    it("should return status code 400 if wrong data", async () => {
+        await request(app).delete("/testing/all-data").expect(204)
+        //CREATING 10 POSTS
+        const createdBlog = await request(app).post("/blogs").set(auth, basic).send({
+            name : "blog name", //maxLength: 15
+            description : "blog description",// maxLength: 500
+            websiteUrl : "https://samurai.it-incubator.io/"
+        }).expect(201)
+        const blogId = createdBlog.body.id
+        console.log(blogId)
+        await request(app)
+            .post(`/blogs/${blogId}/posts`)
+            .set(auth, basic)
+            .send({
+                title:"length_20-DrmM8lHeNj",
+                content:"valid",
+                blogId : blogId
+            }).expect(400)
+
+    })
+
+})
