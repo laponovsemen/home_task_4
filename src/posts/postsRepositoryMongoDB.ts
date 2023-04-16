@@ -123,7 +123,7 @@ export const PostForSpecificBlogValidationErrors = async (req: Request, res: Res
 
     const foundBlog = await client.db("forum").collection<BlogViewModelType>("blogs").findOne({_id : new ObjectId(req.params.id)})
     if(foundBlog === null){
-        result.errorsMessages.push({message: "No blogs with such id in database", field: "blogId"})
+        res.sendStatus(404)
     }
     if (!errors.isEmpty()) {
         res.status(400).send(result)
