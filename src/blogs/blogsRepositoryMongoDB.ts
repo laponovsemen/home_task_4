@@ -107,7 +107,7 @@ export async function getAllPostsForSpecificBlogDB(PagCriteria : getAllPostsForS
     if (!foundBlog) {
         return {status: 404, items: null}
     } else {
-        const totalCount = await blogsCollection.find({}).count({})
+        const totalCount = await blogsCollection.find({blogId : foundBlog._id}).count({})
         const pageSize = PagCriteria.pageSize
         const pagesCount = Math.ceil(totalCount / pageSize)
         const page = PagCriteria.pageNumber
