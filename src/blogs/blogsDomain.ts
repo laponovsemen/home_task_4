@@ -18,7 +18,7 @@ export async function getAllPostsForSpecificBlog(req: Request, res: Response) {
         sortBy : sortBy,
         sortDirection:  sortDirection,
     }
-    const result = await getAllPostsForSpecificBlogDB(PaginationCriteria)
+    const result = await getAllPostsForSpecificBlogDB(PaginationCriteria).finally()
     if (result.status === 404){
         res.sendStatus(404)
     } else {
