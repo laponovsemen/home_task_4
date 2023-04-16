@@ -113,7 +113,7 @@ export const PostValidationErrors = async (req: Request, res: Response, next: Ne
     }
 }
 
-export async function createPostForSpecificBlogDB (newPostToCreate : PostInsertModelType) {
+export async function createPostForSpecificBlogDB (newPostToCreate : PostInputModelType) {
     const foundBlog = await blogsCollection.findOne({_id: new ObjectId(newPostToCreate.blogId)})
     if (!foundBlog) {
         return {status: 404, newlyCreatedPost: null}
