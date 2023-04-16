@@ -10,7 +10,6 @@ export async function getAllPostsForSpecificBlog(req: Request, res: Response) {
     const sortBy : string = req.query.sortBy ? req.query.sortBy as string : "createdAt"
     const sortDirection : string = req.query.sortDirection ? req.query.sortDirection as string : "desc"
 
-
     const PaginationCriteria : getAllPostsForSpecificBlogType = {
         blogId : blogId,
         pageNumber : pageNumber,
@@ -24,7 +23,6 @@ export async function getAllPostsForSpecificBlog(req: Request, res: Response) {
     } else {
         res.send(result.items).status(200)
     }
-
 }
 
 
