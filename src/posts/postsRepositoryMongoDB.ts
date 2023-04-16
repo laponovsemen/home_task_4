@@ -43,7 +43,7 @@ export async function createPost(req: Request, res: Response) {
             title: req.body.title,
             shortDescription: req.body.shortDescription,
             content: req.body.content,
-            blogId: req.body.blogId,
+            blogId: blog._id.toString(),
             blogName: blog.name,
             createdAt: blog.createdAt,
 

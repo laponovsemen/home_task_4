@@ -279,7 +279,32 @@ describe("TESTING OF CREATING POST FOR SPECIFIED BLOG", () => {
                 ]
         })
     })
+    it("should return status code 201 if correct data", async () => {
+        await request(app).delete("/testing/all-data").expect(204)
+        const createdBlog = await request(app).post("/blogs").set(auth, basic).send({
+            name : "blog name", //maxLength: 15
+            description : "blog description",// maxLength: 500
+            websiteUrl : "https://samurai.it-incubator.io/"
 
+        }).expect(201)
+        const blogId = createdBlog.body.id
+        console.log(blogId)
+        const createdPostforSpecificBlog = await request(app)
+            .post(`/blogs/${blogId}/posts`)
+            .set(auth, basic)
+            .send({
+                title:"length_31-DrmM8lHeNjSykwSzQ7Her",
+                content:"valid"
+            }).expect(400)
+        expect(createdPostforSpecificBlog.body).toEqual({
+            errorsMessages:
+                [
+                    { message: "the length of title field is more than 30 chars", field: "title" },
+                    { message: "the field shortDescription is not a sting", field: "shortDescription" },
+
+                ]
+        })
+    })
 })
 
 describe("TESTING OF GETTING ALL POSTS FOR SPECIFIED BLOG", () => {
