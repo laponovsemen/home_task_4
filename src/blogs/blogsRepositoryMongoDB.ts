@@ -9,6 +9,7 @@ import {NextFunction, Request, Response} from "express";
 import {createNewBlogId, mongoBlogSlicing} from "../common";
 import {client} from "../db";
 import {ObjectId} from "mongodb";
+import {postsCollection} from "../posts/postsRepositoryMongoDB";
 
 
 
@@ -107,11 +108,14 @@ export async function getAllPostsForSpecificBlogDB(PagCriteria : getAllPostsForS
     if (!foundBlog) {
         return {status: 404, items: null}
     } else {
-        const totalCount = await blogsCollection.find({blogId : foundBlog._id}).count({})
+        const totalCount = await postsCollection.find({blogId : foundBlog._id.toString()}).count({})
         const pageSize = PagCriteria.pageSize
         const pagesCount = Math.ceil(totalCount / pageSize)
         const page = PagCriteria.pageNumber
-        const foundItems = await blogsCollection.find({blogId : foundBlog._id}).skip((page - 1) * pageSize).limit(pageSize).toArray()
+        const sortBy = PagCriteria.sortBy
+        const sortDirection : number = PagCriteria.sortDirection === "desc" ? -1 : 1
+
+        const foundItems = await postsCollection.find({blogId : foundBlog._id.toString() , $orderby: { sortBy : sortDirection }}).skip((page - 1) * pageSize).limit(pageSize).toArray()
         const SealedFoundItems: PaginatorBlogViewModelType = {
             pagesCount: pagesCount,
             page: page,
