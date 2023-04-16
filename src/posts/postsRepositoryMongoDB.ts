@@ -8,9 +8,9 @@ import {ObjectId} from "mongodb";
 import {validationResult} from "express-validator";
 export const postsCollection = client.db("forum").collection<PostInsertModelType>("blogs")
 export async function getPostById(req: Request, res: Response) {
-    const blogId = req.params.id
-    if(blogId) {
-        const result = await client.db("forum").collection<PostViewModelType>("posts").findOne({_id: new ObjectId(blogId)})
+    const postId = req.params.id
+    if(postId) {
+        const result = await client.db("forum").collection<PostViewModelType>("posts").findOne({_id: new ObjectId(postId)})
         if(result !== null) {
             res.status(200).send(mongoPostSlicing(result))
         } else {
