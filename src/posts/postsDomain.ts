@@ -15,7 +15,7 @@ export async function createPostForSpecificBlog(req: Request, res: Response) {
     }
     const result = await createPostForSpecificBlogDB(newPost)
     if(result.status === 404){
-        res.sendStatus(result.status)
+        res.sendStatus(404)
     } else {
         res.status(201).send(result.newlyCreatedPost)
     }
