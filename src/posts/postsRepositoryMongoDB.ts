@@ -61,7 +61,7 @@ export async function createPost(req: Request, res: Response) {
             createdAt: newPost.createdAt,}
         )
     } else {
-        res.sendStatus(400)
+        res.status(400).send("no blog found")
     }
 }
 

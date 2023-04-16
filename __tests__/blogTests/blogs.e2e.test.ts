@@ -270,7 +270,14 @@ describe("TESTING OF CREATING POST FOR SPECIFIED BLOG", () => {
                 title:"length_31-DrmM8lHeNjSykwSzQ7Her",
                 content:"valid"
             }).expect(400)
-        expect(createdPostforSpecificBlog).toEqual({})
+        expect(createdPostforSpecificBlog.body).toEqual({
+            errorsMessages:
+                [
+                    { message: "the length of title field is more than 30 chars", field: "title" },
+                    { message: "the field shortDescription is not a sting", field: "shortDescription" },
+
+                ]
+        })
     })
 
 })

@@ -38,6 +38,16 @@ describe("TESTING OF CREATING POST", () => {
             .get(`/posts/${result.body.id}`)
             .set(auth, basic)
             .expect(200)
+
+        expect(foundPost.body).toEqual({
+            "id": expect.any(String),
+            "blogId": blogId,
+            "blogName": "new blog",
+            "content": "new post content",
+            "createdAt": expect.any(String),
+            "shortDescription": "description",
+            "title": "post title"
+        })
     })
 })
 
