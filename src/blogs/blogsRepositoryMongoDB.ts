@@ -111,7 +111,7 @@ export async function getAllPostsForSpecificBlogDB(PagCriteria : getAllPostsForS
         const pageSize = PagCriteria.pageSize
         const pagesCount = Math.ceil(totalCount / pageSize)
         const page = PagCriteria.pageNumber
-        const foundItems = await blogsCollection.find({}).skip((page - 1) * pageSize).limit(pageSize).toArray()
+        const foundItems = await blogsCollection.find({blogId : foundBlog._id}).skip((page - 1) * pageSize).limit(pageSize).toArray()
         const SealedFoundItems: PaginatorBlogViewModelType = {
             pagesCount: pagesCount,
             page: page,
