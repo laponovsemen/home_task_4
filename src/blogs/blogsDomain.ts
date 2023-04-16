@@ -20,9 +20,9 @@ export async function getAllPostsForSpecificBlog(req: Request, res: Response) {
     }
     const result = await getAllPostsForSpecificBlogDB(PaginationCriteria)
     if (result.status === 404){
-        res.sendStatus(result.status)
+        res.sendStatus(404)
     } else {
-        res.send(result.items).status(result.status)
+        res.send(result.items).status(200)
     }
 }
 
