@@ -124,7 +124,7 @@ export const PostForSpecificBlogValidationErrors = async (req: Request, res: Res
     const foundBlog = await client.db("forum").collection<BlogViewModelType>("blogs").findOne({_id : new ObjectId(req.params.id)})
     if(foundBlog === null){
         res.sendStatus(404)
-    } else
+    } else // PIZDEC
     if (!errors.isEmpty()) {
         res.send(result).status(400)
     } else {
