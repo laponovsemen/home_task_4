@@ -332,5 +332,11 @@ describe("TESTING OF GETTING ALL POSTS FOR SPECIFIED BLOG", () => {
             }).expect(400)
 
     })
+    it("POST, GET -> \"/blogs/:blogId/posts\": should return error if :id from uri param not found; status 404;", async () => {
+        await request(app).delete("/testing/all-data").expect(204)
 
+        await request(app).post(`/blogs/63189b06003380064c4193be/posts`).set(auth, basic).expect(404)
+        await request(app).get(`/blogs/63189b06003380064c4193be/posts`).set(auth, basic).expect(404)
+
+    })
 })
