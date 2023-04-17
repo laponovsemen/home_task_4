@@ -1,12 +1,12 @@
 import {Router} from 'express'
-import {createBlog, deleteBlogById, getAllBlogs, getBlogById, updateBlog} from "./blogsRepositoryMongoDB";
+import {createBlog, deleteBlogById, getBlogById, updateBlog} from "./blogsRepositoryMongoDB";
 import {
     BlogDescriptionValidation,
     BlogNameValidation,
     BlogWebsiteUrlValidation,
 } from "./blogValidators";
 import {basicAuthGuardMiddleware, ValidationErrors} from "../common";
-import {getAllPostsForSpecificBlog} from "./blogsDomain";
+import {getAllBlogs, getAllPostsForSpecificBlog} from "./blogsDomain";
 import {createPostForSpecificBlog} from "../posts/postsDomain";
 import {postDataValidation} from "../posts/postsRouter";
 import {
