@@ -102,10 +102,6 @@ export const PostValidationErrors = async (req: Request, res: Response, next: Ne
         })
     }
 
-    const foundBlog = await client.db("forum").collection<BlogViewModelType>("blogs").findOne({_id : req.body.blogId})
-    if(foundBlog === null){
-        res.sendStatus(404)
-    } else
     if (!errors.isEmpty()) {
         res.status(400).send(result)
     } else {
