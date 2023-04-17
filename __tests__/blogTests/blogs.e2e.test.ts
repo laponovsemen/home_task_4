@@ -12,7 +12,7 @@ const basic = 'Basic YWRtaW46cXdlcnR5'
 //BLOGS ROUTE
 describe("TESTING OF GETTING ALL BLOGS", () => {
     it("should return all blogs //auth is correct", async () => {
-        await request(app).delete("/testing/all-data").set(auth, basic)
+        await request(app).delete("/testing/all-data")
         const result = await request(app)
             .get("/blogs")
             .expect(200)
@@ -262,7 +262,6 @@ describe("TESTING OF CREATING POST FOR SPECIFIED BLOG", () => {
 
         }).expect(201)
         const blogId = createdBlog.body.id
-        console.log(blogId)
         const createdPostforSpecificBlog = await request(app)
             .post(`/blogs/${blogId}/posts`)
             .set(auth, basic)

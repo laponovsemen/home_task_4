@@ -39,9 +39,15 @@ export async function getAllBlogsDB(PagCriteria : getAllPostsType) {
     const pageSize = PagCriteria.pageSize
     const pagesCount = Math.ceil(totalCount / pageSize)
     const page = PagCriteria.pageNumber
-    const sortBy = PagCriteria.sortBy
-    const sortDirection : number = PagCriteria.sortDirection === "desc" ? -1 : 1
-    const foundItems = await blogsCollection.find({$orderby: { sortBy : sortDirection }}).skip((page - 1) * pageSize).limit(pageSize).toArray()  //{ projection: { name : 0}}
+    const sortBy2 = PagCriteria.sortBy
+    let sortDirection : number
+    if(PagCriteria.sortDirection === "desc"){
+        sortDirection = -1
+    } else {
+        sortDirection = 1
+    }
+    console.log(sortBy2)
+    const foundItems = await blogsCollection.find({}).sort({ sortBy2 : 1 }).skip((page - 1) * pageSize).limit(pageSize).toArray()  //{ projection: { name : 0}}
     const SealedFoundItems: PaginatorBlogViewModelType = {
         pagesCount: pagesCount,
         page: page,
