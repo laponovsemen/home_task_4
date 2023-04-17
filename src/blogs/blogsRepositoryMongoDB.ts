@@ -3,7 +3,7 @@ import {
     PostInsertModelType,
     BlogViewModelType,
     PostViewModelType,
-    getAllPostsForSpecificBlogType, PaginatorBlogViewModelType, PostInputModelType
+    getAllPostsForSpecificBlogType, PaginatorBlogViewModelType, PostInputModelType, PaginatorPostViewModelType
 } from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 import {createNewBlogId, mongoBlogSlicing} from "../common";
@@ -30,9 +30,22 @@ export async function getBlogById(req: Request, res: Response) {
         res.sendStatus(404)
     }
 }
-export async function getAllBlogs(req: Request, res: Response) {
-    const result = await blogsCollection.find({}).toArray()  //{ projection: { name : 0}}
-    res.status(200).send(result.map(blog => mongoBlogSlicing(blog)))
+export async function getAllBlogsDB(PagCriteria : getAllPostsForSpecificBlogType) {
+    const totalCount = await blogsCollection.find({}).count({})
+    const pageSize = PagCriteria.pageSize
+    const pagesCount = Math.ceil(totalCount / pageSize)
+    const page = PagCriteria.pageNumber
+    const sortBy = PagCriteria.sortBy
+    const sortDirection : number = PagCriteria.sortDirection === "desc" ? -1 : 1
+    const foundItems = await blogsCollection.find({$orderby: { sortBy : sortDirection }}).skip((page - 1) * pageSize).limit(pageSize).toArray()  //{ projection: { name : 0}}
+    const SealedFoundItems: PaginatorBlogViewModelType = {
+        pagesCount: pagesCount,
+        page: page,
+        pageSize: pageSize,
+        totalCount: totalCount,
+        items: foundItems
+    }
+    return {status: 200, items: SealedFoundItems}
 }
 
 export async function deleteBlogById(req: Request, res: Response) {
@@ -49,7 +62,6 @@ export async function deleteBlogById(req: Request, res: Response) {
     //  SELECT id, name, description, webUrl FROM blogs
 
 }
-
 export async function createBlog(req: Request, res: Response) {
 
     const newBlog = {
@@ -71,12 +83,10 @@ export async function createBlog(req: Request, res: Response) {
         isMembership: newBlog.isMembership,
     })
 }
-
 export async function deleteAllBlogs() {
     await client.db("forum").collection<BlogViewModelType>("blogs").deleteMany({})
 
 }
-
 export async function updateBlog(req: Request, res: Response) {
     const blogToUpdate = await client.db("forum").collection<BlogViewModelType>("blogs").findOne({_id : new ObjectId(req.params.id)})
     if(blogToUpdate) {
@@ -116,7 +126,7 @@ export async function getAllPostsForSpecificBlogDB(PagCriteria : getAllPostsForS
         const sortDirection : number = PagCriteria.sortDirection === "desc" ? -1 : 1
 
         const foundItems = await postsCollection.find({blogId : foundBlog._id.toString() , $orderby: { sortBy : sortDirection }}).skip((page - 1) * pageSize).limit(pageSize).toArray()
-        const SealedFoundItems: PaginatorBlogViewModelType = {
+        const SealedFoundItems: PaginatorPostViewModelType = {
             pagesCount: pagesCount,
             page: page,
             pageSize: pageSize,

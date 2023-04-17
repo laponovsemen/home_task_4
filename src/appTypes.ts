@@ -67,6 +67,15 @@ export type PaginatorBlogViewModelType = {
         page: number,
         pageSize: number,
         totalCount: number,
-        items: PostViewModelType[]
+        items: BlogViewModelType[]
 
     }
+
+export type PaginatorPostViewModelType = {
+    pagesCount: number,
+    page: number,
+    pageSize: number,
+    totalCount: number,
+    items: PostViewModelType[]
+
+}
