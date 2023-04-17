@@ -1,4 +1,10 @@
-import {BlogViewModelType, PostInputModelType, PostInsertModelType, PostViewModelType} from "../appTypes";
+import {
+    BlogViewModelType, getAllBlogsType, getAllPostsType,
+    PaginatorBlogViewModelType,
+    PostInputModelType,
+    PostInsertModelType,
+    PostViewModelType
+} from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 
 import {client} from "../db";
@@ -20,10 +26,28 @@ export async function getPostById(req: Request, res: Response) {
         res.sendStatus(404)
     }
 }
-export async function getAllPosts(req: Request, res: Response) {
-    const result = await client.db("forum").collection<PostViewModelType>("posts").find({}).toArray()
-    res.status(200).send(result.map(post => mongoPostSlicing(post)))
-
+export async function getAllPostsDB(PagCriteria : getAllPostsType) {
+    const totalCount = await postsCollection.find({}).count({})
+    const pageSize = PagCriteria.pageSize
+    const pagesCount = Math.ceil(totalCount / pageSize)
+    const page = PagCriteria.pageNumber
+    const sortBy2 = PagCriteria.sortBy
+    let sortDirection : number
+    if(PagCriteria.sortDirection === "desc"){
+        sortDirection = -1
+    } else {
+        sortDirection = 1
+    }
+    console.log(sortBy2)
+    const foundItems = await blogsCollection.find({}).sort({ sortBy2 : 1 }).skip((page - 1) * pageSize).limit(pageSize).toArray()  //{ projection: { name : 0}}
+    const SealedFoundItems: PaginatorBlogViewModelType = {
+        pagesCount: pagesCount,
+        page: page,
+        pageSize: pageSize,
+        totalCount: totalCount,
+        items: foundItems
+    }
+    return {status: 200, items: SealedFoundItems}
 }
 
 export async function deletePostById(req: Request, res: Response) {

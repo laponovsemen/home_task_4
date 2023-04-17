@@ -7,7 +7,7 @@ import {
     PaginatorBlogViewModelType,
     PostInputModelType,
     PaginatorPostViewModelType,
-    getAllPostsType
+    getAllPostsType, getAllBlogsType
 } from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 import {createNewBlogId, mongoBlogSlicing} from "../common";
@@ -34,7 +34,7 @@ export async function getBlogById(req: Request, res: Response) {
         res.sendStatus(404)
     }
 }
-export async function getAllBlogsDB(PagCriteria : getAllPostsType) {
+export async function getAllBlogsDB(PagCriteria : getAllBlogsType) {
     const totalCount = await blogsCollection.find({}).count({})
     const pageSize = PagCriteria.pageSize
     const pagesCount = Math.ceil(totalCount / pageSize)

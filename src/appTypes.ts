@@ -85,3 +85,10 @@ export type getAllPostsType = {
     sortBy : string
     sortDirection:  sortDirectionType
 }
+
+export type  getAllBlogsType = {
+    pageNumber : number
+    pageSize : number
+    sortBy : string
+    sortDirection:  sortDirectionType
+}

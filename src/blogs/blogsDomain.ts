@@ -1,6 +1,12 @@
 import {NextFunction,Response, Request} from "express";
 import {blogsCollection, getAllBlogsDB, getAllPostsForSpecificBlogDB} from "./blogsRepositoryMongoDB";
-import {getAllPostsForSpecificBlogType, getAllPostsType, PostInputModelType, sortDirectionType} from "../appTypes";
+import {
+    getAllBlogsType,
+    getAllPostsForSpecificBlogType,
+    getAllPostsType,
+    PostInputModelType,
+    sortDirectionType
+} from "../appTypes";
 import {ObjectId} from "mongodb";
 
 export async function getAllBlogs (req: Request, res: Response){
@@ -9,7 +15,7 @@ export async function getAllBlogs (req: Request, res: Response){
     const sortBy : string = req.query.sortBy ? req.query.sortBy as string : "createdAt"
     const sortDirection : string = req.query.sortDirection ? req.query.sortDirection as string : "desc"
 
-    const PaginationCriteria : getAllPostsType = {
+    const PaginationCriteria : getAllBlogsType = {
         pageNumber : pageNumber,
         pageSize : pageSize,
         sortBy : sortBy,
