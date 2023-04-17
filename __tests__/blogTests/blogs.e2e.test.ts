@@ -25,6 +25,35 @@ describe("TESTING OF GETTING ALL BLOGS", () => {
             .expect(200)
         expect(result.body).toEqual({"items": [], "page": 1, "pageSize": 10, "pagesCount": 0, "totalCount": 0})
     })
+    it("should return all blogs //auth is incorrect", async () => {
+        await request(app).delete("/testing/all-data")
+        for(let i = 0; i < 10 ; i++){
+            await request(app)
+                .post("/blogs")
+                .set(auth, basic)
+                .send({
+                    "name":`Timma${i}`,
+                    "description":"description",
+                    "websiteUrl":"https://someurl.com"
+                })
+                .expect(201)
+        }
+        const result = await request(app)
+            .get("/blogs")
+            .expect(200)
+        expect(result.body).toEqual({"page": 1, "pageSize": 10, "pagesCount": 1, "totalCount": 1, "items": [
+                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma9", websiteUrl: "https://someurl.com"},
+                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma8", websiteUrl: "https://someurl.com"},
+                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma7", websiteUrl: "https://someurl.com"},
+                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma6", websiteUrl: "https://someurl.com"},
+                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma5", websiteUrl: "https://someurl.com"},
+                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma4", websiteUrl: "https://someurl.com"},
+                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma3", websiteUrl: "https://someurl.com"},
+                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma2", websiteUrl: "https://someurl.com"},
+                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma1", websiteUrl: "https://someurl.com"},
+                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma0", websiteUrl: "https://someurl.com"},
+            ]})
+    })
 
 
 })

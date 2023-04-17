@@ -44,6 +44,15 @@ export type PostViewModelType = {
     blogName:	string,
     createdAt : string
 }
+export type BlogViewFromDBModelType = {
+    id:	ObjectId,
+
+    name:	string,
+    description: string,
+    websiteUrl: string,
+    isMembership: boolean,
+    createdAt : string
+}
 export type PostViewDBModelType = {
     _id:	ObjectId,
     title:	string,
@@ -76,7 +85,7 @@ export type PaginatorBlogViewModelType = {
         page: number,
         pageSize: number,
         totalCount: number,
-        items: BlogViewModelType[]
+        items: BlogViewFromDBModelType[]
 
     }
 

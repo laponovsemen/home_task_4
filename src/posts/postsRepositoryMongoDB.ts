@@ -45,7 +45,7 @@ export async function getAllPostsDB(PagCriteria : getAllPostsType) {
         page: page,
         pageSize: pageSize,
         totalCount: totalCount,
-        items: foundItems
+        items: foundItems.map(item => mongoBlogSlicing(item))
     }
     return {status: 200, items: SealedFoundItems}
 }
@@ -73,7 +73,7 @@ export async function createPost(req: Request, res: Response) {
 
         }
 
-        const insertedPost = await client.db("forum").collection("posts").insertOne(newPost)
+        const insertedPost = await client.db("forum").collection<PostInsertModelType>("posts").insertOne(newPost)
 
         res.status(201).send({
             id: insertedPost.insertedId,
