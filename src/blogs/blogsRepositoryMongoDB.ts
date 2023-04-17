@@ -133,9 +133,9 @@ export async function getAllPostsForSpecificBlogDB(PagCriteria : getAllPostsForS
         const pagesCount = Math.ceil(totalCount / pageSize)
         const page = PagCriteria.pageNumber
         const sortBy = PagCriteria.sortBy
-        const sortDirection : number = PagCriteria.sortDirection === "desc" ? -1 : 1
+        const sortDirection : any = PagCriteria.sortDirection === "desc" ? -1 : 1
 
-        const foundItems = await postsCollection.find({blogId : foundBlog._id.toString() , $orderby: { sortBy : sortDirection }}).skip((page - 1) * pageSize).limit(pageSize).toArray()
+        const foundItems = await postsCollection.find({blogId : foundBlog._id.toString()}).sort({ sortBy : sortDirection }).skip((page - 1) * pageSize).limit(pageSize).toArray()
         const SealedFoundItems: PaginatorPostViewModelType = {
             pagesCount: pagesCount,
             page: page,
