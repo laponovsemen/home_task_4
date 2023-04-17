@@ -79,3 +79,9 @@ export type PaginatorPostViewModelType = {
     items: PostViewModelType[]
 
 }
+export type getAllPostsType = {
+    pageNumber : number
+    pageSize : number
+    sortBy : string
+    sortDirection:  sortDirectionType
+}
