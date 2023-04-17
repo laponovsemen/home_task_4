@@ -12,7 +12,7 @@ import {mongoBlogSlicing, mongoPostSlicing} from "../common";
 import {blogsCollection} from "../blogs/blogsRepositoryMongoDB";
 import {ObjectId} from "mongodb";
 import {validationResult} from "express-validator";
-export const postsCollection = client.db("forum").collection<PostInsertModelType>("blogs")
+export const postsCollection = client.db("forum").collection<PostInsertModelType>("posts")
 export async function getPostById(req: Request, res: Response) {
     const postId = req.params.id
     if(postId) {
