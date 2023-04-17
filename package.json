@@ -1,14 +1,12 @@
 {
-  "name": "home_task_4",
+  "name": "home_task_3",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:laponovsemen/home_task_4.git",
-  "author": "Laponov Semen <johndoe@example.com>",
   "license": "MIT",
   "scripts": {
     "dev": "yarn nodemon --inspect dist/index.js",
-    "watch":"tsc -w",
-    "test": "jest --runInBand"
+    "watch": "tsc -w",
+    "test": "jest --runInBand "
   },
   "dependencies": {
     "@types/jest": "^29.5.0",

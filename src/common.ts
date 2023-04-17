@@ -1,10 +1,4 @@
-import {
-    BlogInsertModelType,
-    BlogViewModelType,
-    PostInsertModelType,
-    PostViewDBModelType,
-    PostViewModelType
-} from "./appTypes";
+import {BlogInsertModelType, BlogViewModelType, PostViewModelType} from "./appTypes";
 import {NextFunction, Request, Response} from "express";
 import {header, validationResult} from "express-validator";
 import {ObjectId} from "mongodb";
@@ -51,7 +45,7 @@ export const mongoBlogSlicing = ( Obj2: BlogViewModelType) =>  {
     }
 }
 
-export const mongoPostSlicing = ( Obj2: PostViewDBModelType) =>  {
+export const mongoPostSlicing = ( Obj2: PostViewModelType) =>  {
     return {
         id : Obj2._id,
         title:	Obj2.title,

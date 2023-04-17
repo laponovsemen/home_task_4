@@ -29,6 +29,7 @@ export type BlogInsertModelType = {
     isMembership: boolean,
     createdAt : string
 }
+
 export type PostInputModelType = {
     title : 	string, //    maxLength: 30
     shortDescription: string, //maxLength: 100
@@ -36,24 +37,6 @@ export type PostInputModelType = {
     blogId: string
 }
 export type PostViewModelType = {
-    id:	ObjectId,
-    title:	string,
-    shortDescription:	string,
-    content:	string,
-    blogId:	string,
-    blogName:	string,
-    createdAt : string
-}
-export type BlogViewFromDBModelType = {
-    id:	ObjectId,
-
-    name:	string,
-    description: string,
-    websiteUrl: string,
-    isMembership: boolean,
-    createdAt : string
-}
-export type PostViewDBModelType = {
     _id:	ObjectId,
     title:	string,
     shortDescription:	string,
@@ -62,6 +45,7 @@ export type PostViewDBModelType = {
     blogName:	string,
     createdAt : string
 }
+
 export type PostInsertModelType = {
     title:	string,
     shortDescription:	string,
@@ -69,44 +53,4 @@ export type PostInsertModelType = {
     blogId:	string,
     blogName:	string,
     createdAt : string
-}
-
-export type sortDirectionType = string
-
-export type getAllPostsForSpecificBlogType = {
-    blogId : string
-    pageNumber : number
-    pageSize : number
-    sortBy : string
-    sortDirection:  sortDirectionType
-}
-export type PaginatorBlogViewModelType = {
-        pagesCount: number,
-        page: number,
-        pageSize: number,
-        totalCount: number,
-        items: BlogViewFromDBModelType[]
-
-    }
-
-export type PaginatorPostViewModelType = {
-    pagesCount: number,
-    page: number,
-    pageSize: number,
-    totalCount: number,
-    items: PostViewModelType[]
-
-}
-export type getAllPostsType = {
-    pageNumber : number
-    pageSize : number
-    sortBy : string
-    sortDirection:  sortDirectionType
-}
-
-export type  getAllBlogsType = {
-    pageNumber : number
-    pageSize : number
-    sortBy : string
-    sortDirection:  sortDirectionType
 }

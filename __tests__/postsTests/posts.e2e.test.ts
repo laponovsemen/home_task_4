@@ -15,7 +15,7 @@ describe("TESTING OF CREATING POST", () => {
             .send({"name":"new blog",
                 "description":"description",
                 "websiteUrl":"https://github.com/",
-            })
+                })
             .expect(201)
         const blogId = createdBlog.body.id
         const result = await request(app)
@@ -36,17 +36,8 @@ describe("TESTING OF CREATING POST", () => {
 
         const foundPost = await request(app)
             .get(`/posts/${result.body.id}`)
+            .set(auth, basic)
             .expect(200)
-
-        expect(foundPost.body).toEqual({
-            "id": expect.any(String),
-            "blogId": blogId,
-            "blogName": "new blog",
-            "content": "new post content",
-            "createdAt": expect.any(String),
-            "shortDescription": "description",
-            "title": "post title"
-        })
     })
 })
 
@@ -147,6 +138,7 @@ describe("TESTING OF UPDATING POST BY ID", () => {
             .expect(204)
         const foundPost = await request(app)
             .get(`/posts/${result.body.id}`)
+            .set(auth, basic)
             .expect(200)
         expect(foundPost.body).toEqual({
             id: expect.any(String),
@@ -226,6 +218,7 @@ describe("TESTING OF READING POST BY ID", () => {
 
         const foundPost = await request(app)
             .get(`/posts/${result.body.id}`)
+            .set(auth, basic)
             .expect(200)
         expect(foundPost.body).toEqual({"id": expect.any(String),
             "blogId": blogId,

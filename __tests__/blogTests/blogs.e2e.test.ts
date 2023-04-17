@@ -2,7 +2,6 @@
 import request from "supertest"
 import {app} from "../../src/settings";
 import {before} from "node:test";
-import {ObjectId} from "mongodb";
 
 
 
@@ -12,47 +11,18 @@ const basic = 'Basic YWRtaW46cXdlcnR5'
 //BLOGS ROUTE
 describe("TESTING OF GETTING ALL BLOGS", () => {
     it("should return all blogs //auth is correct", async () => {
-        await request(app).delete("/testing/all-data")
+        await request(app).delete("/testing/all-data").set(auth, basic)
         const result = await request(app)
             .get("/blogs")
             .expect(200)
-        expect(result.body).toEqual({"items": [], "page": 1, "pageSize": 10, "pagesCount": 0, "totalCount": 0})
+        expect(result.body).toEqual([])
     })
     it("should return all blogs //auth is incorrect", async () => {
         await request(app).delete("/testing/all-data")
         const result = await request(app)
             .get("/blogs")
             .expect(200)
-        expect(result.body).toEqual({"items": [], "page": 1, "pageSize": 10, "pagesCount": 0, "totalCount": 0})
-    })
-    it("should return all blogs //auth is incorrect", async () => {
-        await request(app).delete("/testing/all-data")
-        for(let i = 0; i < 10 ; i++){
-            await request(app)
-                .post("/blogs")
-                .set(auth, basic)
-                .send({
-                    "name":`Timma${i}`,
-                    "description":"description",
-                    "websiteUrl":"https://someurl.com"
-                })
-                .expect(201)
-        }
-        const result = await request(app)
-            .get("/blogs")
-            .expect(200)
-        expect(result.body).toEqual({"page": 1, "pageSize": 10, "pagesCount": 1, "totalCount": 1, "items": [
-                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma9", websiteUrl: "https://someurl.com"},
-                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma8", websiteUrl: "https://someurl.com"},
-                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma7", websiteUrl: "https://someurl.com"},
-                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma6", websiteUrl: "https://someurl.com"},
-                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma5", websiteUrl: "https://someurl.com"},
-                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma4", websiteUrl: "https://someurl.com"},
-                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma3", websiteUrl: "https://someurl.com"},
-                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma2", websiteUrl: "https://someurl.com"},
-                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma1", websiteUrl: "https://someurl.com"},
-                {id: expect.any(String), createdAt: expect.any(String), description : "description", isMembership : false, name : "Timma0", websiteUrl: "https://someurl.com"},
-            ]})
+        expect(result.body).toEqual([])
     })
 
 
@@ -219,7 +189,7 @@ describe("TESTING OF UPDATING BLOG BY ID", () => {
                 name: "name",
                 description: "string",
                 websiteUrl: "https://samurai.it-incubator.io",
-            }).expect(201)
+        }).expect(201)
         const blogId = result.body.id
         const updatedBlog = await request(app)
             .put(`/blogs/${blogId}`)
@@ -277,94 +247,5 @@ describe("TESTING OF UPDATING BLOG BY ID", () => {
                 websiteUrl: "",})
             .expect(400)
         expect(result.body).toEqual({errorsMessages : [{message : "the websiteUrl field is not URL", field: "websiteUrl"}]})
-    })
-})
-
-describe("TESTING OF CREATING POST FOR SPECIFIED BLOG", () => {
-
-    it("should return status code 400 if wrong data", async () => {
-        await request(app).delete("/testing/all-data").expect(204)
-        const createdBlog = await request(app).post("/blogs").set(auth, basic).send({
-            name : "blog name", //maxLength: 15
-            description : "blog description",// maxLength: 500
-            websiteUrl : "https://samurai.it-incubator.io/"
-
-        }).expect(201)
-        const blogId = createdBlog.body.id
-        const createdPostforSpecificBlog = await request(app)
-            .post(`/blogs/${blogId}/posts`)
-            .set(auth, basic)
-            .send({
-                title:"length_31-DrmM8lHeNjSykwSzQ7Her",
-                content:"valid"
-            }).expect(400)
-        expect(createdPostforSpecificBlog.body).toEqual({
-            errorsMessages:
-                [
-                    { message: "the length of title field is more than 30 chars", field: "title" },
-                    { message: "the field shortDescription is not a sting", field: "shortDescription" },
-
-                ]
-        })
-    })
-    it("should return status code 201 if correct data", async () => {
-        await request(app).delete("/testing/all-data").expect(204)
-        const createdBlog = await request(app).post("/blogs").set(auth, basic).send({
-            name : "blog name", //maxLength: 15
-            description : "blog description",// maxLength: 500
-            websiteUrl : "https://samurai.it-incubator.io/"
-
-        }).expect(201)
-        const blogId = createdBlog.body.id
-        console.log(blogId)
-        const createdPostforSpecificBlog = await request(app)
-            .post(`/blogs/${blogId}/posts`)
-            .set(auth, basic)
-            .send({
-                title:"valid title for post",
-                content:"valid",
-                shortDescription: "some shortDescription",
-                blogId : blogId
-            }).expect(201)
-        expect(createdPostforSpecificBlog.body).toEqual({
-            id : createdPostforSpecificBlog.body.id,
-            title:"valid title for post",
-            content:"valid",
-            shortDescription: "some shortDescription",
-            blogId : blogId,
-            createdAt : expect.any(String),
-            blogName : createdBlog.body.name,
-        })
-    })
-})
-
-describe("TESTING OF GETTING ALL POSTS FOR SPECIFIED BLOG", () => {
-
-    it("should return status code 400 if wrong data", async () => {
-        await request(app).delete("/testing/all-data").expect(204)
-        //CREATING 10 POSTS
-        const createdBlog = await request(app).post("/blogs").set(auth, basic).send({
-            name : "blog name", //maxLength: 15
-            description : "blog description",// maxLength: 500
-            websiteUrl : "https://samurai.it-incubator.io/"
-        }).expect(201)
-        const blogId = createdBlog.body.id
-        console.log(blogId)
-        await request(app)
-            .post(`/blogs/${blogId}/posts`)
-            .set(auth, basic)
-            .send({
-                title:"length_20-DrmM8lHeNj",
-                content:"valid",
-                blogId : blogId
-            }).expect(400)
-
-    })
-    it("POST, GET -> \"/blogs/:blogId/posts\": should return error if :id from uri param not found; status 404;", async () => {
-        await request(app).delete("/testing/all-data").expect(204)
-
-        await request(app).post(`/blogs/63189b06003380064c4193be/posts`).set(auth, basic).expect(404)
-        await request(app).get(`/blogs/63189b06003380064c4193be/posts`).set(auth, basic).expect(404)
-
     })
 })

@@ -2,6 +2,7 @@ import {Router} from 'express'
 import {
     createPost,
     deletePostById,
+    getAllPosts,
     getPostById,
     PostValidationErrors,
     updatePost
@@ -12,10 +13,9 @@ import {
     PostShortDescriptionValidation,
     PostTitleValidation,
 } from "./postsValidator";
-import {getAllPosts} from "./postsDomain";
 
 export const postsRouter = Router({})
-export const postDataValidation = [PostTitleValidation, PostShortDescriptionValidation, PostContentValidation,  PostValidationErrors]
+const postDataValidation = [PostTitleValidation, PostShortDescriptionValidation, PostContentValidation, PostBlogIdValidation, PostValidationErrors]
 postsRouter.get("", getAllPosts)
 postsRouter.post("",basicAuthGuardMiddleware, postDataValidation,  createPost)
 postsRouter.get("/:id", getPostById)

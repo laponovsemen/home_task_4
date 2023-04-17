@@ -1,10 +1,4 @@
-import {
-    BlogViewModelType, getAllBlogsType, getAllPostsType,
-    PaginatorBlogViewModelType,
-    PostInputModelType,
-    PostInsertModelType,
-    PostViewModelType
-} from "../appTypes";
+import {PostInsertModelType, PostViewModelType} from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 
 import {client} from "../db";
@@ -12,12 +6,12 @@ import {mongoBlogSlicing, mongoPostSlicing} from "../common";
 import {blogsCollection} from "../blogs/blogsRepositoryMongoDB";
 import {ObjectId} from "mongodb";
 import {validationResult} from "express-validator";
-export const postsCollection = client.db("forum").collection<PostInsertModelType>("posts")
+
 export async function getPostById(req: Request, res: Response) {
-    const postId = req.params.id
-    if(postId) {
-        const result = await client.db("forum").collection<PostViewModelType>("posts").findOne({_id: new ObjectId(postId)})
-        if(result !== null) {
+    const blogId = req.params.id
+    if(blogId) {
+        const result = await client.db("forum").collection<PostViewModelType>("posts").findOne({_id: new ObjectId(blogId)})
+        if(result) {
             res.status(200).send(mongoPostSlicing(result))
         } else {
             res.sendStatus(404)
@@ -26,28 +20,10 @@ export async function getPostById(req: Request, res: Response) {
         res.sendStatus(404)
     }
 }
-export async function getAllPostsDB(PagCriteria : getAllPostsType) {
-    const totalCount = await postsCollection.find({}).count({})
-    const pageSize = PagCriteria.pageSize
-    const pagesCount = Math.ceil(totalCount / pageSize)
-    const page = PagCriteria.pageNumber
-    const sortBy2 = PagCriteria.sortBy
-    let sortDirection : number
-    if(PagCriteria.sortDirection === "desc"){
-        sortDirection = -1
-    } else {
-        sortDirection = 1
-    }
-    console.log(sortBy2)
-    const foundItems = await blogsCollection.find({}).sort({ sortBy2 : 1 }).skip((page - 1) * pageSize).limit(pageSize).toArray()  //{ projection: { name : 0}}
-    const SealedFoundItems: PaginatorBlogViewModelType = {
-        pagesCount: pagesCount,
-        page: page,
-        pageSize: pageSize,
-        totalCount: totalCount,
-        items: foundItems.map(item => mongoBlogSlicing(item))
-    }
-    return {status: 200, items: SealedFoundItems}
+export async function getAllPosts(req: Request, res: Response) {
+     const result = await client.db("forum").collection<PostViewModelType>("posts").find({}).toArray()
+     res.status(200).send(result.map(post => mongoPostSlicing(post)))
+
 }
 
 export async function deletePostById(req: Request, res: Response) {
@@ -61,19 +37,19 @@ export async function deletePostById(req: Request, res: Response) {
 }
 
 export async function createPost(req: Request, res: Response) {
-    const blog = await client.db("forum").collection<BlogViewModelType>("blogs").findOne({_id : new ObjectId(req.body.blogId)})
+    const blog = await client.db("forum").collection("blogs").findOne({_id : new ObjectId(req.body.blogId)})
     if(blog) {
         const newPost: PostInsertModelType = {
             title: req.body.title,
             shortDescription: req.body.shortDescription,
             content: req.body.content,
-            blogId: blog._id.toString(),
+            blogId: req.body.blogId,
             blogName: blog.name,
             createdAt: blog.createdAt,
 
         }
 
-        const insertedPost = await client.db("forum").collection<PostInsertModelType>("posts").insertOne(newPost)
+        const insertedPost = await client.db("forum").collection("posts").insertOne(newPost)
 
         res.status(201).send({
             id: insertedPost.insertedId,
@@ -90,7 +66,7 @@ export async function createPost(req: Request, res: Response) {
 }
 
 export async function updatePost(req: Request, res: Response) {
-    const postToUpdate = await client.db("forum").collection<PostViewModelType>("posts").findOne({_id: new ObjectId(req.params.id)})
+    const postToUpdate = await client.db("forum").collection("posts").findOne({_id: new ObjectId(req.params.id)})
     if (postToUpdate) {
         const updatedPost = {
             title: req.body.title,
@@ -101,7 +77,7 @@ export async function updatePost(req: Request, res: Response) {
             content : req.body.content,
         }
         await client.db("forum")
-            .collection<PostInsertModelType>("posts")
+            .collection("posts")
             .updateOne({_id: new ObjectId(req.params.id)},
                 {$set: {title : updatedPost.title,
                         shortDescription : updatedPost.shortDescription,
@@ -126,7 +102,7 @@ export const PostValidationErrors = async (req: Request, res: Response, next: Ne
         })
     }
 
-    const foundBlog = await client.db("forum").collection<BlogViewModelType>("blogs").findOne({_id : req.body.blogId})
+    const foundBlog = await client.db("forum").collection<PostViewModelType>("blogs").findOne({_id : new ObjectId(req.body.blogId)})
     if(foundBlog === null){
         result.errorsMessages.push({message: "No blogs with such id in database", field: "blogId"})
     }
@@ -134,52 +110,5 @@ export const PostValidationErrors = async (req: Request, res: Response, next: Ne
         res.status(400).send(result)
     } else {
         next()
-    }
-}
-
-export const PostForSpecificBlogValidationErrors = async (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req)
-    const result = {
-        errorsMessages: errors.array().map(error => {
-            return {message: error.msg, field: error.param}
-        })
-    }
-
-    const foundBlog = await client.db("forum").collection<BlogViewModelType>("blogs").findOne({_id : new ObjectId(req.params.id)})
-    if(foundBlog === null){
-        res.sendStatus(404)
-    } else if (!errors.isEmpty()) {
-        res.status(400).send(result)
-    } else {
-        next()
-    }
-}
-
-export async function createPostForSpecificBlogDB (newPostToCreate : PostInputModelType) {
-    const foundBlog = await blogsCollection.findOne({_id: new ObjectId(newPostToCreate.blogId)})
-    if (!foundBlog) {
-        return {status: 404, newlyCreatedPost: null}
-    } else {
-
-        const PostToCreate = {
-            title:	newPostToCreate.title,
-            shortDescription:	newPostToCreate.shortDescription,
-            content:	newPostToCreate.content,
-            blogId:	newPostToCreate.blogId,
-            blogName: foundBlog.name,
-            createdAt : new Date().toISOString()
-        }
-
-        const InsertedPost = await postsCollection.insertOne(PostToCreate)
-
-        return {status: 201, newlyCreatedPost: {
-                id: InsertedPost.insertedId,
-                title:	PostToCreate.title,
-                shortDescription:	PostToCreate.shortDescription,
-                content:	PostToCreate.content,
-                blogId:	PostToCreate.blogId,
-                blogName: PostToCreate.blogName,
-                createdAt : PostToCreate.createdAt
-            }}
     }
 }
