@@ -10,7 +10,7 @@ import {
     getAllPostsType, getAllBlogsType
 } from "../appTypes";
 import {NextFunction, Request, Response} from "express";
-import {createNewBlogId, mongoBlogSlicing} from "../common";
+import {createNewBlogId, mongoBlogSlicing, mongoPostSlicing} from "../common";
 import {client} from "../db";
 import {ObjectId} from "mongodb";
 import {postsCollection} from "../posts/postsRepositoryMongoDB";
@@ -141,7 +141,7 @@ export async function getAllPostsForSpecificBlogDB(PagCriteria : getAllPostsForS
             page: page,
             pageSize: pageSize,
             totalCount: totalCount,
-            items: foundItems
+            items: foundItems.map(item => mongoPostSlicing(item))
         }
         return {status: 200, items: SealedFoundItems}
     }

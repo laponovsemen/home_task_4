@@ -36,6 +36,15 @@ export type PostInputModelType = {
     blogId: string
 }
 export type PostViewModelType = {
+    id:	ObjectId,
+    title:	string,
+    shortDescription:	string,
+    content:	string,
+    blogId:	string,
+    blogName:	string,
+    createdAt : string
+}
+export type PostViewDBModelType = {
     _id:	ObjectId,
     title:	string,
     shortDescription:	string,

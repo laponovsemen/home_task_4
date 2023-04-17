@@ -16,14 +16,14 @@ describe("TESTING OF GETTING ALL BLOGS", () => {
         const result = await request(app)
             .get("/blogs")
             .expect(200)
-        expect(result.body).toEqual([])
+        expect(result.body).toEqual({"items": [], "page": 1, "pageSize": 10, "pagesCount": 0, "totalCount": 0})
     })
     it("should return all blogs //auth is incorrect", async () => {
         await request(app).delete("/testing/all-data")
         const result = await request(app)
             .get("/blogs")
             .expect(200)
-        expect(result.body).toEqual([])
+        expect(result.body).toEqual({"items": [], "page": 1, "pageSize": 10, "pagesCount": 0, "totalCount": 0})
     })
 
 
