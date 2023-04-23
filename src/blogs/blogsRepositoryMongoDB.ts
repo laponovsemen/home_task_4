@@ -6,10 +6,11 @@ import {ObjectId} from "mongodb";
 
 
 
-export let blogsCollection = client.db("forum").collection<BlogViewModelType>("blogs")
+export const blogsCollectionInsert = client.db("forum").collection<BlogInsertModelType>("blogs")
+export const blogsCollectionOutput = client.db("forum").collection<BlogViewModelType>("blogs")
 export async function getBlogById(req: Request, res: Response) {
      if(req.params.id) {
-        const mongoBlog = await blogsCollection
+        const mongoBlog = await blogsCollectionOutput
             .findOne({_id: new ObjectId(req.params.id)},
                 {projection : {id : 1, name: 1,description: 1, websiteUrl: 1, isMembership: 1, createdAt: 1}})
          if(mongoBlog){
@@ -24,7 +25,7 @@ export async function getBlogById(req: Request, res: Response) {
     }
 }
 export async function getAllBlogs(req: Request, res: Response) {
-    const result = await blogsCollection.find({}).toArray()  //{ projection: { name : 0}}
+    const result = await blogsCollectionOutput.find({}).toArray()  //{ projection: { name : 0}}
     res.status(200).send(result.map(blog => mongoBlogSlicing(blog)))
 }
 
@@ -53,7 +54,7 @@ export async function createBlog(req: Request, res: Response) {
         isMembership: false,
     }
 
-    const result = await client.db("forum").collection<BlogInsertModelType>("blogs").insertOne(newBlog)  // Need to check / bad decision
+    const result = await blogsCollectionInsert.insertOne(newBlog)  // Need to check / bad decision
 
     res.status(201).send({
         id: result.insertedId,
@@ -94,6 +95,15 @@ export async function updateBlog(req: Request, res: Response) {
         res.sendStatus(404)
     }
 
+}
+
+export async function CheckingForBlogExistance(blogId : string) : Promise<boolean> {
+    const foundBlog = await blogsCollectionOutput.findOne({_id : new ObjectId(blogId)})
+    if(foundBlog){
+        return true
+    } else {
+        return false
+    }
 }
 
 

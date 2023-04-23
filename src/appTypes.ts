@@ -54,3 +54,27 @@ export type PostInsertModelType = {
     blogName:	string,
     createdAt : string
 }
+
+export type PaginatorPostViewModelType = {
+    pagesCount	: number
+    page: number
+    pageSize: number
+    totalCount: number
+    items : PostViewModelType[]
+}
+export type PaginatorBlogViewModelType = {
+    pagesCount	: number
+    page: number
+    pageSize: number
+    totalCount: number
+    items : BlogViewModelType[]
+}
+
+export type PaginationCriteriaType = {
+    pageNumber : number,
+    pageSize : number,
+    sortBy : string,
+    sortDirection : "asc" | "desc"
+    blogId : string
+}
+
