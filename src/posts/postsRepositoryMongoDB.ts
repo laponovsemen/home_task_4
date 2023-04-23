@@ -1,10 +1,16 @@
-import {PostsPaginationCriteriaType, PaginatorPostViewModelType, PostInsertModelType, PostViewModelType} from "../appTypes";
+import {
+    PostsPaginationCriteriaType,
+    PaginatorPostViewModelType,
+    PostInsertModelType,
+    PostViewModelType,
+    PostInputModelType, BlogViewModelType
+} from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 
 import {client} from "../db";
 import {mongoBlogSlicing, mongoPostSlicing} from "../common";
 import {blogsCollectionOutput} from "../blogs/blogsRepositoryMongoDB";
-import {ObjectId, Sort} from "mongodb";
+import {ObjectId, Sort, WithId} from "mongodb";
 import {validationResult} from "express-validator";
 
 const postCollectionInsert = client.db("forum").collection<PostInsertModelType>("posts")
@@ -136,4 +142,25 @@ export const PostValidationErrors = async (req: Request, res: Response, next: Ne
     } else {
         next()
     }
+}
+
+export async function createPostForSpecificBlogDB (newPost : PostInputModelType) {
+    const title = 	newPost.title
+    const shortDescription = 	newPost.shortDescription
+    const content = 	newPost.content
+    const blogId = 	newPost.blogId
+    const blog = await blogsCollectionOutput.findOne({_id : new ObjectId(blogId)})
+    // @ts-ignore
+    const blogName = blog.name
+    const createdAt  = new Date().toISOString()
+
+    const createdPost = await postCollectionInsert.insertOne({
+        title : title,
+        shortDescription : shortDescription,
+        content : content,
+        blogId : blogId ,
+        blogName : blogName,
+        createdAt : createdAt
+    })
+    return createdPost
 }

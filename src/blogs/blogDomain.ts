@@ -1,6 +1,11 @@
 import {Request, Response} from "express";
-import {getAllPostsForSpecificBlogDB} from "../posts/postsRepositoryMongoDB";
-import {BlogsPaginationCriteriaType, PaginatorPostViewModelType, PostsPaginationCriteriaType} from "../appTypes";
+import {createPostForSpecificBlogDB, getAllPostsForSpecificBlogDB} from "../posts/postsRepositoryMongoDB";
+import {
+    BlogsPaginationCriteriaType,
+    PaginatorPostViewModelType,
+    PostInputModelType,
+    PostsPaginationCriteriaType
+} from "../appTypes";
 import {CheckingForBlogExistance, getAllBlogsDB} from "./blogsRepositoryMongoDB";
 export async function  getAllBlogs(req: Request, res : Response) {
     const searchNameTerm = req.query.searchNameTerm ? req.query.searchNameTerm.toString() : null
@@ -46,6 +51,20 @@ export async function getAllPostsForSpecificBlog(req: Request, res : Response) {
     }
 }
 
-export async function createPostForSpecificBlog() {
+export async function createPostForSpecificBlog(req: Request, res : Response) {
+    const blogId = req.params.id
+    const BlogExists : boolean = await CheckingForBlogExistance(blogId)
 
+    if(BlogExists) {
+        const postToCreate: PostInputModelType = {
+            title : 	req.body.title, //    maxLength: 30
+            shortDescription: req.body.shortDescription, //maxLength: 100
+            content: req.body.content, // maxLength: 1000
+            blogId: blogId
+        }
+        const newPost = await createPostForSpecificBlogDB(postToCreate)
+        res.status(201).send(newPost)
+    } else {
+        res.sendStatus(404)
+    }
 }
