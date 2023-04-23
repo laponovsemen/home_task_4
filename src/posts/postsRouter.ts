@@ -15,7 +15,7 @@ import {
 } from "./postsValidator";
 
 export const postsRouter = Router({})
-const postDataValidation = [PostTitleValidation, PostShortDescriptionValidation, PostContentValidation, PostBlogIdValidation, PostValidationErrors]
+export const postDataValidation = [PostTitleValidation, PostShortDescriptionValidation, PostContentValidation, PostBlogIdValidation, PostValidationErrors]
 postsRouter.get("", getAllPosts)
 postsRouter.post("",basicAuthGuardMiddleware, postDataValidation,  createPost)
 postsRouter.get("/:id", getPostById)
