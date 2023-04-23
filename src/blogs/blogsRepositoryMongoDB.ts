@@ -1,6 +1,12 @@
-import {BlogInsertModelType, PostInsertModelType, BlogViewModelType, PostViewModelType} from "../appTypes";
+import {
+    BlogInsertModelType,
+    PostInsertModelType,
+    BlogViewModelType,
+    PostViewModelType,
+    BlogsPaginationCriteriaType
+} from "../appTypes";
 import {NextFunction, Request, Response} from "express";
-import {createNewBlogId, mongoBlogSlicing} from "../common";
+import {createNewBlogId, mongoBlogSlicing, mongoPostSlicing} from "../common";
 import {client} from "../db";
 import {ObjectId} from "mongodb";
 
@@ -24,9 +30,34 @@ export async function getBlogById(req: Request, res: Response) {
         res.sendStatus(404)
     }
 }
-export async function getAllBlogs(req: Request, res: Response) {
-    const result = await blogsCollectionOutput.find({}).toArray()  //{ projection: { name : 0}}
-    res.status(200).send(result.map(blog => mongoBlogSlicing(blog)))
+export async function getAllBlogsDB(BlogsPagination : BlogsPaginationCriteriaType) {
+    const pageSize = BlogsPagination.pageSize
+    const totalCount = await blogsCollectionOutput.countDocuments({})
+    const pagesCount = Math.ceil(totalCount / pageSize)
+    const page = BlogsPagination.pageNumber
+    const sortBy = BlogsPagination.sortBy
+    const sortDirection : "asc" | "desc"  = BlogsPagination.sortDirection
+
+    const result = await blogsCollectionOutput
+        .find({name : { $regex : /BlogsPagination.searchNameTerm/}})
+        .sort({sortBy : sortDirection})
+        .skip(BlogsPagination.pageSize * (pagesCount - 1))
+        .limit(pageSize)
+        .toArray()
+    return {
+        pageSize : pageSize,
+        totalCount : totalCount,
+        pagesCount : pagesCount,
+        page : page,
+        items : result.map(item => mongoBlogSlicing(item))
+    }
+
+
+
+    //{ projection: { name : 0}}
+
+
+    return result
 }
 
 export async function deleteBlogById(req: Request, res: Response) {

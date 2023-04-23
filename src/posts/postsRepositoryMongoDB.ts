@@ -1,4 +1,4 @@
-import {PaginationCriteriaType, PaginatorPostViewModelType, PostInsertModelType, PostViewModelType} from "../appTypes";
+import {PostsPaginationCriteriaType, PaginatorPostViewModelType, PostInsertModelType, PostViewModelType} from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 
 import {client} from "../db";
@@ -28,7 +28,7 @@ export async function getAllPosts(req: Request, res: Response) {
 
 }
 
-export async function getAllPostsForSpecificBlogDB(PaginationCriteria : PaginationCriteriaType) {
+export async function getAllPostsForSpecificBlogDB(PaginationCriteria : PostsPaginationCriteriaType) {
     const pageSize = PaginationCriteria.pageSize
     const totalCount = await postCollectionOutput.countDocuments({})
     const pagesCount = Math.ceil(totalCount / pageSize)

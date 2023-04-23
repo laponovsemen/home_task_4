@@ -273,21 +273,22 @@ describe("TESTING OF CREATING POST FOR SPECIFIED BLOG", () => {
                     blogId: blogId
                 })
                 .expect(201)
+            setTimeout(() => {} , 30)
         }
 
         const allPostsForspecifiedBlog = await request(app).get(`/blogs/${blogId}/posts`)
         expect(allPostsForspecifiedBlog.body).toEqual({"items":
                 [
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String),"shortDescription": "string", "title": "string0"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string1"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string2"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string3"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string4"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string5"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string6"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string7"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string8"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string9"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)","shortDescription": "string", "title": "string0"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string1"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string2"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string3"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string4"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string5"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string6"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string7"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string8"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string9"},
 
                 ], "page": 1, "pageSize": 10, "pagesCount": 1, "totalCount": 10})
     }, 30000)

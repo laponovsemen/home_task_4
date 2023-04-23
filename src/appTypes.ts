@@ -69,8 +69,14 @@ export type PaginatorBlogViewModelType = {
     totalCount: number
     items : BlogViewModelType[]
 }
-
-export type PaginationCriteriaType = {
+export type BlogsPaginationCriteriaType = {
+    pageNumber : number,
+    pageSize : number,
+    sortBy : string,
+    sortDirection : "asc" | "desc"
+    searchNameTerm: string | null
+}
+export type PostsPaginationCriteriaType = {
     pageNumber : number,
     pageSize : number,
     sortBy : string,
