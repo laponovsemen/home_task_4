@@ -15,8 +15,8 @@ export async function  getAllBlogs(req: Request, res : Response) {
         sortDirection : sortDirection,
         searchNameTerm : searchNameTerm
     }
-    await getAllBlogsDB(PaginationCriteria)
-
+    const result = await getAllBlogsDB(PaginationCriteria)
+    res.send(result).status(200)
 
 }
 export async function getAllPostsForSpecificBlog(req: Request, res : Response) {
