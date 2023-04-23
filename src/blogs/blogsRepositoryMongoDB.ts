@@ -37,11 +37,11 @@ export async function getAllBlogsDB(BlogsPagination : BlogsPaginationCriteriaTyp
     const page = BlogsPagination.pageNumber
     const sortBy = BlogsPagination.sortBy
     const sortDirection : "asc" | "desc"  = BlogsPagination.sortDirection
-
+    const ToSkip = (BlogsPagination.pageSize * (pagesCount - 1)) > 0 ? BlogsPagination.pageSize * (pagesCount - 1) : 0
     const result = await blogsCollectionOutput
-        .find({name : { $regex : /BlogsPagination.searchNameTerm/}})
+        .find({})  //name : { $regex : /BlogsPagination.searchNameTerm/}
         .sort({sortBy : sortDirection})
-        .skip(BlogsPagination.pageSize * (pagesCount - 1))
+        .skip(ToSkip)
         .limit(pageSize)
         .toArray()
     return {
