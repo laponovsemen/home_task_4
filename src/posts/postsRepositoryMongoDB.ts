@@ -166,5 +166,13 @@ export async function createPostForSpecificBlogDB (newPost : PostInputModelType)
         blogName : blogName,
         createdAt : createdAt
     })
-    return createdPost
+    return {
+        id : createdPost.insertedId,
+        title : title,
+        shortDescription : shortDescription,
+        content : content,
+        blogId : blogId ,
+        blogName : blogName,
+        createdAt : createdAt
+    }
 }
