@@ -45,7 +45,7 @@ export async function getAllPostsDB(postsPagination : BlogsPaginationCriteriaTyp
 
     const result = await blogsCollectionOutput
         .find(filter)  //
-        .sort({sortBy : sortDirection})
+        .sort({[sortBy] : sortDirection})
         .skip(ToSkip)
         .limit(pageSize)
         .toArray()
