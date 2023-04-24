@@ -3,7 +3,7 @@ import {
     PaginatorPostViewModelType,
     PostInsertModelType,
     PostViewModelType,
-    PostInputModelType, BlogViewModelType
+    PostInputModelType, BlogViewModelType, BlogsPaginationCriteriaType
 } from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 
@@ -28,9 +28,34 @@ export async function getPostById(req: Request, res: Response) {
         res.sendStatus(404)
     }
 }
-export async function getAllPosts(req: Request, res: Response) {
-     const result = await postCollectionOutput.find({}).toArray()
-     res.status(200).send(result.map(post => mongoPostSlicing(post)))
+export async function getAllPostsDB(postsPagination : BlogsPaginationCriteriaType) {
+    const pageSize = postsPagination.pageSize
+    const totalCount = await blogsCollectionOutput.countDocuments({})
+    const pagesCount = Math.ceil(totalCount / pageSize)
+    const page = postsPagination.pageNumber
+    const sortBy = postsPagination.sortBy
+    const sortDirection : "asc" | "desc"  = postsPagination.sortDirection
+    const ToSkip = (postsPagination.pageSize * (postsPagination.pageNumber - 1))
+
+    const filter: {name?: any} = {}
+
+    if(postsPagination.searchNameTerm) {
+        filter.name = {$regex : new RegExp(postsPagination.searchNameTerm, 'i')}
+    }
+
+    const result = await blogsCollectionOutput
+        .find(filter)  //
+        .sort({sortBy : sortDirection})
+        .skip(ToSkip)
+        .limit(pageSize)
+        .toArray()
+    return {
+        pageSize : pageSize,
+        totalCount : totalCount,
+        pagesCount : pagesCount,
+        page : page,
+        items : result.map(item => mongoBlogSlicing(item))
+    }
 
 }
 
