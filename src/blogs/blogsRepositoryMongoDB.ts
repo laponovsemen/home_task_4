@@ -37,7 +37,7 @@ export async function getAllBlogsDB(blogsPagination : BlogsPaginationCriteriaTyp
     const page = blogsPagination.pageNumber
     const sortBy = blogsPagination.sortBy
     const sortDirection : "asc" | "desc"  = blogsPagination.sortDirection
-    const ToSkip = (blogsPagination.pageSize * (pagesCount - 1))
+    const ToSkip = (blogsPagination.pageSize * (blogsPagination.pageNumber - 1))
 
     const filter: {name?: any} = {}
 
