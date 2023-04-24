@@ -35,7 +35,7 @@ export async function getAllPostsDB(postsPagination : BlogsPaginationCriteriaTyp
         filter.name = {$regex : new RegExp(postsPagination.searchNameTerm, 'i')}
     }
     const pageSize = postsPagination.pageSize
-    const totalCount = await blogsCollectionOutput.countDocuments({filter})
+    const totalCount = await postCollectionOutput.countDocuments({filter})
     const pagesCount = Math.ceil(totalCount / pageSize)
     const page = postsPagination.pageNumber
     const sortBy = postsPagination.sortBy
@@ -44,7 +44,7 @@ export async function getAllPostsDB(postsPagination : BlogsPaginationCriteriaTyp
 
 
 
-    const result = await blogsCollectionOutput
+    const result = await postCollectionOutput
         .find(filter)  //
         .sort({[sortBy] : sortDirection})
         .skip(ToSkip)
@@ -55,7 +55,7 @@ export async function getAllPostsDB(postsPagination : BlogsPaginationCriteriaTyp
         totalCount : totalCount,
         pagesCount : pagesCount,
         page : page,
-        items : result.map(item => mongoBlogSlicing(item))
+        items : result.map(item => mongoPostSlicing(item))
     }
 
 }
