@@ -36,7 +36,7 @@ export async function getAllBlogsDB(blogsPagination : BlogsPaginationCriteriaTyp
         filter.name = {$regex : blogsPagination.searchNameTerm, $options: 'i' }
     }
     const pageSize = blogsPagination.pageSize
-    const totalCount = await blogsCollectionOutput.countDocuments({filter})
+    const totalCount = await blogsCollectionOutput.countDocuments(filter)
     const pagesCount = Math.ceil(totalCount / pageSize)
     const page = blogsPagination.pageNumber
     const sortBy = blogsPagination.sortBy
