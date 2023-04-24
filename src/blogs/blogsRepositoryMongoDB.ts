@@ -30,16 +30,23 @@ export async function getBlogById(req: Request, res: Response) {
         res.sendStatus(404)
     }
 }
-export async function getAllBlogsDB(BlogsPagination : BlogsPaginationCriteriaType) {
-    const pageSize = BlogsPagination.pageSize
+export async function getAllBlogsDB(blogsPagination : BlogsPaginationCriteriaType) {
+    const pageSize = blogsPagination.pageSize
     const totalCount = await blogsCollectionOutput.countDocuments({})
     const pagesCount = Math.ceil(totalCount / pageSize)
-    const page = BlogsPagination.pageNumber
-    const sortBy = BlogsPagination.sortBy
-    const sortDirection : "asc" | "desc"  = BlogsPagination.sortDirection
-    const ToSkip = (BlogsPagination.pageSize * (pagesCount - 1)) > 0 ? BlogsPagination.pageSize * (pagesCount - 1) : 0
+    const page = blogsPagination.pageNumber
+    const sortBy = blogsPagination.sortBy
+    const sortDirection : "asc" | "desc"  = blogsPagination.sortDirection
+    const ToSkip = (blogsPagination.pageSize * (pagesCount - 1)) > 0 ? blogsPagination.pageSize * (pagesCount - 1) : 0
+
+    const filter: {name?: any} = {}
+
+    if(blogsPagination.searchNameTerm) {
+        filter.name = {$regex : new RegExp(blogsPagination.searchNameTerm, 'i')}
+    }
+
     const result = await blogsCollectionOutput
-        .find({})  //name : { $regex : /BlogsPagination.searchNameTerm/}
+        .find(filter)  //
         .sort({sortBy : sortDirection})
         .skip(ToSkip)
         .limit(pageSize)

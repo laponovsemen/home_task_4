@@ -38,13 +38,17 @@ export async function getAllPostsForSpecificBlogDB(PaginationCriteria : PostsPag
     const pageSize = PaginationCriteria.pageSize
     const totalCount = await postCollectionOutput.countDocuments({})
     const pagesCount = Math.ceil(totalCount / pageSize)
-    const page = PaginationCriteria.pageNumber
+    const page = PaginationCriteria["pageNumber"]
     const sortBy = PaginationCriteria.sortBy
-    const sortDirection : "asc" | "desc"  = PaginationCriteria.sortDirection
+    const sortDirection : 1 | -1  = PaginationCriteria.sortDirection
+
+    const obj = {
+        ['created' + 'At'] : ''
+    }
 
     const foundItems = await postCollectionOutput
         .find({blogId : PaginationCriteria.blogId})
-        .sort({sortBy : sortDirection})
+        .sort({[sortBy] : sortDirection}) //{createdAt: 1}
         .skip(pageSize * (pagesCount - 1))
         .limit(pageSize)
         .toArray()
@@ -77,7 +81,7 @@ export async function createPost(req: Request, res: Response) {
             content: req.body.content,
             blogId: req.body.blogId,
             blogName: blog.name,
-            createdAt: blog.createdAt,
+            createdAt: new Date().toISOString(),
 
         }
 

@@ -3,7 +3,13 @@ import request from "supertest"
 import {app} from "../../src/settings";
 import {before} from "node:test";
 
-
+const delay = (milliseconds: number): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve()
+        }, milliseconds)
+    })
+}
 
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
@@ -273,24 +279,58 @@ describe("TESTING OF CREATING POST FOR SPECIFIED BLOG", () => {
                     blogId: blogId
                 })
                 .expect(201)
-            setTimeout(() => {} , 30)
+           await delay(30)
         }
 
-        const allPostsForspecifiedBlog = await request(app).get(`/blogs/${blogId}/posts`)
-        expect(allPostsForspecifiedBlog.body).toEqual({"items":
+        const allPostsForspecifiedBlogASC = await request(app).get(`/blogs/${blogId}/posts`).query({sortDirection: "asc"})
+        expect(allPostsForspecifiedBlogASC.body).toEqual({"items":
                 [
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)","shortDescription": "string", "title": "string0"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string1"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string2"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string3"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string4"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string5"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string6"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string7"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string8"},
-                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": "expect.any(String)", "shortDescription": "string", "title": "string9"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String),"shortDescription": "string", "title": "string0"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string1"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string2"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string3"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string4"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string5"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string6"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string7"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string8"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string9"},
+
+                ], "page": 1, "pageSize": 10, "pagesCount": 1, "totalCount": 10})
+
+        const allPostsForspecifiedBlogDESC = await request(app).get(`/blogs/${blogId}/posts`).query({sortDirection: "desc"})
+        expect(allPostsForspecifiedBlogDESC.body).toEqual({"items":
+                [
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String),"shortDescription": "string", "title": "string9"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string8"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string7"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string6"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string5"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string4"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string3"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string2"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string1"},
+                    {"id": expect.any(String), "blogId": blogId, "blogName": "name", "content": "string", "createdAt": expect.any(String), "shortDescription": "string", "title": "string0"},
 
                 ], "page": 1, "pageSize": 10, "pagesCount": 1, "totalCount": 10})
     }, 30000)
+})
 
+describe("TESTING OF CREATING POSTS FOR SPECIFIC BLOG", () => {
+    it("should return STATRUS CODE 201 and created  POST //Authorization field is correct", async () => {
+        request(app).delete("/testing/all-data").set(auth, basic)
+        const createdBlog = await request(app)
+            .post("/blogs")
+            .set(auth, basic)
+            .send({
+                name : "string", //maxLength: 15
+                description : "string",// maxLength: 500
+                websiteUrl : "https://samurai.it-incubator.io/pc" // maxLength: 100 pattern: ^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$
+            })
+
+        const createdPost = await request(app)
+            .post(`/blogs/${createdBlog.body.id}/posts`)
+            .set(auth, basic)
+            .send({"content":"new post content","shortDescription":"description","title":"post title"}).expect(201)
+    })
 })

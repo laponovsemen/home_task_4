@@ -80,7 +80,7 @@ export type PostsPaginationCriteriaType = {
     pageNumber : number,
     pageSize : number,
     sortBy : string,
-    sortDirection : "asc" | "desc"
+    sortDirection : 1 | -1
     blogId : string
 }
 
