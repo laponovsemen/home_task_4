@@ -31,19 +31,21 @@ export async function getBlogById(req: Request, res: Response) {
     }
 }
 export async function getAllBlogsDB(blogsPagination : BlogsPaginationCriteriaType) {
+    const filter: {name?: any} = {}
+    if(blogsPagination.searchNameTerm) {
+        filter.name = {$regex : new RegExp(blogsPagination.searchNameTerm, 'i')}
+    }
     const pageSize = blogsPagination.pageSize
-    const totalCount = await blogsCollectionOutput.countDocuments({})
+    const totalCount = await blogsCollectionOutput.countDocuments({filter})
     const pagesCount = Math.ceil(totalCount / pageSize)
     const page = blogsPagination.pageNumber
     const sortBy = blogsPagination.sortBy
     const sortDirection : "asc" | "desc"  = blogsPagination.sortDirection
     const ToSkip = (blogsPagination.pageSize * (blogsPagination.pageNumber - 1))
 
-    const filter: {name?: any} = {}
 
-    if(blogsPagination.searchNameTerm) {
-        filter.name = {$regex : new RegExp(blogsPagination.searchNameTerm, 'i')}
-    }
+
+
 
     const result = await blogsCollectionOutput
         .find(filter)  //
