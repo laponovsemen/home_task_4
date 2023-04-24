@@ -328,7 +328,7 @@ describe("TESTING OF CREATING POSTS FOR SPECIFIC BLOG", () => {
                 websiteUrl : "https://samurai.it-incubator.io/pc" // maxLength: 100 pattern: ^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$
             })
 
-        const createdPost = await request(app)
+        await request(app)
             .post(`/blogs/${createdBlog.body.id}/posts`)
             .set(auth, basic)
             .send({"content":"new post content","shortDescription":"description","title":"post title"}).expect(201)

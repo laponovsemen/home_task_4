@@ -8,6 +8,7 @@ import {
 import {basicAuthGuardMiddleware, ValidationErrors} from "../common";
 import {createPostForSpecificBlog, getAllBlogs, getAllPostsForSpecificBlog} from "./blogDomain";
 import {postDataValidation} from "../posts/postsRouter";
+import {PostContentValidation, PostShortDescriptionValidation, PostTitleValidation} from "../posts/postsValidator";
 
 export const blogsRouter = Router({})
 
@@ -16,7 +17,7 @@ const blogDataValidation = [BlogNameValidation, BlogDescriptionValidation, BlogW
 blogsRouter.get("", getAllBlogs)
 blogsRouter.post("", basicAuthGuardMiddleware, blogDataValidation, createBlog)
 blogsRouter.get("/:id/posts", getAllPostsForSpecificBlog)
-blogsRouter.post("/:id/posts", basicAuthGuardMiddleware, postDataValidation, createPostForSpecificBlog)
+blogsRouter.post("/:id/posts", basicAuthGuardMiddleware, PostTitleValidation, PostShortDescriptionValidation, PostContentValidation, ValidationErrors, createPostForSpecificBlog)
 
 blogsRouter.get("/:id", getBlogById)
 blogsRouter.put("/:id",basicAuthGuardMiddleware,blogDataValidation, updateBlog)
