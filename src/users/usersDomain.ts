@@ -10,6 +10,7 @@ import {getAllUsersDB} from "./usersRepositoryMongoDB";
 import {client} from "../db";
 import {randomUUID} from "crypto";
 import {ObjectId} from "mongodb";
+import {mongoUserSlicing} from "../common";
 
 export const usersCollectionInsert = client.db("forum").collection<userInputModel>("users")
 export const usersCollectionOutput = client.db("forum").collection<userViewModel>("users")
@@ -38,12 +39,19 @@ export async function createUser(req: Request, res:Response) {
     const login : string = req.body.login
     const email : string = req.body.email
     const password : string = req.body.password
+    const dateOfCreation = new Date().toISOString()
     const newCreatedUser = await usersCollectionInsert.insertOne({
         login : login,
         email : email,
-        password : password
+        password : password,
+        createdAt: dateOfCreation
     })
-    res.send(newCreatedUser).status(201)
+    res.status(201).send({
+        id : newCreatedUser.insertedId,
+        login : login,
+        email : email,
+        createdAt: dateOfCreation
+    })
 }
 
 export async function deleteUserById(req: Request, res:Response) {
