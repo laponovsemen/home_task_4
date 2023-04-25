@@ -15,7 +15,7 @@ describe("TESTING OF CREATING ALL BLOGS", () => {
                 email : "simsbury65@gmail.com"
             })
             .expect(201)
-        expect(result.body).toEqual({"createdAt": "2023-04-25T10:59:48.790Z", "email": "simsbury65@gmail.com", "id": "6447b2a43cd6a54629838532", "login": "login"})
+        expect(result.body).toEqual({"createdAt": expect.any(String), "email": "simsbury65@gmail.com", "id": expect.any(String), "login": "login"})
     })
 
 
