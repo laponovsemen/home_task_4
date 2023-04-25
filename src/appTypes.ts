@@ -112,5 +112,6 @@ export type userViewModel = {
 export type userInputModel = {
     login : string,
     email:	string,
+    password:	string,
 
 }

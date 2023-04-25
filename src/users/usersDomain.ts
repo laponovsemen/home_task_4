@@ -37,9 +37,11 @@ export async function getAllUsers(req: Request, res:Response) {
 export async function createUser(req: Request, res:Response) {
     const login : string = req.body.login
     const email : string = req.body.email
+    const password : string = req.body.password
     const newCreatedUser = await usersCollectionInsert.insertOne({
         login : login,
-        email : email
+        email : email,
+        password : password
     })
     res.send(newCreatedUser).status(201)
 }
