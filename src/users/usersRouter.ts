@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {createUser, getAllUsers} from "./usersDomain";
+import {createUser, deleteUserById, getAllUsers} from "./usersDomain";
 import {basicAuthGuardMiddleware, ValidationErrors} from "../common";
 import {UserEmailValidation, UserLoginValidation, UserPasswordValidation} from "./usersValidation";
 
