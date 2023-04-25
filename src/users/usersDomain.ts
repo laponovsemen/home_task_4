@@ -55,10 +55,7 @@ export async function createUser(req: Request, res:Response) {
 }
 
 export async function deleteUserById(req: Request, res:Response) {
-    const userId = req.params.id
-
-
-    const deletedUser = await usersCollectionOutput.deleteOne({id : new ObjectId(userId)})
+    const deletedUser = await usersCollectionOutput.deleteOne({_id : new ObjectId(req.params.id)})
     if(deletedUser.deletedCount === 1){
         res.sendStatus(204)
 

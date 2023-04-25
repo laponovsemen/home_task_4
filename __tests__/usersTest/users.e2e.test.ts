@@ -1,6 +1,7 @@
 // @ts-ignore
 import request from "supertest";
 import {app} from "../../src/settings";
+import exp = require("constants");
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
 describe("TESTING OF CREATING ALL BLOGS", () => {
@@ -38,6 +39,21 @@ describe("TESTING OF CREATING ALL BLOGS", () => {
 
     }, 30000)
 
-
+    it("should create user //auth is correct", async () => {
+        await request(app).delete("/testing/all-data").set(auth, basic)
+        const result = await request(app)
+            .post("/users")
+            .set(auth, basic)
+            .send({
+                login : "loginlogin",
+                password : "passwordword",
+                email : "simsbury65@gmail.com"
+            })
+            .expect(201)
+        const userId = result.body.id
+        request(app).delete(`/users/${userId}`).set(auth, basic).expect(204)
+        const allUsers = await request(app).get("/users").expect(200)
+        expect(allUsers.body.items).toEqual([])
+    })
 
 })
