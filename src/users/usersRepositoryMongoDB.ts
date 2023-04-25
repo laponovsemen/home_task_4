@@ -16,8 +16,9 @@ export async function getAllUsersDB(paginationCriteria : usersPaginationCriteria
     let searchParams = []
     if (searchEmailTerm) searchParams.push({email : {$regex : searchEmailTerm, $options : "i"}})
     if (searchLoginTerm) searchParams.push({login : {$regex : searchLoginTerm, $options : "i"}})
-    const filter: {$or : any[]}  = {$or : searchParams}
 
+    let filter: {$or? : any[]}  = {$or : searchParams}
+    if(searchParams.length === 0 ) filter = {}
     const totalCount = await usersCollectionOutput.countDocuments(filter)
     const ToSkip = (paginationCriteria.pageSize * (paginationCriteria.pageNumber - 1))
     const pagesCount = Math.ceil(totalCount / pageSize)
@@ -36,4 +37,8 @@ export async function getAllUsersDB(paginationCriteria : usersPaginationCriteria
         totalCount : totalCount,
         items : result.map(item => mongoUserSlicing(item))
     }
+}
+
+export async function deleteAllUsers() {
+    await usersCollectionOutput.deleteMany({})
 }
