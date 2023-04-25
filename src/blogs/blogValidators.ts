@@ -24,6 +24,7 @@ export const BlogDescriptionValidation = body("description")
     .withMessage("the length of description field is less than 1")
     .isLength({max : 500})
     .withMessage("the length of description field is more than 500 chars")
+
 export const BlogWebsiteUrlValidation = body("websiteUrl")
     .isString()
     .withMessage("the field websiteUrl is not a sting")

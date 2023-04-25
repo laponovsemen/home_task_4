@@ -84,3 +84,33 @@ export type PostsPaginationCriteriaType = {
     blogId : string
 }
 
+export type sortDirectionType  = 1 | -1
+export type usersPaginationCriteriaType = {
+    sortBy : string,
+    sortDirection : string,
+    pageNumber : number,
+    pageSize : number,
+    searchLoginTerm : string | null,
+    searchEmailTerm : string | null,
+}
+export type userViewModelPaginationType = {
+    pagesCount :number,
+    page :number,
+    pageSize :number,
+    totalCount	:number,
+    items : userViewModel[]
+}
+
+export type userViewModel = {
+    id:	string,
+    login : string,
+    email:	string,
+    createdAt:	string,
+
+}
+
+export type userInputModel = {
+    login : string,
+    email:	string,
+
+}
