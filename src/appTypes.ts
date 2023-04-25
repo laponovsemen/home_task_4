@@ -102,7 +102,7 @@ export type userViewModelPaginationType = {
 }
 
 export type userViewModel = {
-    id:	string,
+    _id:	string,
     login : string,
     email:	string,
     createdAt:	string,

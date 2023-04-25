@@ -1,4 +1,4 @@
-import {BlogInsertModelType, BlogViewModelType, PostViewModelType} from "./appTypes";
+import {BlogInsertModelType, BlogViewModelType, PostViewModelType, userViewModel} from "./appTypes";
 import {NextFunction, Request, Response} from "express";
 import {header, validationResult} from "express-validator";
 import {ObjectId} from "mongodb";
@@ -54,5 +54,14 @@ export const mongoPostSlicing = ( Obj2: PostViewModelType) =>  {
         blogId: Obj2.blogId,
         blogName:	Obj2.blogName,
         createdAt : Obj2.createdAt,
+    }
+}
+
+export const mongoUserSlicing = ( Obj2: userViewModel) =>  {
+    return {
+        id : Obj2._id,
+        login : Obj2.login,
+        email:	Obj2.email,
+        createdAt:	Obj2.createdAt,
     }
 }

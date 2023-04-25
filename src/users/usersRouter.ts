@@ -6,5 +6,5 @@ import {UserEmailValidation, UserLoginValidation, UserPasswordValidation} from "
 export const usersRouter = Router({})
 
 usersRouter.get("", getAllUsers)
-usersRouter.post("", basicAuthGuardMiddleware, UserLoginValidation,UserEmailValidation, ValidationErrors, createUser)
+usersRouter.post("", basicAuthGuardMiddleware, UserLoginValidation, UserEmailValidation, UserPasswordValidation, ValidationErrors, createUser)
 usersRouter.delete("/:id", basicAuthGuardMiddleware, deleteUserById)

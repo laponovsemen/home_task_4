@@ -11,8 +11,8 @@ import {client} from "../db";
 import {randomUUID} from "crypto";
 import {ObjectId} from "mongodb";
 
-const usersCollectionInsert = client.db("forum").collection<userInputModel>("users")
-const usersCollectionOutput = client.db("forum").collection<userViewModel>("users")
+export const usersCollectionInsert = client.db("forum").collection<userInputModel>("users")
+export const usersCollectionOutput = client.db("forum").collection<userViewModel>("users")
 
 export async function getAllUsers(req: Request, res:Response) {
     const sortBy : string = req.query.sortBy ? req.query.sortBy.toString() : "createdAt"
@@ -30,6 +30,7 @@ export async function getAllUsers(req: Request, res:Response) {
         searchEmailTerm : searchEmailTerm,
     }
     const result = await getAllUsersDB(usersPaginationCriteria)
+    res.send(result).status(200)
 
 }
 
@@ -46,9 +47,11 @@ export async function createUser(req: Request, res:Response) {
 export async function deleteUserById(req: Request, res:Response) {
     const userId = req.params.id
 
-    const deletedUser = await usersCollectionOutput.deleteOne({_id : new ObjectId(userId)})
+
+    const deletedUser = await usersCollectionOutput.deleteOne({id : new ObjectId(userId)})
     if(deletedUser.deletedCount === 1){
         res.sendStatus(204)
+
     } else {
         res.sendStatus(404)
     }
