@@ -116,3 +116,9 @@ export type userInputModel = {
     createdAt : string
 
 }
+
+export type LoginInputModel = {
+    loginOrEmail:	string,
+    password: string,
+
+}

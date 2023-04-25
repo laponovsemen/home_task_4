@@ -51,7 +51,7 @@ describe("TESTING OF CREATING ALL BLOGS", () => {
             })
             .expect(201)
         const userId = result.body.id
-        request(app).delete(`/users/${userId}`).set(auth, basic).expect(204)
+        const deletedUser = await request(app).delete(`/users/${userId}`).set(auth, basic).expect(204)
         const allUsers = await request(app).get("/users").expect(200)
         expect(allUsers.body.items).toEqual([])
     })
