@@ -38,7 +38,6 @@ describe("TESTING OF CREATING ALL BLOGS", () => {
         expect(result.body).toEqual({})
 
     }, 30000)
-
     it("should create user //auth is correct", async () => {
         await request(app).delete("/testing/all-data").set(auth, basic)
         const result = await request(app)

@@ -10,9 +10,9 @@ export async function Login(req: Request, res : Response) {
     const result = await LoginDB(loginOrEmail, password)
     if(result){
         try {
-            const JWT = jwtService.createJWT(result)
+            const JWT = await jwtService.createJWT(result)
             res.status(200).send({
-                "accessToken": JWT
+                accessToken: JWT
             })
         }catch(e){
             console.log(e)
