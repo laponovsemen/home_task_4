@@ -29,6 +29,11 @@ export async function giveUserInformation(req: Request, res : Response) {
     if(header !== undefined) {
         const userId = await jwtService.getUserIdByToken(req.header("Authorization"))
         const userInfo = await usersCollectionOutput.findOne({_id : new ObjectId(userId)})
+        res.status(200).send({
+            "email": userInfo?.email,
+            "login": userInfo?.login,
+            "userId": userId
+        })
     } else {
         res.sendStatus(401)
     }
