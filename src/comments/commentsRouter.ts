@@ -3,11 +3,12 @@ import {basicAuthGuardMiddleware, JSONWebTokenMiddleware, ValidationErrors} from
 import {getAllBlogs} from "../blogs/blogDomain";
 import {createBlog} from "../blogs/blogsRepositoryMongoDB";
 import {deleteCommentById, getCommentById, updateCommentById} from "./commentsDomain";
+import {commentContentValidation} from "./commentsValidation";
 
 export const commentsRouter = Router({})
 
 
 
-commentsRouter.put("",JSONWebTokenMiddleware,  updateCommentById)
+commentsRouter.put("",JSONWebTokenMiddleware, commentContentValidation, ValidationErrors, updateCommentById)
 commentsRouter.delete("", JSONWebTokenMiddleware,  deleteCommentById)
 commentsRouter.get("", JSONWebTokenMiddleware, getCommentById)

@@ -128,6 +128,13 @@ export type commentInsertModel = {
     createdAt:	string,
     postId : string,
 }
+export type commentOutputModel = {
+    _id:	ObjectId,
+    content: string,
+    commentatorInfo: commentatorInfoType,
+    createdAt:	string,
+    postId : string,
+}
 export type commentViewModel = {
     id:	string,
     content: string,

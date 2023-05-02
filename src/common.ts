@@ -1,4 +1,10 @@
-import {BlogInsertModelType, BlogViewModelType, PostViewModelType, userViewModel} from "./appTypes";
+import {
+    BlogInsertModelType,
+    BlogViewModelType,
+    commentatorInfoType, commentOutputModel, commentViewModel,
+    PostViewModelType,
+    userViewModel
+} from "./appTypes";
 import {NextFunction, Request, Response} from "express";
 import {header, validationResult} from "express-validator";
 import {ObjectId} from "mongodb";
@@ -67,6 +73,16 @@ export const mongoUserSlicing = ( Obj2: userViewModel) =>  {
         createdAt:	Obj2.createdAt,
     }
 }
+export const mongoCommentSlicing = ( Obj2: commentOutputModel) =>  {
+    return {
+        id : Obj2._id,
+        content: Obj2.content,
+        commentatorInfo: Obj2.commentatorInfo,
+        createdAt:	Obj2.createdAt,
+    }
+}
+
+
 
 export const JSONWebTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {

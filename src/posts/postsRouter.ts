@@ -19,7 +19,7 @@ import {createCommentForSpecifiedPost, getAllCommentsForSpecifiedPost} from "../
 export const postsRouter = Router({})
 export const postDataValidation = [PostTitleValidation, PostShortDescriptionValidation, PostContentValidation, PostBlogIdValidation, PostValidationErrors]
 postsRouter.get("/:id/comments", getAllCommentsForSpecifiedPost)
-postsRouter.post("/:id/comments",PostExistanceMiddleware, commentContentValidation, ValidationErrors, createCommentForSpecifiedPost)
+postsRouter.post("/:id/comments",JSONWebTokenMiddleware,PostExistanceMiddleware, commentContentValidation, ValidationErrors, createCommentForSpecifiedPost)
 postsRouter.get("", getAllPosts)
 postsRouter.post("",basicAuthGuardMiddleware, postDataValidation,  createPost)
 postsRouter.get("/:id", getPostById)
