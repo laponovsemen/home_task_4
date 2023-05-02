@@ -36,6 +36,18 @@ describe("TESTING OF CREATING ALL BLOGS", () => {
             .get("/users")
             .expect(200)
         expect(result.body).toEqual({
+            items: [
+                {"createdAt": expect.any(String), email: "simsbury65@gmail.com",id: expect.any(String),login: "login9",},
+                {"createdAt": expect.any(String), email: "simsbury65@gmail.com",id: expect.any(String),login: "login8",},
+                {"createdAt": expect.any(String), email: "simsbury65@gmail.com",id: expect.any(String),login: "login7",},
+                {"createdAt": expect.any(String), email: "simsbury65@gmail.com",id: expect.any(String),login: "login6",},
+                {"createdAt": expect.any(String), email: "simsbury65@gmail.com",id: expect.any(String),login: "login5",},
+                {"createdAt": expect.any(String), email: "simsbury65@gmail.com",id: expect.any(String),login: "login4",},
+                {"createdAt": expect.any(String), email: "simsbury65@gmail.com",id: expect.any(String),login: "login3",},
+                {"createdAt": expect.any(String), email: "simsbury65@gmail.com",id: expect.any(String),login: "login2",},
+                {"createdAt": expect.any(String), email: "simsbury65@gmail.com",id: expect.any(String),login: "login1",},
+                {"createdAt": expect.any(String), email: "simsbury65@gmail.com",id: expect.any(String),login: "login0"}
+            ],
             "page": 1,
             "pageSize": 10,
             "pagesCount": 1,

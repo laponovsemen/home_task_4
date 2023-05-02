@@ -87,6 +87,7 @@ export const mongoCommentSlicing = ( Obj2: commentOutputModel) =>  {
 export const JSONWebTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
         res.sendStatus(401)
+        console.log("no header field")
         return
     }
 
@@ -97,10 +98,13 @@ export const JSONWebTokenMiddleware = async (req: Request, res: Response, next: 
         if(foundUser) {
             req.body.user = mongoUserSlicing(foundUser)
             next()
+            return
         }else {
+            console.log("no user found")
             res.sendStatus(401)
         }
     }
+    console.log("last error ")
     res.sendStatus(401)
 
 }
