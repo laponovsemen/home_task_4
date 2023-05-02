@@ -16,7 +16,12 @@ export const jwtService = {
     },
     async getUserIdByToken(token: string | undefined) {
         // @ts-ignore
-        const result : any = jwt.verify(token, secretKey)
-        return new ObjectId(result.userId)
+        try {
+            // @ts-ignore
+            const result: any = jwt.verify(token, secretKey)
+            return new ObjectId(result.userId)
+        }catch(e){
+            return null
+        }
     }
 }
