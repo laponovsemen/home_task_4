@@ -61,10 +61,11 @@ export async function  createCommentForSpecifiedPost(req: Request, res : Respons
     }
     const createdAt = new Date().toISOString()
 
-    const newComment:commentInsertModel  =  {
+    const newComment  =  {
         content: content,
         commentatorInfo: commentatorInfo,
-        createdAt: createdAt
+        createdAt: createdAt,
+        postId : req.params.id
     }
     const insertedComment = await commentsCollectionInsert.insertOne(newComment)
     res.status(201).send({
