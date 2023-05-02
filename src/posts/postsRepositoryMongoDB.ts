@@ -194,3 +194,8 @@ export async function createPostForSpecificBlogDB (newPost : PostInputModelType)
         createdAt : createdAt
     }
 }
+
+export async function findPostById(postId : string){
+    const postExistance = await postCollectionOutput.findOne({_id : new ObjectId(postId)})
+    return !!postExistance
+}

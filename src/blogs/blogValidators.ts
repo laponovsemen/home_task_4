@@ -1,4 +1,4 @@
-import {body, validationResult} from "express-validator";
+import {body} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 import {ValidationErrors} from "../common";
 

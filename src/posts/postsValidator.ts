@@ -1,6 +1,7 @@
 import {body, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 import {ValidationErrors} from "../common";
+import {findPostById} from "./postsRepositoryMongoDB";
 
 const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
 
@@ -39,7 +40,15 @@ export const PostBlogIdValidation = body("blogId")
     .isLength({min : 1})
     .withMessage("the blogId field is empty")
 
-
+export const PostExistanceMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const postId = req.params.id
+    const foundPost = await findPostById(postId)
+    if(!foundPost){
+        res.sendStatus(404)
+    } else {
+        next()
+    }
+}
 
 
 

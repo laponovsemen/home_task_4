@@ -5,6 +5,7 @@ import {startRouter} from "./start/startRouter";
 import {testingRouter} from "./testing/testingRouter";
 import {usersRouter} from "./users/usersRouter";
 import {authRouter} from "./auth/authRouter";
+import {commentsRouter} from "./comments/commentsRouter";
 
 export const app = express()
 
@@ -15,4 +16,5 @@ app.use("/auth", authRouter)
 app.use("/posts", postsRouter)
 app.use("/blogs", blogsRouter)
 app.use("/users", usersRouter)
+app.use("/comments", commentsRouter)
 app.use("/testing/all-data", testingRouter)

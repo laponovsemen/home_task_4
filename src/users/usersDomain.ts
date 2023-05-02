@@ -6,7 +6,7 @@ import {
     usersPaginationCriteriaType,
     userViewModel
 } from "../appTypes";
-import {getAllUsersDB} from "./usersRepositoryMongoDB";
+import {findUserByIdDB, getAllUsersDB} from "./usersRepositoryMongoDB";
 import {client} from "../db";
 import {randomUUID} from "crypto";
 import {ObjectId} from "mongodb";
@@ -63,4 +63,13 @@ export async function deleteUserById(req: Request, res:Response) {
         res.sendStatus(404)
     }
 
+}
+
+export async function findUserById(req: Request, res:Response) {
+    const user = await findUserByIdDB(req.params.id)
+    if(user) {
+        return mongoUserSlicing(user)
+    } else {
+        return false
+    }
 }

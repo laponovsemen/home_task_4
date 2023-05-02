@@ -2,6 +2,9 @@ import {BlogInsertModelType, BlogViewModelType, PostViewModelType, userViewModel
 import {NextFunction, Request, Response} from "express";
 import {header, validationResult} from "express-validator";
 import {ObjectId} from "mongodb";
+import {jwtService} from "./jwtDomain";
+import {findUserById} from "./users/usersDomain";
+import {findUserByIdDB} from "./users/usersRepositoryMongoDB";
 
 export function createNewBlogId(array : BlogViewModelType[]) {
     return (array.length + 1).toString()
@@ -24,7 +27,6 @@ export const basicAuthGuardMiddleware  = (req : Request, res: Response, next : N
 
 export const ValidationErrors = (req: Request, res : Response, next : NextFunction) => {
     const errors = validationResult(req)
-    //console.log(errors, 'errors in middleware')
     if(!errors.isEmpty()){
         res.status(400).send({errorsMessages : errors.array().map(error  => {return {message: error.msg, field: error.param}})})
     } else {
@@ -64,4 +66,25 @@ export const mongoUserSlicing = ( Obj2: userViewModel) =>  {
         email:	Obj2.email,
         createdAt:	Obj2.createdAt,
     }
+}
+
+export const JSONWebTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.headers.authorization) {
+        res.sendStatus(401)
+        return
+    }
+
+    const token = req.headers.authorization.split(" ")[1]
+    const userId = await jwtService.getUserIdByToken(token)
+    if (userId) {
+        const foundUser = await findUserByIdDB(userId.toString())
+        if(foundUser) {
+            req.body.user = mongoUserSlicing(foundUser)
+            next()
+        }else {
+            res.sendStatus(401)
+        }
+    }
+    res.sendStatus(401)
+
 }

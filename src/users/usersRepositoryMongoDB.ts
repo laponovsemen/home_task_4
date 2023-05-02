@@ -2,6 +2,7 @@ import {usersPaginationCriteriaType} from "../appTypes";
 import {usersCollectionOutput} from "./usersDomain";
 import {blogsCollectionOutput} from "../blogs/blogsRepositoryMongoDB";
 import {mongoBlogSlicing, mongoUserSlicing} from "../common";
+import {ObjectId} from "mongodb";
 
 
 export async function getAllUsersDB(paginationCriteria : usersPaginationCriteriaType) {
@@ -41,4 +42,8 @@ export async function getAllUsersDB(paginationCriteria : usersPaginationCriteria
 
 export async function deleteAllUsers() {
     await usersCollectionOutput.deleteMany({})
+}
+
+export async function findUserByIdDB(userId : string){
+    return await usersCollectionOutput.findOne({_id : new ObjectId(userId)})
 }

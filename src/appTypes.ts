@@ -83,7 +83,6 @@ export type PostsPaginationCriteriaType = {
     sortDirection : 1 | -1
     blogId : string
 }
-
 export type sortDirectionType  = 1 | -1
 export type usersPaginationCriteriaType = {
     sortBy : string,
@@ -100,7 +99,6 @@ export type userViewModelPaginationType = {
     totalCount	:number,
     items : userViewModel[]
 }
-
 export type userViewModel = {
     _id:	ObjectId,
     login : string,
@@ -108,7 +106,6 @@ export type userViewModel = {
     createdAt:	string,
 
 }
-
 export type userInputModel = {
     login : string,
     email:	string,
@@ -116,9 +113,33 @@ export type userInputModel = {
     createdAt : string
 
 }
-
 export type LoginInputModel = {
     loginOrEmail:	string,
     password: string,
 
+}
+
+export type commentInputModel = {
+    content : string //string maxLength: 300 minLength: 20
+}
+export type commentInsertModel = {
+    content: string,
+    commentatorInfo: commentatorInfoType,
+    createdAt:	string,
+}
+export type commentViewModel = {
+    id:	string,
+    content: string,
+    commentatorInfo: commentatorInfoType,
+    createdAt:	string,
+}
+export type commentatorInfoType = {
+    userId: string,
+    userLogin:	string,
+}
+
+export type meViewModel = {
+    email:	string,
+    login:	string,
+    userId:	string,
 }
