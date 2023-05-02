@@ -35,7 +35,12 @@ describe("TESTING OF CREATING ALL BLOGS", () => {
         const result = await request(app)
             .get("/users")
             .expect(200)
-        expect(result.body).toEqual({})
+        expect(result.body).toEqual({
+            "page": 1,
+            "pageSize": 10,
+            "pagesCount": 1,
+            "totalCount": 10,
+    })
 
     }, 30000)
     it("should create user //auth is correct", async () => {

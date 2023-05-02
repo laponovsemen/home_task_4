@@ -25,10 +25,10 @@ export async function Login(req: Request, res : Response) {
 
 
 export async function giveUserInformation(req: Request, res : Response) {
-    const header = req.header("Authorization")
-    if(header !== undefined) {
-        const userId = await jwtService.getUserIdByToken(req.header("Authorization"))
-        const userInfo = await usersCollectionOutput.findOne({_id : new ObjectId(userId)})
+    const auth = req.headers.authorization
+    if(auth !== undefined) {
+        const userId = await jwtService.getUserIdByToken(auth)
+        const userInfo = await usersCollectionOutput.findOne({_id : new ObjectId(userId!)})
         res.status(200).send({
             "email": userInfo?.email,
             "login": userInfo?.login,
