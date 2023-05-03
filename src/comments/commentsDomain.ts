@@ -44,8 +44,11 @@ export async function  deleteCommentById(req: Request, res : Response) {
     if(foundComment){
         if(foundComment.commentatorInfo.userId.toString() !== req.body.user.id.toString()){
             res.sendStatus(403)
+        }else {
+            await commentsCollectionOutput.deleteOne({_id: new ObjectId(commentId)})
+            res.sendStatus(204)
         }
-        res.status(204).send(mongoCommentSlicing(foundComment))
+
     } else {
         res.sendStatus(404)
     }
