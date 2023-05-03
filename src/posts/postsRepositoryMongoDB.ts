@@ -3,15 +3,16 @@ import {
     PaginatorPostViewModelType,
     PostInsertModelType,
     PostViewModelType,
-    PostInputModelType, BlogViewModelType, BlogsPaginationCriteriaType
+    PostInputModelType, BlogViewModelType, BlogsPaginationCriteriaType, CommentsPaginationCriteriaType
 } from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 
 import {client} from "../db";
-import {mongoBlogSlicing, mongoPostSlicing} from "../common";
+import {mongoBlogSlicing, mongoCommentSlicing, mongoPostSlicing} from "../common";
 import {blogsCollectionOutput} from "../blogs/blogsRepositoryMongoDB";
 import {ObjectId, Sort, WithId} from "mongodb";
 import {validationResult} from "express-validator";
+import {commentsCollectionOutput} from "../comments/commentsDomain";
 
 const postCollectionInsert = client.db("forum").collection<PostInsertModelType>("posts")
 const postCollectionOutput = client.db("forum").collection<PostViewModelType>("posts")
@@ -52,6 +53,33 @@ export async function getAllPostsDB(postsPagination : BlogsPaginationCriteriaTyp
         pagesCount : pagesCount,
         page : page,
         items : result.map(item => mongoPostSlicing(item))
+    }
+
+}
+export async function getAllCommentsForSpecifiedPostDB(postsPagination : CommentsPaginationCriteriaType) {
+    const postId = postsPagination.postId
+    const pageSize = postsPagination.pageSize
+    const totalCount = await postCollectionOutput.countDocuments({})
+    const pagesCount = Math.ceil(totalCount / pageSize)
+    const page = postsPagination.pageNumber
+    const sortBy = postsPagination.sortBy
+    const sortDirection : "asc" | "desc"  = postsPagination.sortDirection
+    const ToSkip = (postsPagination.pageSize * (postsPagination.pageNumber - 1))
+
+
+
+    const result = await commentsCollectionOutput
+        .find({postId : new ObjectId(postId)})  //
+        .sort({[sortBy] : sortDirection})
+        .skip(ToSkip)
+        .limit(pageSize)
+        .toArray()
+    return {
+        pageSize : pageSize,
+        totalCount : totalCount,
+        pagesCount : pagesCount,
+        page : page,
+        items : result.map(item => mongoCommentSlicing(item))
     }
 
 }

@@ -1,11 +1,18 @@
 import {Request, Response} from "express";
 import {client} from "../db";
-import {commentatorInfoType, commentInsertModel, commentOutputModel, commentViewModel} from "../appTypes";
+import {
+    BlogsPaginationCriteriaType,
+    commentatorInfoType,
+    commentInsertModel,
+    commentOutputModel, CommentsPaginationCriteriaType,
+    commentViewModel, PaginatorPostViewModelType, PostsPaginationCriteriaType
+} from "../appTypes";
 import {ObjectId} from "mongodb";
 import {mongoCommentSlicing, mongoUserSlicing} from "../common";
+import {getAllCommentsForSpecifiedPostDB, getAllPostsDB} from "../posts/postsRepositoryMongoDB";
 
-const commentsCollectionInsert = client.db("forum").collection<commentInsertModel>("comments")
-const commentsCollectionOutput = client.db("forum").collection<commentOutputModel>("comments")
+export const commentsCollectionInsert = client.db("forum").collection<commentInsertModel>("comments")
+export const commentsCollectionOutput = client.db("forum").collection<commentOutputModel>("comments")
 export async function  updateCommentById(req: Request, res : Response) {
     const commentId = req.params.id
     const foundComment = await commentsCollectionOutput.findOne({_id: new ObjectId(commentId)})
@@ -76,5 +83,18 @@ export async function  createCommentForSpecifiedPost(req: Request, res : Respons
     })
 }
 export async function  getAllCommentsForSpecifiedPost(req: Request, res : Response) {
-
+    const postId = req.params.id
+    const pageNumber : number = req.query.pageNumber ? parseInt(req.query.pageNumber.toString(), 10) : 1
+    const pageSize : number = req.query.pageSize ? parseInt(req.query.pageSize.toString(), 10) : 10
+    const sortBy : string = req.query.sortBy ? req.query.sortBy.toString() : "createdAt"
+    const sortDirection : "asc" |  "desc" = req.query.sortDirection === "asc" ? "asc" :  "desc"
+    const PaginationCriteria : CommentsPaginationCriteriaType = {
+        pageNumber : pageNumber,
+        pageSize : pageSize,
+        sortBy : sortBy,
+        sortDirection : sortDirection,
+        postId: postId,
+    }
+    const result = await getAllCommentsForSpecifiedPostDB(PaginationCriteria)
+    res.send(result).status(200)
 }

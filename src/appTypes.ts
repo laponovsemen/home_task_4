@@ -83,6 +83,13 @@ export type PostsPaginationCriteriaType = {
     sortDirection : 1 | -1
     blogId : string
 }
+export type CommentsPaginationCriteriaType = {
+    pageNumber : number,
+    pageSize : number,
+    sortBy : string,
+    sortDirection : "asc" | "desc"
+    postId : string
+}
 export type sortDirectionType  = 1 | -1
 export type usersPaginationCriteriaType = {
     sortBy : string,
@@ -126,14 +133,14 @@ export type commentInsertModel = {
     content: string,
     commentatorInfo: commentatorInfoType,
     createdAt:	string,
-    postId : string,
+    postId : ObjectId,
 }
 export type commentOutputModel = {
     _id:	ObjectId,
     content: string,
     commentatorInfo: commentatorInfoType,
     createdAt:	string,
-    postId : string,
+    postId : ObjectId,
 }
 export type commentViewModel = {
     id:	string,
