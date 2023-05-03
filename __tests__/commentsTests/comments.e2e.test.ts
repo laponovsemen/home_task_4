@@ -90,14 +90,22 @@ describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
                 content: "stringstringstringst"
             }).expect(404)
 
+        await request(app)
+            .delete(`/comments/${wrongId}`)
+            .set(auth, JWTAuth)
+            .expect(404)
 
-    }, 30000)
+        const tryOfUpdatingComment = await request(app)
+            .put(`/comments/${wrongId}`)
+            .set(auth, JWTAuth)
+            .send({content : "length25 - kkkkkkkkkkkkkkk"})
+            .expect(404)
+        //expect(tryOfUpdatingComment.body).toEqual("")
+    }, 60000)
+
+    /*it("should create delete and update comments //auth is correct", async () => {
 
 
 
-    it("should create delete and update comments //auth is correct", async () => {
-
-
-
-    })
+    })*/
 })

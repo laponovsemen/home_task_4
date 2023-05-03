@@ -35,7 +35,7 @@ export async function  updateCommentById(req: Request, res : Response) {
         }
 
     } else {
-
+        res.sendStatus(404)
     }
 }
 
