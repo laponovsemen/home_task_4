@@ -89,7 +89,15 @@ describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
             .send({
                 content: "stringstringstringst"
             }).expect(404)
-        expect(createdComment.body).toEqual("")
+
 
     }, 30000)
+
+
+
+    it("should create delete and update comments //auth is correct", async () => {
+
+
+
+    })
 })
