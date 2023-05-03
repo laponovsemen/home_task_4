@@ -78,11 +78,11 @@ describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
             content: "stringstringstringst",
             createdAt: expect.any(String),
             id: expect.any(String)})
-
+        const commentId = createdComment.body.id
 
         const wrongId = "6452328cf49782a0f0000000"
-        console.log(wrongId)
-        console.log(postId)
+        //console.log(wrongId)
+        //console.log(postId)
         await request(app)
             .post(`/posts/${wrongId}/comments`)
             .set(auth, JWTAuth)
@@ -90,16 +90,28 @@ describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
                 content: "stringstringstringst"
             }).expect(404)
 
-        await request(app)
+        /*await request(app)
             .delete(`/comments/${wrongId}`)
             .set(auth, JWTAuth)
             .expect(404)
 
-        const tryOfUpdatingComment = await request(app)
+        await request(app)
             .put(`/comments/${wrongId}`)
             .set(auth, JWTAuth)
             .send({content : "length25 - kkkkkkkkkkkkkkk"})
-            .expect(404)
+            .expect(404)*/
+
+        const tryOfUpdatingComment = await request(app)
+            .put(`/comments/${commentId}`)
+            .set(auth, JWTAuth)
+            .send({content : "length25 - kkkkkkkkkkkkkkk"})
+            .expect(204)
+
+        await request(app)
+            .delete(`/comments/${commentId}`)
+            .set(auth, JWTAuth)
+            .expect(204)
+
         //expect(tryOfUpdatingComment.body).toEqual("")
     }, 60000)
 

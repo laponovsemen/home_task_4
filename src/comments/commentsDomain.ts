@@ -18,6 +18,7 @@ export async function  updateCommentById(req: Request, res : Response) {
     const foundComment = await commentsCollectionOutput.findOne({_id: new ObjectId(commentId)})
     if(foundComment){
         if(foundComment.commentatorInfo.userId.toString() !== req.body.user.id.toString()){
+            console.log("comments user id is not the same as in JWT")
             res.sendStatus(403)
             return
         }
@@ -29,12 +30,17 @@ export async function  updateCommentById(req: Request, res : Response) {
                         postId : foundComment.postId,
             }})
         if(updatedComment.modifiedCount === 1){
+            console.log("comment modified")
             res.sendStatus(204)
+            return
         }else {
+            console.log("comment is not found by id")
             res.sendStatus(404)
+            return
         }
 
     } else {
+        console.log("comment is not found by id")
         res.sendStatus(404)
     }
 }
