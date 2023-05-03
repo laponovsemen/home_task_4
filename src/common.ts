@@ -105,7 +105,7 @@ export const JSONWebTokenMiddleware = async (req: Request, res: Response, next: 
         }
     }
     console.log("last error ")
-    res.sendStatus(404)
+    res.sendStatus(401)
 
 }
 
