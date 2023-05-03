@@ -4,8 +4,8 @@ import {app} from "../../src/settings";
 import exp = require("constants");
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
-describe("TESTING OF CREATING ALL BLOGS", () => {
-    it("should create user //auth is correct", async () => {
+describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
+    it("should create user, blog, pot, comment , auth and get comments //auth is correct", async () => {
         request(app).delete("/testing/all-data").set(auth, basic)
         const createdBlog = await request(app)
             .post("/blogs")
@@ -68,6 +68,14 @@ describe("TESTING OF CREATING ALL BLOGS", () => {
             .send({
                 content: "stringstringstringst"
             }).expect(201)
+        expect(createdComment.body).toEqual("")
+
+        await request(app)
+            .post(`/posts/${postId}kwepoirpweo/comments`)
+            .set(auth, JWTAuth)
+            .send({
+                content: "stringstringstringst"
+            }).expect(401)
         expect(createdComment.body).toEqual("")
 
     })
