@@ -90,7 +90,7 @@ describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
                 content: "stringstringstringst"
             }).expect(404)
 
-        /*await request(app)
+        await request(app)
             .delete(`/comments/${wrongId}`)
             .set(auth, JWTAuth)
             .expect(404)
@@ -99,7 +99,7 @@ describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
             .put(`/comments/${wrongId}`)
             .set(auth, JWTAuth)
             .send({content : "length25 - kkkkkkkkkkkkkkk"})
-            .expect(404)*/
+            .expect(404)
 
         const tryOfUpdatingComment = await request(app)
             .put(`/comments/${commentId}`)

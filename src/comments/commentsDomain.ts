@@ -51,13 +51,16 @@ export async function  deleteCommentById(req: Request, res : Response) {
     if(foundComment){
         if(foundComment.commentatorInfo.userId.toString() !== req.body.user.id.toString()){
             res.sendStatus(403)
+            return
         }else {
             await commentsCollectionOutput.deleteOne({_id: new ObjectId(commentId)})
             res.sendStatus(204)
+            return
         }
 
     } else {
         res.sendStatus(404)
+        return
     }
 }
 export async function  getCommentById(req: Request, res : Response) {
