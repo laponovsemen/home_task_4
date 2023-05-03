@@ -45,7 +45,7 @@ export async function  deleteCommentById(req: Request, res : Response) {
         if(foundComment.commentatorInfo.userId.toString() !== req.body.user.id.toString()){
             res.sendStatus(403)
         }
-        res.status(200).send(mongoCommentSlicing(foundComment))
+        res.status(204).send(mongoCommentSlicing(foundComment))
     } else {
         res.sendStatus(404)
     }
