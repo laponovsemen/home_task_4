@@ -74,12 +74,16 @@ export async function getAllCommentsForSpecifiedPostDB(commentsPagination : Comm
         .skip(ToSkip)
         .limit(pageSize)
         .toArray()
-    return {
-        pageSize : pageSize,
-        totalCount : totalCount,
-        pagesCount : pagesCount,
-        page : page,
-        items : result.map(item => mongoCommentSlicing(item))
+    if(result) {
+        return {
+            pageSize: pageSize,
+            totalCount: totalCount,
+            pagesCount: pagesCount,
+            page: page,
+            items: result.map(item => mongoCommentSlicing(item))
+        }
+    }else {
+        return null
     }
 
 }

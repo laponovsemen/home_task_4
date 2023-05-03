@@ -100,5 +100,9 @@ export async function  getAllCommentsForSpecifiedPost(req: Request, res : Respon
         postId: postId,
     }
     const result = await getAllCommentsForSpecifiedPostDB(PaginationCriteria)
-    res.send(result).status(200)
+    if(result) {
+        res.send(result).status(200)
+    }else{
+        res.sendStatus(404)
+    }
 }
