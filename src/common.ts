@@ -108,3 +108,11 @@ export const JSONWebTokenMiddleware = async (req: Request, res: Response, next: 
     res.sendStatus(401)
 
 }
+
+export const delay = (milliseconds: number): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve()
+        }, milliseconds)
+    })
+}

@@ -2,6 +2,7 @@
 import request from "supertest";
 import {app} from "../../src/settings";
 import exp = require("constants");
+import {randomUUID} from "crypto";
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
 describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
@@ -57,26 +58,38 @@ describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
 
         const JWT = login.body.accessToken
         const JWTAuth = "Bearer ".concat(JWT)
-        console.log(JWTAuth)
+        //console.log(JWTAuth)
 
         expect(JWT).toEqual(expect.any(String))
 
-        console.log(JWT)
+        //console.log(JWT)
         const createdComment = await request(app)
             .post(`/posts/${postId}/comments`)
             .set(auth, JWTAuth)
             .send({
                 content: "stringstringstringst"
             }).expect(201)
-        expect(createdComment.body).toEqual("")
+        expect(createdComment.body).toEqual(
+            {commentatorInfo:
+                    {
+                        userId: expect.any(String),
+                        userLogin: expect.any(String)
+                    },
+            content: "stringstringstringst",
+            createdAt: expect.any(String),
+            id: expect.any(String)})
 
+
+        const wrongId = "6452328cf49782a0f0000000"
+        console.log(wrongId)
+        console.log(postId)
         await request(app)
-            .post(`/posts/${postId}kwepoirpweo/comments`)
+            .post(`/posts/${wrongId}/comments`)
             .set(auth, JWTAuth)
             .send({
                 content: "stringstringstringst"
-            }).expect(401)
+            }).expect(404)
         expect(createdComment.body).toEqual("")
 
-    })
+    }, 30000)
 })

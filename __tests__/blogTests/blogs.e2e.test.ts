@@ -2,14 +2,9 @@
 import request from "supertest"
 import {app} from "../../src/settings";
 import {before} from "node:test";
+import {delay} from "../../src/common";
 
-const delay = (milliseconds: number): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve()
-        }, milliseconds)
-    })
-}
+
 
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
