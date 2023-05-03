@@ -72,7 +72,7 @@ export async function  createCommentForSpecifiedPost(req: Request, res : Respons
         content: content,
         commentatorInfo: commentatorInfo,
         createdAt: createdAt,
-        postId : req.params.id
+        postId : new ObjectId(req.params.id)
     }
     const insertedComment = await commentsCollectionInsert.insertOne(newComment)
     res.status(201).send({
