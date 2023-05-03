@@ -12,7 +12,7 @@ import {mongoBlogSlicing, mongoCommentSlicing, mongoPostSlicing} from "../common
 import {blogsCollectionOutput} from "../blogs/blogsRepositoryMongoDB";
 import {ObjectId, Sort, WithId} from "mongodb";
 import {validationResult} from "express-validator";
-import {commentsCollectionOutput} from "../comments/commentsDomain";
+import {commentsCollectionInsert, commentsCollectionOutput} from "../comments/commentsDomain";
 
 const postCollectionInsert = client.db("forum").collection<PostInsertModelType>("posts")
 const postCollectionOutput = client.db("forum").collection<PostViewModelType>("posts")
@@ -56,15 +56,15 @@ export async function getAllPostsDB(postsPagination : BlogsPaginationCriteriaTyp
     }
 
 }
-export async function getAllCommentsForSpecifiedPostDB(postsPagination : CommentsPaginationCriteriaType) {
-    const postId = postsPagination.postId
-    const pageSize = postsPagination.pageSize
-    const totalCount = await postCollectionOutput.countDocuments({})
+export async function getAllCommentsForSpecifiedPostDB(commentsPagination : CommentsPaginationCriteriaType) {
+    const postId = commentsPagination.postId
+    const pageSize = commentsPagination.pageSize
+    const totalCount = await commentsCollectionOutput.countDocuments({})
     const pagesCount = Math.ceil(totalCount / pageSize)
-    const page = postsPagination.pageNumber
-    const sortBy = postsPagination.sortBy
-    const sortDirection : "asc" | "desc"  = postsPagination.sortDirection
-    const ToSkip = (postsPagination.pageSize * (postsPagination.pageNumber - 1))
+    const page = commentsPagination.pageNumber
+    const sortBy = commentsPagination.sortBy
+    const sortDirection : "asc" | "desc"  = commentsPagination.sortDirection
+    const ToSkip = (commentsPagination.pageSize * (commentsPagination.pageNumber - 1))
 
 
 
