@@ -59,7 +59,13 @@ export async function getAllPostsDB(postsPagination : BlogsPaginationCriteriaTyp
 export async function getAllCommentsForSpecifiedPostDB(commentsPagination : CommentsPaginationCriteriaType) {
     const postId = commentsPagination.postId
     const pageSize = commentsPagination.pageSize
-    const totalCount = await commentsCollectionOutput.countDocuments({})
+    const totalCount = await commentsCollectionOutput.countDocuments({postId : new ObjectId(postId)})
+
+    if(totalCount < 1){
+        return null
+    }
+
+
     const pagesCount = Math.ceil(totalCount / pageSize)
     const page = commentsPagination.pageNumber
     const sortBy = commentsPagination.sortBy
