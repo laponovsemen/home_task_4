@@ -112,6 +112,14 @@ describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
             .set(auth, JWTAuth)
             .expect(204)
 
+        console.log(commentId)
+        console.log(JWTAuth)
+        await request(app)
+            .get(`/comments/${commentId}`)
+            .set(auth, JWTAuth)
+            .expect(404)
+
+
         //expect(tryOfUpdatingComment.body).toEqual("")
     }, 60000)
 
