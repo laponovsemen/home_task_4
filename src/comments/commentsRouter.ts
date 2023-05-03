@@ -9,6 +9,6 @@ export const commentsRouter = Router({})
 
 
 
-commentsRouter.put("",JSONWebTokenMiddleware, commentContentValidation, ValidationErrors, updateCommentById)
-commentsRouter.delete("", JSONWebTokenMiddleware,  deleteCommentById)
-commentsRouter.get("", JSONWebTokenMiddleware, getCommentById)
+commentsRouter.put("/:id",JSONWebTokenMiddleware, commentContentValidation, ValidationErrors, updateCommentById)
+commentsRouter.delete("/:id", JSONWebTokenMiddleware,  deleteCommentById)
+commentsRouter.get("/:id", JSONWebTokenMiddleware, getCommentById)
