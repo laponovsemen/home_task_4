@@ -19,6 +19,7 @@ export async function  updateCommentById(req: Request, res : Response) {
     if(foundComment){
         if(foundComment.commentatorInfo.userId.toString() !== req.body.user.id.toString()){
             res.sendStatus(403)
+            return
         }
         const updatedComment = await commentsCollectionInsert.updateOne({_id: new ObjectId(commentId)},
             {$set:
@@ -28,7 +29,7 @@ export async function  updateCommentById(req: Request, res : Response) {
                         postId : foundComment.postId,
             }})
         if(updatedComment.modifiedCount === 1){
-            res.status(204)
+            res.sendStatus(204)
         }else {
             res.sendStatus(404)
         }
