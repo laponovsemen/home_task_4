@@ -42,5 +42,5 @@ export async function giveUserInformation(req: Request, res : Response) {
 
 export async function sendMessageToEmail(req: Request, res : Response) {
     await emailAdapter.sendEmail(req.body.email,req.body.subject,req.body.message)
-    res.sendStatus(200)
+    res.sendStatus(204)
 }
