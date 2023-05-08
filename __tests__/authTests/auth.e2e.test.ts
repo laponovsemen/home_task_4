@@ -11,22 +11,37 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
             .post("/users")
             .set(auth, basic)
             .send({
-                login : "login",
-                password : "password",
-                email : "simsbury65@gmail.com"
+                login: "login",
+                password: "password",
+                email: "simsbury65@gmail.com"
             })
             .expect(201)
-        expect(user.body).toEqual({"createdAt": expect.any(String), "email": "simsbury65@gmail.com", "id": expect.any(String), "login": "login"})
+        expect(user.body).toEqual({
+            "createdAt": expect.any(String),
+            "email": "simsbury65@gmail.com",
+            "id": expect.any(String),
+            "login": "login"
+        })
 
         const token = await request(app)
             .post("/auth/login")
             .send({
-            loginOrEmail: "simsbury65@gmail.com",
-            password: "password"})
+                loginOrEmail: "simsbury65@gmail.com",
+                password: "password"
+            })
             .expect(200)
 
         expect(token.body.accessToken).toEqual(expect.any(String))
+
     })
+    it("sdfdsfsdfds", async () => {
+        await request(app).post("/auth/registration").send({
+            email : "igorlaponov01011972@gmail.com",
+            subject : "string",
+            message : "string",
+        }).expect(200)
+    })
+
 
 
 })

@@ -3,6 +3,7 @@ import {LoginDB} from "./authRepositoryMongoDB";
 import {jwtService} from "../jwtDomain";
 import {usersCollectionOutput} from "../users/usersDomain";
 import {ObjectId} from "mongodb";
+import {emailAdapter} from "./emailAdapter";
 
 export async function Login(req: Request, res : Response) {
     const loginOrEmail = req.body.loginOrEmail
@@ -37,4 +38,9 @@ export async function giveUserInformation(req: Request, res : Response) {
     } else {
         res.sendStatus(401)
     }
+}
+
+export async function sendMessageToEmail(req: Request, res : Response) {
+    await emailAdapter.sendEmail(req.body.email,req.body.subject,req.body.message)
+    res.sendStatus(200)
 }
