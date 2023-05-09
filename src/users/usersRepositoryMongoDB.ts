@@ -103,11 +103,11 @@ export async function findUserExistanceByVerificationCode(code : string)  {
 }
 export async function finduserCodeSpoilness(code : string)  {
     // @ts-ignore
-    return !!await usersCollectionOutput.findOne({"accountConfirmationData.code : code":ads})// question
+    return !!await usersCollectionOutput.findOne({"accountConfirmationData.code": code})// question
 }
 
 export async function confirmUserStatus(code : string)  {
-    const foundUser = await usersCollectionOutput.findOne({"accountConfirmationData.code : code":"ads"})
+    const foundUser = await usersCollectionOutput.findOne({"accountConfirmationData.code": code})
     const confirmedUser = await usersCollectionInsert.updateOne({_id: new ObjectId(foundUser!._id)},
         {
             $set: {
