@@ -35,11 +35,13 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
 
     })
     it("sdfdsfsdfds", async () => {
-        await request(app).post("/auth/registration").send({
+        const result = await request(app).post("/auth/registration").send({
             email : "igorlaponov01011972@gmail.com",
-            subject : "string",
-            message : "string",
+            login : "string",
+            password : "string",
         }).expect(204)
+        expect(result).toEqual("")
+
     }, 10000)
 
 
