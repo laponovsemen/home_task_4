@@ -9,7 +9,7 @@ const secretKey = process.env.SECRET_KEY
 
 export const jwtService = {
     async  createJWT(user: userViewModel){
-        const token: string = jwt.sign({userId : user._id, login: user.login, email : user.email}, secretKey!, {expiresIn : "12h"})
+        const token: string = jwt.sign({userId : user._id, login: user.accountData.login, email : user.accountData.email}, secretKey!, {expiresIn : "12h"})
         //console.log(token)
         return token
 

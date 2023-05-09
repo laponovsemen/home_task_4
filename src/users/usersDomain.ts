@@ -39,7 +39,7 @@ export async function createUser(req: Request, res:Response) {
     const login : string = req.body.login
     const email : string = req.body.email
     const password : string = req.body.password
-    const dateOfCreation = new Date().toISOString()
+    const dateOfCreation = new Date()
     const newCreatedUser = await usersCollectionInsert.insertOne({
 
 

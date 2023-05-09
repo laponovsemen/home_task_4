@@ -68,9 +68,9 @@ export const mongoPostSlicing = ( Obj2: PostViewModelType) =>  {
 export const mongoUserSlicing = ( Obj2: userViewModel) =>  {
     return {
         id : Obj2._id,
-        login : Obj2.login,
-        email:	Obj2.email,
-        createdAt:	Obj2.createdAt,
+        login : Obj2.accountData.login,
+        email:	Obj2.accountData.email,
+        createdAt:	Obj2.accountData.createdAt,
     }
 }
 export const mongoCommentSlicing = ( Obj2: commentOutputModel) =>  {
