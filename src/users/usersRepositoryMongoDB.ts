@@ -1,4 +1,4 @@
-import {userInputModel, usersPaginationCriteriaType} from "../appTypes";
+import {APIErrorResultType, userInputModel, usersPaginationCriteriaType} from "../appTypes";
 import {usersCollectionInsert, usersCollectionOutput} from "./usersDomain";
 import {blogsCollectionOutput} from "../blogs/blogsRepositoryMongoDB";
 import {mongoBlogSlicing, mongoUserSlicing} from "../common";
@@ -83,9 +83,17 @@ export async function createUnconfirmedUser(login : string, password : string, e
         }
     }
 }
-export async function checkUserExistance(login : string, password : string, email: string) : Promise<boolean> {
-    return !!await usersCollectionOutput.findOne({login : login, email : email, password : password})
-
+export async function checkUserExistance(login : string, password : string, email: string) {
+    const foundUserByLogin = await usersCollectionOutput.findOne({"accountData.login" : login})
+    const foundUserByEmail = await usersCollectionOutput.findOne({"accountData.email" : email})
+    let errors: APIErrorResultType = {errorsMessages : []}
+    if(foundUserByLogin) errors.errorsMessages.push({message: "user with such login already exists", field : "login"})
+    if(foundUserByEmail) errors.errorsMessages.push({message: "user with such email already exists", field : "email"})
+    if(errors.errorsMessages.length === 0){
+        return null
+    } else {
+        return errors
+    }
 }
 
 export async function codeVerification(code : string)  {

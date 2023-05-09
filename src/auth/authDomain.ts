@@ -56,14 +56,7 @@ export async function sendMessageToEmail(req: Request, res : Response) {
 
     const userExists = await checkUserExistance(login, password, email)
     if(userExists){
-        res.status(400).send({
-            "errorsMessages": [
-                {
-                    "message": "user with the given email or password already exists",
-                    "field": "login or email"
-                }
-            ]
-        })
+        res.status(400).send(userExists)
     } else {
         const user = await createUnconfirmedUser(login, password, email)
 
