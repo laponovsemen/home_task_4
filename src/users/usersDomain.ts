@@ -41,10 +41,19 @@ export async function createUser(req: Request, res:Response) {
     const password : string = req.body.password
     const dateOfCreation = new Date().toISOString()
     const newCreatedUser = await usersCollectionInsert.insertOne({
-        login : login,
-        email : email,
-        password : password,
-        createdAt: dateOfCreation
+
+
+        accountData : {
+            login : login,
+            email : email,
+            password : password,
+            createdAt: dateOfCreation
+        },
+        accountConfirmationData: {
+            isConfirmed : true,
+            code : null,
+            codeDateOfExpiary : null
+        }
     })
     res.status(201).send({
         id : newCreatedUser.insertedId,

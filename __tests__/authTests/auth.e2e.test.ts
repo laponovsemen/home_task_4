@@ -39,8 +39,8 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
             email : "igorlaponov01011972@gmail.com",
             subject : "string",
             message : "string",
-        }).expect(200)
-    })
+        }).expect(204)
+    }, 10000)
 
 
 

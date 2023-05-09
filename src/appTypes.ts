@@ -1,4 +1,5 @@
 import {ObjectId} from "mongodb";
+import * as cluster from "cluster";
 
 export type APIErrorResultType = {
     errorsMessages : FieldErrorType[]
@@ -21,7 +22,6 @@ export type BlogViewModelType = {
     isMembership: boolean,
     createdAt : string
 }
-
 export type BlogInsertModelType = {
     name:	string,
     description: string,
@@ -29,7 +29,6 @@ export type BlogInsertModelType = {
     isMembership: boolean,
     createdAt : string
 }
-
 export type PostInputModelType = {
     title : 	string, //    maxLength: 30
     shortDescription: string, //maxLength: 100
@@ -108,16 +107,38 @@ export type userViewModelPaginationType = {
 }
 export type userViewModel = {
     _id:	ObjectId,
-    login : string,
-    email:	string,
-    createdAt:	string,
+    accountData : {
+        login: string,
+        email: string,
+        createdAt: string,
+    },
+    accountConfirmationData: {
+        isConfirmed : true,
+        code : null,
+        codeDateOfExpiary : null
+    } | {
+        isConfirmed : false,
+        code : string,
+        codeDateOfExpiary : string
+    }
 
 }
 export type userInputModel = {
-    login : string,
-    email:	string,
-    password:	string,
-    createdAt : string
+    accountData : {
+        login: string,
+        email: string,
+        createdAt: Date,
+        password: string,
+    },
+    accountConfirmationData: {
+        isConfirmed : true,
+        code : null,
+        codeDateOfExpiary : null
+    } | {
+        isConfirmed : false,
+        code : string,
+        codeDateOfExpiary : Date
+    }
 
 }
 export type LoginInputModel = {
@@ -158,3 +179,15 @@ export type meViewModel = {
     login:	string,
     userId:	string,
 }
+
+
+/*
+type test = {
+    accountData: {
+        id, login, email, password, data
+    }
+    emailConfirmation: {
+        isConfirmed: true
+
+    }
+}*/
