@@ -11,7 +11,7 @@ export const emailAdapter = {
         })
 
         const subject = "Registration"
-        const message = "<h1>Thank for your registration</h1>\n<p>To finish registration please follow the link below:\n<a href=`https://somesite.com/confirm-email?code=${code}`>complete registration</a>\n</p>"
+        const message = "<h1>Thank for your registration</h1>\n<p>To finish registration please follow the link below:\n<a href=`https://home-task-4.vercel.app/registration-confirmation?code=${code}`>complete registration</a>\n</p>"
         let info = await transport.sendMail({
             from : 'Semen <simsbury65@gmail.com>',
             to : email,
