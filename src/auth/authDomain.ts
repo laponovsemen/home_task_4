@@ -66,7 +66,7 @@ export async function sendMessageToEmail(req: Request, res : Response) {
     }
 }
 export async function registrationConfirmation(req: Request, res : Response) {
-    const code = req.body.code
+    const code : string = req.body.code
     if(code){
         const codeVerificationResult = await codeVerification(code.toString())
         if(!codeVerificationResult){

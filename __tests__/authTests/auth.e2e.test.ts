@@ -43,6 +43,14 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
 
 
     }, 10000)
+    it("sdfdsfsdfds2", async () => {
+        const result = await request(app)
+            .post("/auth/registration-confirmation")
+            .send({"code":"ee751dc0-bd44-41e2-a303-1c8bfade13bd"})
+            .expect(400)
+
+
+    }, 10000)
 
 
 

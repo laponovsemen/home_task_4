@@ -107,7 +107,7 @@ export async function codeVerification(code : string)  {
 }
 export async function findUserExistanceByVerificationCode(code : string)  {
     // @ts-ignore
-    return !!await usersCollectionOutput.findOne({"accountConfirmationData.code : code":ads})// question
+    return !!await usersCollectionOutput.findOne({"accountConfirmationData.code" : code})// question
 }
 export async function finduserCodeSpoilness(code : string)  {
     // @ts-ignore
