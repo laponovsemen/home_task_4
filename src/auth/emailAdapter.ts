@@ -11,15 +11,12 @@ export const emailAdapter = {
         })
 
         const subject = "Registration"
-        const registrationLink = `https://somesite.com/confirm-email?code=${code}`
+        const message = "<h1>Thank for your registration</h1>\n<p>To finish registration please follow the link below:\n<a href=`https://somesite.com/confirm-email?code=${code}`>complete registration</a>\n</p>"
         let info = await transport.sendMail({
             from : 'Semen <simsbury65@gmail.com>',
             to : email,
             subject: subject,
-            html: `<h1>Thank for your registration</h1>
-            <p>To finish registration please follow the link below:
-                <a href='registrationLink'>complete registration</a>
-            </p>`
+            html: message
         })
 
         console.log(info)
