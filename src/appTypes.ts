@@ -110,7 +110,7 @@ export type userViewModel = {
     accountData : {
         login: string,
         email: string,
-        createdAt: string,
+        createdAt: Date,
     },
     accountConfirmationData: {
         isConfirmed : true,

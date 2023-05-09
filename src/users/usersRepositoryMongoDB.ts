@@ -87,3 +87,43 @@ export async function checkUserExistance(login : string, password : string, emai
     return !!await usersCollectionOutput.findOne({login : login, email : email, password : password})
 
 }
+
+export async function codeVerification(code : string)  {
+    const userExists = await findUserExistanceByVerificationCode(code)
+    const userCodeSpoilness = await finduserCodeSpoilness(code)
+    if(userExists || userCodeSpoilness){
+        return false
+    } else {
+        return true
+    }
+}
+export async function findUserExistanceByVerificationCode(code : string)  {
+    // @ts-ignore
+    return !!await usersCollectionOutput.findOne({"accountConfirmationData.code : code":ads})// question
+}
+export async function finduserCodeSpoilness(code : string)  {
+    // @ts-ignore
+    return !!await usersCollectionOutput.findOne({"accountConfirmationData.code : code":ads})// question
+}
+
+export async function confirmUserStatus(code : string)  {
+    const foundUser = await usersCollectionOutput.findOne({"accountConfirmationData.code : code":"ads"})
+    const confirmedUser = await usersCollectionInsert.updateOne({_id: new ObjectId(foundUser!._id)},
+        {
+            $set: {
+                accountConfirmationData: {
+                    isConfirmed: true,
+                    code: null,
+                    codeDateOfExpiary: null
+                }
+            }
+        })
+
+}
+
+export async function checkUserExistanceByEmail(email : string) {
+    return !!await usersCollectionOutput.findOne({"accountData.email": email})
+}
+export async function updateCodeOfUserConfirmation(email : string, code : string) {
+    await usersCollectionInsert.updateOne({email : email}, {$set : {"accountConfirmationData.code" : code}})
+}

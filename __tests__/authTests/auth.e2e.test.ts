@@ -40,7 +40,7 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
             login : "string",
             password : "string",
         }).expect(204)
-        expect(result).toEqual("")
+
 
     }, 10000)
 

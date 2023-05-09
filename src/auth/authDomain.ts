@@ -4,7 +4,12 @@ import {jwtService} from "../jwtDomain";
 import {usersCollectionOutput} from "../users/usersDomain";
 import {ObjectId} from "mongodb";
 import {emailAdapter} from "./emailAdapter";
-import {checkUserExistance, createUnconfirmedUser} from "../users/usersRepositoryMongoDB";
+import {
+    checkUserExistance, checkUserExistanceByEmail,
+    codeVerification,
+    confirmUserStatus,
+    createUnconfirmedUser, updateCodeOfUserConfirmation
+} from "../users/usersRepositoryMongoDB";
 import {v4 as uuidv4} from 'uuid'
 export async function Login(req: Request, res : Response) {
     const loginOrEmail = req.body.loginOrEmail
@@ -64,10 +69,36 @@ export async function sendMessageToEmail(req: Request, res : Response) {
     }
 }
 export async function registrationConfirmation(req: Request, res : Response) {
+    const code = req.query.code
+    if(code){
+        const codeVerificationResult = await codeVerification(code.toString())
+        if(!codeVerificationResult){
+            res.status(400).send({errorsMessages : [{"message": "wrong code passed", "field": "code"}]})
+        } else {
+            await confirmUserStatus(code.toString())
+            res.sendStatus(204)
+        }
+
+
+    }else{
+        res.status(400).send({errorsMessages : [{"message": "no code in query params passed", "field": "code"}]})
+    }
 
 }
 export async function registrationEmailResending(req: Request, res : Response) {
-
+    const email = req.body.email
+    const userExists = await checkUserExistanceByEmail(email)
+    if(userExists){
+        res.status(400).send({"errorsMessages": [{
+                    "message": "user with such email already exists",
+                    "field": "email"
+                }] })
+    } else{
+        const code = await createEmailSendCode()
+        await updateCodeOfUserConfirmation(email, code)
+        await emailAdapter.sendEmail(req.body.email, code)
+        res.sendStatus(204)
+    }
 }
 
 export async function createEmailSendCode() {
