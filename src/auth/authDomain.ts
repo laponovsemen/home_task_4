@@ -84,7 +84,7 @@ export async function registrationConfirmation(req: Request, res : Response) {
 export async function registrationEmailResending(req: Request, res : Response) {
     const email = req.body.email
     const userExists = await checkUserExistanceByEmail(email)
-    if(userExists){
+    if(!userExists){
         res.status(400).send({"errorsMessages": [{
                     "message": "user with such email already exists",
                     "field": "email"
