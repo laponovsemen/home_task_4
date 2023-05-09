@@ -135,3 +135,8 @@ export async function checkUserExistanceByEmail(email : string) {
 export async function updateCodeOfUserConfirmation(email : string, code : string) {
     await usersCollectionInsert.updateOne({email : email}, {$set : {"accountConfirmationData.code" : code}})
 }
+
+export async function checkingForUserConfirmationStatus(email : string) {
+    const foundUser = await usersCollectionOutput.findOne({"accountData.email" : email})
+    return foundUser!.accountConfirmationData.isConfirmed
+}

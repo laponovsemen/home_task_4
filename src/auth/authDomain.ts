@@ -5,6 +5,7 @@ import {usersCollectionOutput} from "../users/usersDomain";
 import {ObjectId} from "mongodb";
 import {emailAdapter} from "./emailAdapter";
 import {
+    checkingForUserConfirmationStatus,
     checkUserExistance, checkUserExistanceByEmail,
     codeVerification,
     confirmUserStatus,
@@ -86,10 +87,18 @@ export async function registrationEmailResending(req: Request, res : Response) {
     const userExists = await checkUserExistanceByEmail(email)
     if(!userExists){
         res.status(400).send({"errorsMessages": [{
-                    "message": "user with such email already exists",
+                    "message": "user with such email doesnt exists",
                     "field": "email"
                 }] })
     } else{
+        if(await checkingForUserConfirmationStatus(email)){
+            res.status(400).send({"errorsMessages": [{
+                    "message": "user already confirmed",
+                    "field": "isConfirmed"
+                }] })
+        }
+
+
         const code = await createEmailSendCode()
         await updateCodeOfUserConfirmation(email, code)
         await emailAdapter.sendEmail(req.body.email, code)
