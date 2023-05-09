@@ -101,6 +101,7 @@ export async function registrationEmailResending(req: Request, res : Response) {
                     "message": "user already confirmed",
                     "field": "isConfirmed"
                 }] })
+            return
         }
 
 
