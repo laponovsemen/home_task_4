@@ -1,15 +1,26 @@
 import {Router} from "express";
-import {UserLoginOrEmailValidation, UserPasswordValidation} from "../users/usersValidation";
+import {
+    UserEmailValidation,
+    UserLoginOrEmailValidation,
+    UserLoginValidation,
+    UserPasswordValidation
+} from "../users/usersValidation";
 import {ValidationErrors} from "../common";
-import {giveUserInformation, Login, registrationConfirmation, sendMessageToEmail} from "./authDomain";
+import {
+    giveUserInformation,
+    Login,
+    registrationConfirmation,
+    registrationEmailResending,
+    sendMessageToEmail
+} from "./authDomain";
 
 
 export const authRouter = Router({})
 
 authRouter.post("/login",UserLoginOrEmailValidation, UserPasswordValidation, ValidationErrors, Login)
-authRouter.post("/registration", sendMessageToEmail)
+authRouter.post("/registration",UserEmailValidation,UserLoginValidation,  UserPasswordValidation, ValidationErrors, sendMessageToEmail)
 authRouter.post("/registration-confirmation", registrationConfirmation)
-authRouter.post("/registration-email-resending",UserLoginOrEmailValidation, UserPasswordValidation, ValidationErrors, Login)
+authRouter.post("/registration-email-resending", registrationEmailResending)
 authRouter.get("/me", giveUserInformation)
 
 const SECRET_KEY = 'My-secret-key'

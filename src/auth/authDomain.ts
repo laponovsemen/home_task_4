@@ -66,6 +66,9 @@ export async function sendMessageToEmail(req: Request, res : Response) {
 export async function registrationConfirmation(req: Request, res : Response) {
 
 }
+export async function registrationEmailResending(req: Request, res : Response) {
+
+}
 
 export async function createEmailSendCode() {
     return uuidv4()
