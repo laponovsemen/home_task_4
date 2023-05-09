@@ -111,21 +111,32 @@ export async function findUserExistanceByVerificationCode(code : string)  {
 }
 export async function finduserCodeSpoilness(code : string)  {
     // @ts-ignore
-    return !!await usersCollectionOutput.findOne({"accountConfirmationData.code": code})// question
+    const foundUser = await usersCollectionOutput.findOne({"accountConfirmationData.code": code})// question
+    if(foundUser && foundUser.accountConfirmationData.codeDateOfExpiary) {
+        return foundUser.accountConfirmationData.codeDateOfExpiary > new Date();
+    } else {
+        return false
+    }
+
 }
 
 export async function confirmUserStatus(code : string)  {
     const foundUser = await usersCollectionOutput.findOne({"accountConfirmationData.code": code})
-    const confirmedUser = await usersCollectionInsert.updateOne({_id: new ObjectId(foundUser!._id)},
-        {
-            $set: {
-                accountConfirmationData: {
-                    isConfirmed: true,
-                    code: null,
-                    codeDateOfExpiary: null
+    if(foundUser) {
+        const confirmedUser = await usersCollectionInsert.updateOne({_id: new ObjectId(foundUser!._id)},
+            {
+                $set: {
+                    accountConfirmationData: {
+                        isConfirmed: true,
+                        code: null,
+                        codeDateOfExpiary: null
+                    }
                 }
-            }
-        })
+            })
+        return true
+    } else {
+        return false
+    }
 
 }
 

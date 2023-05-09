@@ -60,9 +60,12 @@ export async function sendMessageToEmail(req: Request, res : Response) {
         res.status(400).send(userExists)
     } else {
         const user = await createUnconfirmedUser(login, password, email)
-
-        await emailAdapter.sendEmail(req.body.email, user.accountConfirmationData.code)
-        res.sendStatus(204)
+        if(user) {
+            await emailAdapter.sendEmail(req.body.email, user.accountConfirmationData.code)
+            res.sendStatus(204)
+        } else {
+            res.sendStatus(400)
+        }
     }
 }
 export async function registrationConfirmation(req: Request, res : Response) {

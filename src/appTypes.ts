@@ -119,7 +119,7 @@ export type userViewModel = {
     } | {
         isConfirmed : false,
         code : string,
-        codeDateOfExpiary : string
+        codeDateOfExpiary : Date
     }
 
 }
