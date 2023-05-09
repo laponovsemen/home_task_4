@@ -99,7 +99,7 @@ export async function checkUserExistance(login : string, password : string, emai
 export async function codeVerification(code : string)  {
     const userExists = await findUserExistanceByVerificationCode(code)
     const userCodeSpoilness = await finduserCodeSpoilness(code)
-    if(userExists || userCodeSpoilness){
+    if(!userExists || userCodeSpoilness){
         return false
     } else {
         return true

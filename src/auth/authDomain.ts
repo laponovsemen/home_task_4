@@ -75,8 +75,10 @@ export async function registrationConfirmation(req: Request, res : Response) {
         if(!codeVerificationResult){
             res.status(400).send({errorsMessages : [{"message": "wrong code passed", "field": "code"}]})
         } else {
-            await confirmUserStatus(code.toString())
-            res.sendStatus(204)
+            if(await confirmUserStatus(code.toString())){
+                res.sendStatus(204)
+            }
+            res.status(400).send({errorsMessages : [{"message": "no code in query params passed", "field": "code"}]})
         }
 
 
