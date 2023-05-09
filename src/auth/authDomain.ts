@@ -16,7 +16,6 @@ import {randomUUID} from "crypto";
 export async function Login(req: Request, res : Response) {
     const loginOrEmail = req.body.loginOrEmail
     const password =  req.body.password
-    const code = randomUUID()
 
     const result = await LoginDB(loginOrEmail, password)
     if(result){

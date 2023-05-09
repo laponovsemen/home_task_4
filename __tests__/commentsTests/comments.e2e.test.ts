@@ -54,7 +54,7 @@ describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
             .send({
                 loginOrEmail: "login",
                 password: "password",
-            })
+            }).expect(200)
 
         const JWT = login.body.accessToken
         const JWTAuth = "Bearer ".concat(JWT)
