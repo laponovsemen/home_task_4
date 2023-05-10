@@ -17,8 +17,8 @@ export async function getAllUsersDB(paginationCriteria : usersPaginationCriteria
 
 
     let searchParams = []
-    if (searchEmailTerm) searchParams.push({email : {$regex : searchEmailTerm, $options : "i"}})
-    if (searchLoginTerm) searchParams.push({login : {$regex : searchLoginTerm, $options : "i"}})
+    if (searchEmailTerm) searchParams.push({"accountData.email" : {$regex : searchEmailTerm, $options : "i"}})
+    if (searchLoginTerm) searchParams.push({"accountData.login" : {$regex : searchLoginTerm, $options : "i"}})
 
     let filter: {$or? : any[]}  = {$or : searchParams}
     if(searchParams.length === 0 ) filter = {}
