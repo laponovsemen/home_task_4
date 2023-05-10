@@ -24,11 +24,13 @@ export async function Login(req: Request, res : Response) {
             res.status(200).send({
                 accessToken: JWT
             })
+            return
         }catch(e){
             console.log(e)
         }
 
     } else{
+        console.log("no result found")
         res.sendStatus(401)
     }
 }

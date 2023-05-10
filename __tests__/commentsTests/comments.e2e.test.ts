@@ -46,7 +46,14 @@ describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
                 login: "login",
                 password: "password",
                 email: "simsbury65@gmail.com"
-            })
+            }).expect(201)
+
+        expect(createdUser.body).toEqual({
+            id : expect.any(String),
+            login : "login",
+            email : "simsbury65@gmail.com",
+            createdAt: expect.any(String),
+        })
 
         const login = await request(app)
             .post("/auth/login")
@@ -58,7 +65,7 @@ describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
 
         const JWT = login.body.accessToken
         const JWTAuth = "Bearer ".concat(JWT)
-        //console.log(JWTAuth)
+        console.log(JWTAuth)
 
         expect(JWT).toEqual(expect.any(String))
 
