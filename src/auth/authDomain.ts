@@ -74,7 +74,7 @@ export async function registrationConfirmation(req: Request, res : Response) {
     if(code){
         const codeVerificationResult = await codeVerification(code.toString())
         if(!codeVerificationResult){
-            res.status(400).send({errorsMessages : [{"message": "wrong code passed", "field": "code"}]})
+            res.status(400).send({errorsMessages : [{"message": "wrong code passed228", "field": "code"}]})
         } else {
             if(await confirmUserStatus(code.toString())){
                 res.sendStatus(204)

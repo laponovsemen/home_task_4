@@ -99,11 +99,7 @@ export async function checkUserExistance(login : string, password : string, emai
 export async function codeVerification(code : string)  {
     const userExists = await findUserExistanceByVerificationCode(code)
     const userCodeSpoilness = await finduserCodeSpoilness(code)
-    if(!userExists || userCodeSpoilness){
-        return false
-    } else {
-        return true
-    }
+    return (userExists && userCodeSpoilness);
 }
 export async function findUserExistanceByVerificationCode(code : string)  {
     // @ts-ignore
@@ -113,7 +109,7 @@ export async function finduserCodeSpoilness(code : string)  {
     // @ts-ignore
     const foundUser = await usersCollectionOutput.findOne({"accountConfirmationData.code": code})// question
     if(foundUser && foundUser.accountConfirmationData.codeDateOfExpiary) {
-        return foundUser.accountConfirmationData.codeDateOfExpiary > new Date();
+        return foundUser.accountConfirmationData.codeDateOfExpiary >= new Date();
     } else {
         return false
     }
