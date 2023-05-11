@@ -45,6 +45,12 @@ export async function giveUserInformation(req: Request, res: Response) {
     const auth = req.headers.authorization
     if (auth !== undefined) {
         const userId = await jwtService.getUserIdByToken(auth)
+
+
+        if(!userId){
+            res.sendStatus(401)
+            return
+        }
         const userInfo = await usersCollectionOutput.findOne({_id: new ObjectId(userId!)})
         res.status(200).send({
             "email": userInfo?.accountData.email,
