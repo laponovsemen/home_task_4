@@ -140,7 +140,7 @@ export async function checkUserExistanceByEmail(email : string) {
     return !!await usersCollectionOutput.findOne({"accountData.email": email})
 }
 export async function updateCodeOfUserConfirmation(email : string, code : string) {
-    await usersCollectionInsert.updateOne({email : email}, {$set : {"accountConfirmationData.code" : code}})
+    await usersCollectionInsert.updateOne({"accountData.email" : email}, {$set : {"accountConfirmationData.code" : code}})
 }
 
 export async function checkingForUserConfirmationStatus(email : string) {
