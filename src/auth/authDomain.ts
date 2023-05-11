@@ -23,7 +23,7 @@ export async function Login(req: Request, res: Response) {
             const accessJWT = await jwtService.createAccessJWT(result)
             const refreshJWT = await jwtService.createRefreshJWT(result)
 
-            res.cookie('refreshJWT', refreshJWT, {httpOnly: true,secure: true})
+            res.cookie('refresh', refreshJWT, {httpOnly: true,secure: true})
             res.status(200).send({
                 accessToken: accessJWT
             })
