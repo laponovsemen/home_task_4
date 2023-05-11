@@ -8,7 +8,7 @@ import {
 import {ValidationErrors} from "../common";
 import {
     giveUserInformation,
-    Login,
+    Login, refreshToken,
     registrationConfirmation,
     registrationEmailResending,
     sendMessageToEmail
@@ -18,7 +18,7 @@ import {
 export const authRouter = Router({})
 
 authRouter.post("/login",UserLoginOrEmailValidation, UserPasswordValidation, ValidationErrors, Login)
-authRouter.post("/refresh-token",UserLoginOrEmailValidation, UserPasswordValidation, ValidationErrors, Login)
+authRouter.post("/refresh-token",refreshToken)
 
 authRouter.post("/registration",UserEmailValidation,UserLoginValidation,  UserPasswordValidation, ValidationErrors, sendMessageToEmail)
 authRouter.post("/registration-confirmation", registrationConfirmation)

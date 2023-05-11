@@ -21,7 +21,7 @@ export async function Login(req: Request, res: Response) {
     if (result) {
         try {
             const accessJWT = await jwtService.createAccessJWT(result)
-            const refreshJWT = await jwtService.createAccessJWT(result)
+            const refreshJWT = await jwtService.createRefreshJWT(result)
 
             res.cookie('refreshJWT', refreshJWT, {httpOnly: true,secure: true})
             res.status(200).send({
@@ -117,6 +117,11 @@ export async function registrationEmailResending(req: Request, res: Response) {
     }
 }
 
-export async function createEmailSendCode() {
+export async function refreshToken(req: Request, res: Response) {
+
+}
+
+
+    export async function createEmailSendCode() {
     return uuidv4()
 }
