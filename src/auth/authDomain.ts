@@ -20,9 +20,12 @@ export async function Login(req: Request, res: Response) {
     const result = await LoginDB(loginOrEmail, password)
     if (result) {
         try {
-            const JWT = await jwtService.createJWT(result)
+            const accessJWT = await jwtService.createAccessJWT(result)
+            const refreshJWT = await jwtService.createAccessJWT(result)
+
+            res.cookie('refreshJWT', refreshJWT, {httpOnly: true,secure: true})
             res.status(200).send({
-                accessToken: JWT
+                accessToken: accessJWT
             })
             return
         } catch (e) {
@@ -77,9 +80,11 @@ export async function registrationConfirmation(req: Request, res: Response) {
         res.status(400).send({errorsMessages: [{"message": "wrong code passed228", "field": "code"}]})
     } else {
         if (await confirmUserStatus(code.toString())) {
-            return res.sendStatus(204)
+            res.sendStatus(204)
+            return
         }
-        return res.status(400).send({errorsMessages: [{"message": "no code in query params passed", "field": "code"}]})
+        res.status(400).send({errorsMessages: [{"message": "no code in query params passed", "field": "code"}]})
+        return
     }
 }
 

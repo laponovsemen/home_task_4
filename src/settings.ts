@@ -6,10 +6,12 @@ import {testingRouter} from "./testing/testingRouter";
 import {usersRouter} from "./users/usersRouter";
 import {authRouter} from "./auth/authRouter";
 import {commentsRouter} from "./comments/commentsRouter";
+import cookieParser from "cookie-parser";
 
 export const app = express()
 
 app.use(express.json())
+app.use(cookieParser())
 
 app.use("", startRouter)
 app.use("/auth", authRouter)
