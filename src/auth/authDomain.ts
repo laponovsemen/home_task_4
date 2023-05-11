@@ -77,13 +77,10 @@ export async function registrationConfirmation(req: Request, res: Response) {
         res.status(400).send({errorsMessages: [{"message": "wrong code passed228", "field": "code"}]})
     } else {
         if (await confirmUserStatus(code.toString())) {
-            res.sendStatus(204)
-            return
+            return res.sendStatus(204)
         }
-        res.status(400).send({errorsMessages: [{"message": "no code in query params passed", "field": "code"}]})
-        return
+        return res.status(400).send({errorsMessages: [{"message": "no code in query params passed", "field": "code"}]})
     }
-
 }
 
 export async function registrationEmailResending(req: Request, res: Response) {
@@ -101,7 +98,7 @@ export async function registrationEmailResending(req: Request, res: Response) {
             res.status(400).send({
                 "errorsMessages": [{
                     "message": "user already confirmed",
-                    "field": "isConfirmed"
+                    "field": "email"
                 }]
             })
             return
