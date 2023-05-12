@@ -158,8 +158,8 @@ export async function refreshToken(req: Request, res: Response) {
         return
     } else {
 
-        const newRefreshToken = jwtService.createRefreshJWT(user)
-        const newAccessToken = jwtService.createAccessJWT(user)
+        const newRefreshToken = await jwtService.createRefreshJWT(user)
+        const newAccessToken = await jwtService.createAccessJWT(user)
         await addOldTokensAsProhibitedDB("refresh", refreshToken)
         //await addOldTokensAsProhibitedDB("access", accessToken)
 
