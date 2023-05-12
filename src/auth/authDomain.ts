@@ -58,11 +58,11 @@ export async function Logout(req: Request, res: Response) {
 export async function giveUserInformation(req: Request, res: Response) {
     const auth = req.headers.authorization
     if (auth !== undefined) {
-        const userId = await jwtService.getUserIdByToken(auth)
+        const userId = await jwtService.getUserIdByToken(auth.split(" ")[1])
 
 
         if(!userId){
-            res.status(401).send(auth)
+            res.status(401).send(auth.split(" ")[1])
             return
         }
         const userInfo = await usersCollectionOutput.findOne({_id: new ObjectId(userId!)})
