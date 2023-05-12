@@ -140,7 +140,8 @@ export async function registrationEmailResending(req: Request, res: Response) {
 }
 
 export async function refreshToken(req: Request, res: Response) {
-    const refreshToken = req.cookies.refreshTokenconst accessToken = req.body.accessToken
+    const refreshToken = req.cookies.refreshToken
+    const accessToken = req.body.accessToken
     const userId = await jwtService.getUserIdByToken(refreshToken)
     if(!userId){
         res.sendStatus(401)
