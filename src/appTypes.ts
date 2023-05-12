@@ -179,15 +179,10 @@ export type meViewModel = {
     login:	string,
     userId:	string,
 }
+export type spoiledTokenType = {
+    typeOfToken:	"refresh" | "access",
+    token : string
+}
 
 
-/*
-type test = {
-    accountData: {
-        id, login, email, password, data
-    }
-    emailConfirmation: {
-        isConfirmed: true
 
-    }
-}*/

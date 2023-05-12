@@ -31,5 +31,15 @@ export const jwtService = {
             console.log(e + " error")
             return null
         }
+    },
+
+    async JWTverify (token:string) {
+        try {
+            const result: any = jwt.verify(token, secretKey!)
+            return result
+        }catch(e){
+            console.log(e + " error")
+            return null
+        }
     }
 }
