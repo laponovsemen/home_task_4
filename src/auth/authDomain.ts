@@ -141,18 +141,18 @@ export async function registrationEmailResending(req: Request, res: Response) {
 
 export async function refreshToken(req: Request, res: Response) {
     const refreshToken = req.cookies.refreshToken
-    const accessToken = req.body.accessToken
-    const userId = await jwtService.getUserIdByToken(accessToken)
+    //const accessToken = req.body.accessToken
+    const userId = await jwtService.getUserIdByToken(refreshToken)
     if(!userId){
         res.sendStatus(401)
         return
     }
     const user = await usersCollectionOutput.findOne({_id : new ObjectId(userId)})
     const tokensVerification = !jwtService.JWTverify(refreshToken)
-        || !jwtService.JWTverify(accessToken)
+        //|| !jwtService.JWTverify(accessToken)
         || !user
         || await refreshTokenSpoilness(refreshToken)
-        || await accessTokenSpoilness(accessToken)
+        //|| await accessTokenSpoilness(accessToken)
     if(tokensVerification){
         res.sendStatus(401)
         return
@@ -161,7 +161,7 @@ export async function refreshToken(req: Request, res: Response) {
         const newRefreshToken = jwtService.createRefreshJWT(user)
         const newAccessToken = jwtService.createRefreshJWT(user)
         await addOldTokensAsProhibitedDB("refresh", refreshToken)
-        await addOldTokensAsProhibitedDB("access", accessToken)
+        //await addOldTokensAsProhibitedDB("access", accessToken)
 
         res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true,})
         res.send({"accessToken": newAccessToken}).status(200)
