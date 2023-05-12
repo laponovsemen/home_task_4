@@ -19,7 +19,6 @@ export const authRouter = Router({})
 
 authRouter.post("/login",UserLoginOrEmailValidation, UserPasswordValidation, ValidationErrors, Login)
 authRouter.post("/refresh-token",refreshToken)
-
 authRouter.post("/registration",UserEmailValidation,UserLoginValidation,  UserPasswordValidation, ValidationErrors, sendMessageToEmail)
 authRouter.post("/registration-confirmation", registrationConfirmation)
 authRouter.post("/registration-email-resending",UserEmailValidation, ValidationErrors, registrationEmailResending)

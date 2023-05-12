@@ -71,8 +71,10 @@ export async function giveUserInformation(req: Request, res: Response) {
             "login": userInfo?.accountData.login,
             "userId": userId
         })
+        return
     } else {
         res.sendStatus(401)
+        return
     }
 }
 
