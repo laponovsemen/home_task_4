@@ -62,7 +62,7 @@ export async function giveUserInformation(req: Request, res: Response) {
 
 
         if(!userId){
-            res.sendStatus(402)
+            res.status(401).send(auth)
             return
         }
         const userInfo = await usersCollectionOutput.findOne({_id: new ObjectId(userId!)})
@@ -73,7 +73,7 @@ export async function giveUserInformation(req: Request, res: Response) {
         })
         return
     } else {
-        res.sendStatus(403)
+        res.sendStatus(401)
         return
     }
 }
