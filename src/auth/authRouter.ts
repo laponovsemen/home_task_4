@@ -8,7 +8,7 @@ import {
 import {ValidationErrors} from "../common";
 import {
     giveUserInformation,
-    Login, refreshToken,
+    Login, Logout, refreshToken,
     registrationConfirmation,
     registrationEmailResending,
     sendMessageToEmail
@@ -23,7 +23,7 @@ authRouter.post("/refresh-token",refreshToken)
 authRouter.post("/registration",UserEmailValidation,UserLoginValidation,  UserPasswordValidation, ValidationErrors, sendMessageToEmail)
 authRouter.post("/registration-confirmation", registrationConfirmation)
 authRouter.post("/registration-email-resending",UserEmailValidation, ValidationErrors, registrationEmailResending)
-authRouter.post("/logout",UserLoginOrEmailValidation, UserPasswordValidation, ValidationErrors, Login)
+authRouter.post("/logout",Logout)
 authRouter.get("/me", giveUserInformation)
 
 const SECRET_KEY = 'My-secret-key'

@@ -44,6 +44,15 @@ export async function Login(req: Request, res: Response) {
         res.sendStatus(401)
     }
 }
+export async function Logout(req: Request, res: Response) {
+    const refreshToken = req.cookies.refreshToken
+    if(!await jwtService.JWTverify(refreshToken) || await refreshTokenSpoilness(refreshToken)){
+        res.sendStatus(401)
+    } else {
+        await addOldTokensAsProhibitedDB("refresh", refreshToken)
+        res.sendStatus(204)
+    }
+}
 
 
 export async function giveUserInformation(req: Request, res: Response) {
