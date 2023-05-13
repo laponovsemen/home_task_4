@@ -189,7 +189,7 @@ export type DeviceViewModel = {
     ip : string,                  // string IP address of device during signing in
     title : string,               // string Device name: for example Chrome 105 (received by parsing http header "user-agent"
     lastActiveDate : string,      // string Date of the last generating of refresh/access tokens
-    deviceId : string             // string Id of connected device session
+    deviceId : ObjectId             // string Id of connected device session
 }
 export type DeviceInputModel = {
     ip : string,                  // string IP address of device during signing in

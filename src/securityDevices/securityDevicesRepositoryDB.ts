@@ -18,7 +18,7 @@ export async function saveDeviceToDB(deviceToSave : DeviceInputModel, refreshTok
         ip : ip,
         title : title,
         lastActiveDate: lastActiveDate,
-        deviceId : deviceId
+        deviceId : new ObjectId(deviceId)
     }
     await devicesCollectionInsert.insertOne({
         userId : userId,
@@ -28,4 +28,7 @@ export async function saveDeviceToDB(deviceToSave : DeviceInputModel, refreshTok
 }
 export async function getAllDevicesForSpecifiedUserDB(userId : ObjectId) {
     return await devicesCollectionOutput.find({userId : userId})
+}
+export async function findDevice(deviceId : string) {
+    return !!await devicesCollectionOutput.findOne({"device.deviceId" : new ObjectId(deviceId)})
 }
