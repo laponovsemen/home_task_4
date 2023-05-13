@@ -36,6 +36,8 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
                 password : "password"
             }).expect(200)
         console.log(login.body.accessToken)
+
+        const gettingAllDevicesForSpecificUser =
     })
 
 
