@@ -8,17 +8,15 @@ const secretKey = process.env.SECRET_KEY
 
 
 export const jwtService = {
-    async  createAccessJWT(user: userViewModel){
-        const token: string = jwt.sign({userId : user._id, login: user.accountData.login, email : user.accountData.email}, secretKey!, {expiresIn : "10s"})
+    async  createAccessJWT(user: userViewModel, dateOfCreation : string){
+        const token: string = jwt.sign({userId : user._id, login: user.accountData.login, email : user.accountData.email, dateOfCreation : dateOfCreation}, secretKey!, {expiresIn : "10s"})
         //console.log(token)
         return token
-
     },
-    async  createRefreshJWT(user: userViewModel){
-        const token: string = jwt.sign({userId : user._id, login: user.accountData.login, email : user.accountData.email}, secretKey!, {expiresIn : "20s"})
+    async  createRefreshJWT(user: userViewModel, dateOfCreation : string){
+        const token: string = jwt.sign({userId : user._id, login: user.accountData.login, email : user.accountData.email, dateOfCreation : dateOfCreation}, secretKey!, {expiresIn : "20s"})
         //console.log(token)
         return token
-
     },
     async getUserIdByToken(token: string) {
 

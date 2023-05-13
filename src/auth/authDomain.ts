@@ -17,6 +17,8 @@ import {
     createUnconfirmedUser, updateCodeOfUserConfirmation
 } from "../users/usersRepositoryMongoDB";
 import {v4 as uuidv4} from 'uuid'
+import {saveDeviceToDB} from "../securityDevices/securityDevicesRepositoryDB";
+import {createNewDevice} from "../securityDevices/securityDevicesDomain";
 
 
 
@@ -27,8 +29,20 @@ export async function Login(req: Request, res: Response) {
     const result = await LoginDB(loginOrEmail, password)
     if (result) {
         try {
-            const accessJWT = await jwtService.createAccessJWT(result)
-            const refreshJWT = await jwtService.createRefreshJWT(result)
+            const dateOfCreation = new Date().toISOString()
+            const accessJWT = await jwtService.createAccessJWT(result, dateOfCreation)
+            const refreshJWT = await jwtService.createRefreshJWT(result, dateOfCreation)
+
+            const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress
+            const title =  req.headers["user-agent"]
+            const userId = result._id
+
+            const newDevice = {
+                ip : ip!.toString(),
+                title : title!,
+                lastActiveDate : dateOfCreation
+            }
+            await createNewDevice(newDevice, refreshJWT, userId)
 
             res.cookie('refreshToken', refreshJWT, {httpOnly: true,secure: true})
             res.status(200).send({
@@ -151,19 +165,17 @@ export async function refreshToken(req: Request, res: Response) {
     }
     const user = await usersCollectionOutput.findOne({_id : new ObjectId(userId)})
     const tokensVerification = !jwtService.JWTverify(refreshToken)
-        //|| !jwtService.JWTverify(accessToken)
         || !user
         || await refreshTokenSpoilness(refreshToken)
-        //|| await accessTokenSpoilness(accessToken)
+
     if(tokensVerification){
         res.sendStatus(401)
         return
     } else {
-
-        const newRefreshToken = await jwtService.createRefreshJWT(user)
-        const newAccessToken = await jwtService.createAccessJWT(user)
+        const dateOfCreating = new Date().toISOString()
+        const newRefreshToken = await jwtService.createRefreshJWT(user, dateOfCreating)
+        const newAccessToken = await jwtService.createAccessJWT(user, dateOfCreating)
         await addOldTokensAsProhibitedDB("refresh", refreshToken)
-        //await addOldTokensAsProhibitedDB("access", accessToken)
 
         res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true,})
         res.send({"accessToken": newAccessToken}).status(200)

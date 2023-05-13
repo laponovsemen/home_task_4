@@ -7,6 +7,7 @@ import {usersRouter} from "./users/usersRouter";
 import {authRouter} from "./auth/authRouter";
 import {commentsRouter} from "./comments/commentsRouter";
 import cookieParser from "cookie-parser";
+import {securityDevicesRouter} from "./securityDevices/securityDevicesRouter";
 
 export const app = express()
 
@@ -20,3 +21,4 @@ app.use("/blogs", blogsRouter)
 app.use("/users", usersRouter)
 app.use("/comments", commentsRouter)
 app.use("/testing/all-data", testingRouter)
+app.use("/security/devices", securityDevicesRouter)
