@@ -7,19 +7,35 @@ import {ObjectId} from "mongodb";
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
 
-describe("123", () => {
-    jest.setTimeout(15000)
-    it("321", async () => {
-        const res0 = await request(app).delete("/security/devices")
-        const res1 = await request(app).delete(`/security/devices/${new ObjectId()}`)
-        const res2 = await request(app).get("/security/devices")
-        expect(res0).toBeDefined()
-        expect(res0.status).toBe(210)
-        expect(res1).toBeDefined()
-        expect(res1.status).toBe(404)
-        expect(res2).toBeDefined()
-        expect(res2.status).toBe(200)
+describe("TEST OF CHECKING CONNECTED DEVICES", () => {
+    jest.setTimeout(30000)
+    it("creating user, login 4 times and check devices", async () => {
+        await request(app).delete("/testing/all-data")
+        const registration = await request(app)
+            .post("/auth/registration")
+            .send({
+                login: "login",
+                email : "igorlaponov01011972@gmail.com",
+                password : "password"
+            }).expect(201)
+        expect(registration.body.code).toEqual(expect.any(String))
+        const registrationCode = registration.body.code
 
+
+        const registrationConfirmation = await request(app)
+            .post("/auth/registration-confirmation")
+            .send({
+                code : registrationCode
+            }).expect(204)
+
+
+        const login = await request(app)
+            .post("/auth/login")
+            .send({
+                loginOrEmail : "login",
+                password : "password"
+            }).expect(200)
+        console.log(login.body.accessToken)
     })
 
 

@@ -12,5 +12,6 @@ export async function  deleteAllInformation(req: Request, res: Response) {
     await deleteAllUsers()
     await deleteAllComments()
 
+
     res.sendStatus(204)
 }

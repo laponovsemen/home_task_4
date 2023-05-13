@@ -19,6 +19,7 @@ import {
 import {v4 as uuidv4} from 'uuid'
 import {saveDeviceToDB} from "../securityDevices/securityDevicesRepositoryDB";
 import {createNewDevice} from "../securityDevices/securityDevicesDomain";
+import jwt from "jsonwebtoken";
 
 
 
@@ -29,12 +30,17 @@ export async function Login(req: Request, res: Response) {
     const result = await LoginDB(loginOrEmail, password)
     if (result) {
         try {
+            // deviceId
             const dateOfCreation = new Date().toISOString()
             const accessJWT = await jwtService.createAccessJWT(result, dateOfCreation)
-            const refreshJWT = await jwtService.createRefreshJWT(result, dateOfCreation)
+            const refreshJWT = await jwtService.createRefreshJWT(result, dateOfCreation) //deviceId
 
-            const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress
-            const title =  req.headers["user-agent"]
+            const payload: any = jwt.decode(refreshJWT)
+            const lastActiveDate = new Date(payload.iat * 1000).toISOString()
+
+            // const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress
+            const ip = req.ip
+            const title =  req.headers["user-agent"] || 'Default UA'
             const userId = result._id
 
             const newDevice = {
@@ -44,7 +50,7 @@ export async function Login(req: Request, res: Response) {
             }
             await createNewDevice(newDevice, refreshJWT, userId)
 
-            res.cookie('refreshToken', refreshJWT, {httpOnly: true,secure: true})
+            res.cookie('refreshToken', refreshJWT, {httpOnly: true,secure: true, })
             res.status(200).send({
                 accessToken: accessJWT
             })
@@ -103,8 +109,8 @@ export async function sendMessageToEmail(req: Request, res: Response) {
     } else {
         const user = await createUnconfirmedUser(login, password, email)
         if (user) {
-            await emailAdapter.sendEmail(req.body.email, user.accountConfirmationData.code)
-            res.sendStatus(204)
+            //const info = await emailAdapter.sendEmail(req.body.email, user.accountConfirmationData.code)
+            res.status(201).send({code :user.accountConfirmationData.code})
         } else {
             res.sendStatus(400)
         }

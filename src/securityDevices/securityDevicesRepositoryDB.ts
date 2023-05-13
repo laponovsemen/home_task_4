@@ -3,6 +3,7 @@ import {DeviceInputModel, DeviceViewModel, SessionsInputModel, SessionsViewModel
 import {randomUUID} from "crypto";
 import {ObjectId} from "mongodb";
 import {refreshToken} from "../auth/authDomain";
+import {mongoObjectId} from "../common";
 
 
 const devicesCollectionOutput = client.db("forum").collection<SessionsViewModel>("securityDevices")
@@ -12,7 +13,7 @@ export async function saveDeviceToDB(deviceToSave : DeviceInputModel, refreshTok
     const ip = deviceToSave.ip
     const title = deviceToSave.title
     const lastActiveDate = deviceToSave.lastActiveDate
-    const deviceId = randomUUID()
+    const deviceId = mongoObjectId()
 
     const device = {
         ip : ip,

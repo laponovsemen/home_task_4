@@ -52,6 +52,7 @@ export async function findUserByIdDB(userId : string){
 
 export async function createUnconfirmedUser(login : string, password : string, email: string) {
     const dateOfCreation = new Date()
+    const codeToSend = await createEmailSendCode()
     const newUnconfirmedUser : userInputModel = {
         accountData : {
             createdAt: dateOfCreation,
@@ -61,7 +62,7 @@ export async function createUnconfirmedUser(login : string, password : string, e
         },
         accountConfirmationData: {
             isConfirmed : false,
-            code : await createEmailSendCode(),
+            code : codeToSend,
             codeDateOfExpiary : add(dateOfCreation, {
                 minutes : 10
             })
@@ -78,8 +79,10 @@ export async function createUnconfirmedUser(login : string, password : string, e
         },
         accountConfirmationData: {
             isConfirmed : false,
-            code : await createEmailSendCode(),
-            codeDateOfExpiary : dateOfCreation
+            code : codeToSend,
+            codeDateOfExpiary : add(dateOfCreation, {
+                minutes : 10
+            })
         }
     }
 }
