@@ -39,12 +39,22 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
             }).expect(200)
 
         const accessToken = login.body.accessToken
-        const refreshToken = cookie("refreshToken")
+        const refreshToken = login.headers['set-cookie'][0].split(";")[0].slice(13)
         console.log(accessToken)
-        console.log(refreshToken)
+        console.log("refresh - " + refreshToken)
+
+        const gettingAllDevicesForSpecificUser = await request(app)
+            .get("/security/devices")
+            .set("Cookie", [`refreshToken=${refreshToken}`])
+            .expect(200)
+        expect(gettingAllDevicesForSpecificUser.body).toEqual({})
 
 
-        //const gettingAllDevicesForSpecificUser =
+
+        //expect(gettingAllDevicesForSpecificUser.body).toEqual("sadas")
+
+
+
     })
 
 

@@ -7,11 +7,14 @@ import {ObjectId} from "mongodb";
 
 export async function getAllDevicesForSpecifiedUser(req: Request, res: Response) {
     try {
-        const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken.split(" ")[1])
+        console.log("info " + req.cookies.refreshToken)
+        const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken)
         const devices = await getAllDevicesForSpecifiedUserDB(userId!)
+        console.log("info " + userId)
+
         res.send(devices).status(200)
     } catch (e) {
-        res.sendStatus(200)
+        res.sendStatus(400)
     }
 }
 
