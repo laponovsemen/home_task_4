@@ -5,18 +5,24 @@ import {findDevice, getAllDevicesForSpecifiedUserDB, saveDeviceToDB} from "./sec
 import {jwtService} from "../jwtDomain";
 import {ObjectId} from "mongodb";
 
-export async function getAllDevicesForSpecifiedUser(req: Request, res : Response) {
-    const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken.split(" ")[1])
-    const devices = await getAllDevicesForSpecifiedUserDB(userId!)
-    res.send(devices).status(201)
+export async function getAllDevicesForSpecifiedUser(req: Request, res: Response) {
+    try {
+        const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken.split(" ")[1])
+        const devices = await getAllDevicesForSpecifiedUserDB(userId!)
+        res.send(devices).status(200)
+    } catch (e) {
+        res.sendStatus(200)
+    }
 }
-export async function deleteAllDevicesExcludeCurrent(req: Request, res : Response) {
+
+export async function deleteAllDevicesExcludeCurrent(req: Request, res: Response) {
     res.sendStatus(210)
 }
-export async function deleteDeviceByDeviceId(req: Request, res : Response) {
+
+export async function deleteDeviceByDeviceId(req: Request, res: Response) {
     const deviceId = req.params.deviceId
     const foundDevice = await findDevice(deviceId)
-    if(!foundDevice){
+    if (!foundDevice) {
         res.sendStatus(404)
         return
     } else {
@@ -24,7 +30,8 @@ export async function deleteDeviceByDeviceId(req: Request, res : Response) {
     }
 
 }
-export async function createNewDevice(newDevice : DeviceInputModel, refreshToken : string , userId : ObjectId) {
+
+export async function createNewDevice(newDevice: DeviceInputModel, refreshToken: string, userId: ObjectId) {
 
     await saveDeviceToDB(newDevice, refreshToken, userId)
 }
