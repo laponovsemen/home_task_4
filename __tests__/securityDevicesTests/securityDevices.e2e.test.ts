@@ -3,6 +3,8 @@ import request from "supertest";
 import {app} from "../../src/settings";
 import exp = require("constants");
 import {ObjectId} from "mongodb";
+import {cookie} from "express-validator";
+import {refreshToken} from "../../src/auth/authDomain";
 
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
@@ -35,9 +37,14 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
                 loginOrEmail : "login",
                 password : "password"
             }).expect(200)
-        console.log(login.body.accessToken)
 
-        const gettingAllDevicesForSpecificUser =
+        const accessToken = login.body.accessToken
+        const refreshToken = cookie("refreshToken")
+        console.log(accessToken)
+        console.log(refreshToken)
+
+
+        //const gettingAllDevicesForSpecificUser =
     })
 
 
