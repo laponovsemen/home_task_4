@@ -20,6 +20,7 @@ import {v4 as uuidv4} from 'uuid'
 import {saveDeviceToDB} from "../securityDevices/securityDevicesRepositoryDB";
 import {createNewDevice} from "../securityDevices/securityDevicesDomain";
 import jwt from "jsonwebtoken";
+import {mongoObjectId} from "../common";
 
 
 
@@ -32,8 +33,9 @@ export async function Login(req: Request, res: Response) {
         try {
             // deviceId
             const dateOfCreation = new Date().toISOString()
-            const accessJWT = await jwtService.createAccessJWT(result, dateOfCreation)
-            const refreshJWT = await jwtService.createRefreshJWT(result, dateOfCreation) //deviceId
+            const deviceId = mongoObjectId()
+            const accessJWT = await jwtService.createAccessJWT(result, dateOfCreation, deviceId)
+            const refreshJWT = await jwtService.createRefreshJWT(result, dateOfCreation, deviceId) //deviceId
 
             const payload: any = jwt.decode(refreshJWT)
             const lastActiveDate = new Date(payload.iat * 1000).toISOString()
@@ -50,7 +52,7 @@ export async function Login(req: Request, res: Response) {
             }
             await createNewDevice(newDevice, refreshJWT, userId)
 
-            res.cookie('refreshToken', refreshJWT, {httpOnly: true,secure: true, })
+            res.cookie('refreshToken', refreshJWT, { httpOnly: true, secure: true })
             res.status(200).send({
                 accessToken: accessJWT
             })
@@ -179,8 +181,9 @@ export async function refreshToken(req: Request, res: Response) {
         return
     } else {
         const dateOfCreating = new Date().toISOString()
-        const newRefreshToken = await jwtService.createRefreshJWT(user, dateOfCreating)
-        const newAccessToken = await jwtService.createAccessJWT(user, dateOfCreating)
+        const deviceId = mongoObjectId()
+        const newRefreshToken = await jwtService.createRefreshJWT(user, dateOfCreating, deviceId)
+        const newAccessToken = await jwtService.createAccessJWT(user, dateOfCreating, deviceId)
         await addOldTokensAsProhibitedDB("refresh", refreshToken)
 
         res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true,})
