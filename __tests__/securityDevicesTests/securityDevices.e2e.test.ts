@@ -47,7 +47,7 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
             .get("/security/devices")
             .set("Cookie", [`refreshToken=${refreshToken}`])
             .expect(200)
-        expect(gettingAllDevicesForSpecificUser.body).toEqual("")
+        expect(gettingAllDevicesForSpecificUser.body).toEqual({})
 
 
 

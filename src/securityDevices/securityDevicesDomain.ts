@@ -11,8 +11,11 @@ export async function getAllDevicesForSpecifiedUser(req: Request, res: Response)
         const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken)
         const devices = await getAllDevicesForSpecifiedUserDB(userId!)
         console.log("info " + userId)
+        const result = devices.map(value => {
+                return value.device
+           })
 
-        res.send(devices).status(200)
+        res.send(result).status(200)
     } catch (e) {
         res.sendStatus(400)
     }
