@@ -2,6 +2,9 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import {userViewModel} from "./appTypes";
 import {ObjectId} from "mongodb";
+import {NextFunction, Request, Response} from "express";
+import {getAllDevicesForSpecifiedUserDB} from "./securityDevices/securityDevicesRepositoryDB";
+import {findUserByIdDB} from "./users/usersRepositoryMongoDB";
 dotenv.config()
 
 const secretKey = process.env.SECRET_KEY
@@ -51,5 +54,15 @@ export const jwtService = {
             console.log(e + " error")
             return null
         }
+    }
+}
+
+export async function jwtVerificationMiddleware(req : Request, res : Response, next : NextFunction){
+    const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken)
+    const foundUser = await findUserByIdDB(userId!.toString())
+    if(!userId || !foundUser){
+        res.sendStatus(401)
+    } else {
+        next()
     }
 }

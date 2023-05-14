@@ -5,11 +5,12 @@ import {
     getAllDevicesForSpecifiedUser
 } from "./securityDevicesDomain";
 import {JWTVerifiction} from "./securityDevicesMiddleware";
+import {jwtVerificationMiddleware} from "../jwtDomain";
 
 
 
 export const securityDevicesRouter = Router({})
 // ask about req.baseUrl and counting requests
 securityDevicesRouter.get("",  getAllDevicesForSpecifiedUser)
-securityDevicesRouter.delete("",  deleteAllDevicesExcludeCurrent)
-securityDevicesRouter.delete("/:deviceId",  deleteDeviceByDeviceId)
+securityDevicesRouter.delete("",jwtVerificationMiddleware,   deleteAllDevicesExcludeCurrent)
+securityDevicesRouter.delete("/:deviceId", jwtVerificationMiddleware,  deleteDeviceByDeviceId)
