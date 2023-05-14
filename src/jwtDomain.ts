@@ -59,8 +59,8 @@ export const jwtService = {
 
 export async function jwtVerificationMiddleware(req : Request, res : Response, next : NextFunction){
     const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken)
-    const foundUser = await findUserByIdDB(userId!.toString())
-    if(!userId || !foundUser){
+    //const foundUser = await findUserByIdDB(userId!.toString())
+    if(!userId ){
         res.sendStatus(401)
     } else {
         next()
