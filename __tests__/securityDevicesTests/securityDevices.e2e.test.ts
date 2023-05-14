@@ -33,6 +33,30 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
 
         const login = await request(app)
             .post("/auth/login")
+            .set('user-agent', 'FIREFOX')
+            .send({
+                loginOrEmail : "login",
+                password : "password"
+            }).expect(200)
+
+        await request(app)
+            .post("/auth/login")
+            .set('user-agent', 'CHROME')
+            .send({
+                loginOrEmail : "login",
+                password : "password"
+            }).expect(200)
+
+        await request(app)
+            .post("/auth/login")
+            .set('user-agent', 'SAFARI')
+            .send({
+                loginOrEmail : "login",
+                password : "password"
+            }).expect(200)
+
+        await request(app)
+            .post("/auth/login")
             .send({
                 loginOrEmail : "login",
                 password : "password"
