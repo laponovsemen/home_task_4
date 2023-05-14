@@ -50,7 +50,7 @@ export async function Login(req: Request, res: Response) {
                 title : title!,
                 lastActiveDate : dateOfCreation
             }
-            await createNewDevice(newDevice, refreshJWT, userId)
+            const newSession =  await createNewDevice(newDevice, refreshJWT, userId)
 
             res.cookie('refreshToken', refreshJWT, { httpOnly: true, secure: true })
             res.status(200).send({

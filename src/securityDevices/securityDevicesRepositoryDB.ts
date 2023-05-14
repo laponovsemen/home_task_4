@@ -4,6 +4,7 @@ import {randomUUID} from "crypto";
 import {ObjectId} from "mongodb";
 import {refreshToken} from "../auth/authDomain";
 import {mongoObjectId} from "../common";
+import jwt from "jsonwebtoken";
 
 
 const devicesCollectionOutput = client.db("forum").collection<SessionsViewModel>("securityDevices")
@@ -13,13 +14,14 @@ export async function saveDeviceToDB(deviceToSave : DeviceInputModel, refreshTok
     const ip = deviceToSave.ip
     const title = deviceToSave.title
     const lastActiveDate = deviceToSave.lastActiveDate
-    const deviceId = mongoObjectId()
+    const payload: any = jwt.decode(refreshToken)
+    const deviceId = payload.deviceId
 
     const device = {
         ip : ip,
         title : title,
         lastActiveDate: lastActiveDate,
-        deviceId : new ObjectId(deviceId)
+        deviceId : deviceId
     }
     await devicesCollectionInsert.insertOne({
         userId : userId,
