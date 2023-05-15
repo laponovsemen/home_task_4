@@ -20,8 +20,8 @@ export async function getAllDevicesForSpecifiedUser(req: Request, res: Response)
         const devices = await getAllDevicesForSpecifiedUserDB(userId!)
         console.log("info " + userId)
         const result = devices.map(value => {
-                return value.device
-           })
+            return value.device
+        })
 
         res.send(result).status(200)
     } catch (e) {
@@ -31,32 +31,26 @@ export async function getAllDevicesForSpecifiedUser(req: Request, res: Response)
 
 export async function deleteAllDevicesExcludeCurrent(req: Request, res: Response) {
     const refreshToken = req.cookies.refreshToken
-    const refreshTokenPayload : any = jwt.decode(refreshToken)
-    const deviceIdFromRefresToken = refreshTokenPayload!.deviceId
-    await deleteAllDevicesExcludeCurrentDB(deviceIdFromRefresToken)
+    const refreshTokenPayload: any = jwt.decode(refreshToken)
+    const deviceIdFromRefreshToken = refreshTokenPayload!.deviceId
+    // await deleteAllDevicesExcludeCurrentDB(deviceIdFromRefreshToken)
     res.sendStatus(204)
 }
 
 export async function deleteDeviceByDeviceId(req: Request, res: Response) {
     const refreshToken = req.cookies.refreshToken
-    const refreshTokenPayload : any = jwt.decode(refreshToken)
+    const refreshTokenPayload: any = jwt.decode(refreshToken)
     const userIdFromRefresToken = refreshTokenPayload!.userId
     const deviceIdFromParam = req.params.deviceId
-    const deviceIdFromDB = await findSessionsFromDB(userIdFromRefresToken, deviceIdFromParam)
-
 
     const foundDevice = await findDeviceById(deviceIdFromParam)
-    if (!deviceIdFromDB) {
-        res.sendStatus(403)
-        return
-    } else if(!foundDevice) {
-        res.sendStatus(404)
-        return
-    } else {
-        res.sendStatus(204)
-        await deleteDeviceById(deviceIdFromParam)
-        return
-    }
+
+    if (!foundDevice) return res.sendStatus(404)
+
+    if (foundDevice.userId !== new ObjectId(userIdFromRefresToken)) return res.sendStatus(403)
+
+    await deleteDeviceById(deviceIdFromParam)
+    return res.sendStatus(204)
 
 }
 
