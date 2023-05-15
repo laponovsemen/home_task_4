@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {randomUUID} from "crypto";
 import {DeviceInputModel, DeviceViewModel} from "../appTypes";
 import {
+    deleteAllDevicesExcludeCurrentDB,
     deleteDeviceById,
     findDeviceById,
     findSessionsFromDB,
@@ -29,7 +30,11 @@ export async function getAllDevicesForSpecifiedUser(req: Request, res: Response)
 }
 
 export async function deleteAllDevicesExcludeCurrent(req: Request, res: Response) {
-    res.sendStatus(210)
+    const refreshToken = req.cookies.refreshToken
+    const refreshTokenPayload : any = jwt.decode(refreshToken)
+    const deviceIdFromRefresToken = refreshTokenPayload!.deviceId
+    await deleteAllDevicesExcludeCurrentDB(deviceIdFromRefresToken)
+    res.sendStatus(204)
 }
 
 export async function deleteDeviceByDeviceId(req: Request, res: Response) {

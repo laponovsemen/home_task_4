@@ -45,3 +45,6 @@ export async function findSessionsFromDB(userId : string, deviceId : string) {
 export async function updateDeviceByUserId(userId : ObjectId, dateOfCreating : string, newRefreshToken :string) {
     return await devicesCollectionInsert.updateOne({userId : userId},{$set : {refreshToken : newRefreshToken, "device.lastActiveDate": dateOfCreating}})
 }
+export async function deleteAllDevicesExcludeCurrentDB(deviceId :string) {
+    return await devicesCollectionOutput.deleteMany({_id : {$not : {deviceId}}})
+}
