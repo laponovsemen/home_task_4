@@ -1,14 +1,24 @@
 import {client} from "../db";
-import {DeviceInputModel, DeviceViewModel, SessionsInputModel, SessionsViewModel, userViewModel} from "../appTypes";
+import {
+    DeviceInputModel,
+    DeviceViewModel, RequestsInputModel,
+    RequestsOutputModel,
+    SessionsInputModel,
+    SessionsViewModel,
+    userViewModel
+} from "../appTypes";
 import {randomUUID} from "crypto";
 import {ObjectId} from "mongodb";
 import {refreshToken} from "../auth/authDomain";
 import {mongoObjectId} from "../common";
 import jwt from "jsonwebtoken";
+import {subMinutes, subSeconds} from "date-fns";
 
 
 const devicesCollectionOutput = client.db("forum").collection<SessionsViewModel>("securityDevices")
 const devicesCollectionInsert = client.db("forum").collection<SessionsInputModel>("securityDevices")
+const requestsCollectionInsert = client.db("forum").collection<RequestsInputModel>("Requests")
+const requestsCollectionOutput = client.db("forum").collection<RequestsOutputModel>("Requests")
 
 export async function saveDeviceToDB(deviceToSave : DeviceInputModel, refreshToken : string, userId : ObjectId) {
     const ip = deviceToSave.ip
@@ -47,4 +57,22 @@ export async function updateDeviceByUserId(userId : ObjectId, dateOfCreating : s
 }
 export async function deleteAllDevicesExcludeCurrentDB(deviceId :string) {
     return await devicesCollectionOutput.deleteMany({_id : {$not : {deviceId}}})
+}
+export async function createNewRequestDB(ip :string, device : string) {
+    return await requestsCollectionInsert.insertOne({
+        ip : ip,
+        device : device,
+        lastActiveDate : new Date()
+    })
+}
+export async function readLastRequests(ip :string, device : string) {
+    const date = new Date().toISOString()
+    return requestsCollectionOutput.find({
+        $and:
+            [
+                {ip: ip},
+                {device: device},
+                {lastActiveDate: {$gt: subSeconds(new Date(date), 10)}}
+            ]
+    }).toArray();
 }

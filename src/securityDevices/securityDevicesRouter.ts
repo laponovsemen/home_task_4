@@ -4,7 +4,7 @@ import {
     deleteDeviceByDeviceId,
     getAllDevicesForSpecifiedUser
 } from "./securityDevicesDomain";
-import {JWTVerifiction} from "./securityDevicesMiddleware";
+import {} from "./securityDevicesMiddleware";
 import {jwtVerificationMiddleware} from "../jwtDomain";
 
 

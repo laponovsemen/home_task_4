@@ -208,6 +208,17 @@ export type SessionsInputModel = {
     device : DeviceViewModel
     refreshToken : string
 }
+export type RequestsInputModel = {
+    ip : string,
+    device : string,
+    lastActiveDate : Date
+}
+export type RequestsOutputModel = {
+    _id : ObjectId
+    ip : string,
+    device : string,
+    lastActiveDate : Date
+}
 
 
 
