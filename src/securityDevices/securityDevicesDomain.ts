@@ -41,11 +41,11 @@ export async function deleteDeviceByDeviceId(req: Request, res: Response) {
 
 
     const foundDevice = await findDeviceById(deviceIdFromParam)
-    if (!foundDevice) {
-        res.sendStatus(404)
-        return
-    } else if(!deviceIdFromDB) {
+    if (!deviceIdFromDB) {
         res.sendStatus(403)
+        return
+    } else if(!foundDevice) {
+        res.sendStatus(404)
         return
     } else {
         res.sendStatus(204)
