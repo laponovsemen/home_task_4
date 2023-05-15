@@ -40,7 +40,7 @@ export async function deleteDeviceById(deviceId : string) {
 }
 
 export async function findSessionsFromDB(userId : string, deviceId : string) {
-    return await devicesCollectionOutput.findOne({$and : [{userId: new ObjectId(userId)}, {"device.deviceId" : new ObjectId(deviceId)}]})
+    return await devicesCollectionOutput.findOne({$and : [{userId: new ObjectId(userId)}, {_id : new ObjectId(deviceId)}]})
 }
 export async function updateDeviceByUserId(userId : ObjectId, dateOfCreating : string, newRefreshToken :string) {
     return await devicesCollectionInsert.updateOne({userId : userId},{$set : {refreshToken : newRefreshToken, "device.lastActiveDate": dateOfCreating}})
