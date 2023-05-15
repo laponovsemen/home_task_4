@@ -2,7 +2,8 @@ import {Request, Response} from "express";
 import {randomUUID} from "crypto";
 import {DeviceInputModel, DeviceViewModel} from "../appTypes";
 import {
-    findDevice,
+    deleteDeviceById,
+    findDeviceById,
     findSessionsFromDB,
     getAllDevicesForSpecifiedUserDB,
     saveDeviceToDB
@@ -38,16 +39,18 @@ export async function deleteDeviceByDeviceId(req: Request, res: Response) {
     const deviceIdFromParam = req.params.deviceId
     const deviceIdFromDB = await findSessionsFromDB(userIdFromRefresToken, deviceIdFromParam)
 
-    if(!deviceIdFromDB){
-        res.sendStatus(403)
-        return
-    }
-    const foundDevice = await findDevice(deviceIdFromParam)
+
+    const foundDevice = await findDeviceById(deviceIdFromParam)
     if (!foundDevice) {
         res.sendStatus(404)
         return
+    } else if(!deviceIdFromDB) {
+        res.sendStatus(403)
+        return
     } else {
         res.sendStatus(204)
+        await deleteDeviceById(deviceIdFromParam)
+        return
     }
 
 }
