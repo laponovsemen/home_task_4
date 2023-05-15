@@ -17,7 +17,7 @@ import {
     createUnconfirmedUser, updateCodeOfUserConfirmation
 } from "../users/usersRepositoryMongoDB";
 import {v4 as uuidv4} from 'uuid'
-import {saveDeviceToDB} from "../securityDevices/securityDevicesRepositoryDB";
+import {saveDeviceToDB, updateDeviceByUserId} from "../securityDevices/securityDevicesRepositoryDB";
 import {createNewDevice} from "../securityDevices/securityDevicesDomain";
 import jwt from "jsonwebtoken";
 import {mongoObjectId} from "../common";
@@ -184,6 +184,8 @@ export async function refreshToken(req: Request, res: Response) {
         const deviceId = mongoObjectId()
         const newRefreshToken = await jwtService.createRefreshJWT(user, dateOfCreating, deviceId)
         const newAccessToken = await jwtService.createAccessJWT(user, dateOfCreating, deviceId)
+
+        await updateDeviceByUserId(userId, dateOfCreating, newRefreshToken)
         await addOldTokensAsProhibitedDB("refresh", refreshToken)
 
         res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true,})
