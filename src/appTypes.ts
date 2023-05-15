@@ -211,13 +211,15 @@ export type SessionsInputModel = {
 export type RequestsInputModel = {
     ip : string,
     device : string,
-    lastActiveDate : Date
+    lastActiveDate : Date,
+    baseUrl : string
 }
 export type RequestsOutputModel = {
     _id : ObjectId
     ip : string,
     device : string,
-    lastActiveDate : Date
+    lastActiveDate : Date,
+    baseUrl : string
 }
 
 

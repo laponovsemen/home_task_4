@@ -58,20 +58,22 @@ export async function updateDeviceByUserId(userId : ObjectId, dateOfCreating : s
 export async function deleteAllDevicesExcludeCurrentDB(deviceId :string) {
     return await devicesCollectionOutput.deleteMany({_id : {$not : {deviceId}}})
 }
-export async function createNewRequestDB(ip :string, device : string) {
+export async function createNewRequestDB(ip :string, device : string, baseUrl : string) {
     return await requestsCollectionInsert.insertOne({
         ip : ip,
         device : device,
-        lastActiveDate : new Date()
+        lastActiveDate : new Date(),
+        baseUrl : baseUrl
     })
 }
-export async function readLastRequests(ip :string, device : string) {
+export async function readLastRequests(ip :string, device : string, baseUrl : string) {
     const date = new Date().toISOString()
     return requestsCollectionOutput.find({
         $and:
             [
                 {ip: ip},
                 {device: device},
+                {baseUrl : baseUrl},
                 {lastActiveDate: {$gt: subSeconds(new Date(date), 10)}}
             ]
     }).toArray();
