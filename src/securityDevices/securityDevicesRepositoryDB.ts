@@ -35,3 +35,7 @@ export async function getAllDevicesForSpecifiedUserDB(userId : ObjectId) {
 export async function findDevice(deviceId : string) {
     return !!await devicesCollectionOutput.findOne({"device.deviceId" : new ObjectId(deviceId)})
 }
+
+export async function findSessionsFromDB(userId : string, deviceId : string) {
+    return await devicesCollectionOutput.findOne({$and : [{userId: new ObjectId(userId)}, {"device.deviceId" : new ObjectId(deviceId)}]})
+}

@@ -1,9 +1,15 @@
 import {Request, Response} from "express";
 import {randomUUID} from "crypto";
 import {DeviceInputModel, DeviceViewModel} from "../appTypes";
-import {findDevice, getAllDevicesForSpecifiedUserDB, saveDeviceToDB} from "./securityDevicesRepositoryDB";
+import {
+    findDevice,
+    findSessionsFromDB,
+    getAllDevicesForSpecifiedUserDB,
+    saveDeviceToDB
+} from "./securityDevicesRepositoryDB";
 import {jwtService} from "../jwtDomain";
 import {ObjectId} from "mongodb";
+import jwt from "jsonwebtoken";
 
 export async function getAllDevicesForSpecifiedUser(req: Request, res: Response) {
     try {
@@ -26,8 +32,17 @@ export async function deleteAllDevicesExcludeCurrent(req: Request, res: Response
 }
 
 export async function deleteDeviceByDeviceId(req: Request, res: Response) {
-    const deviceId = req.params.deviceId
-    const foundDevice = await findDevice(deviceId)
+    const refreshToken = req.cookies.refreshToken
+    const refreshTokenPayload : any = jwt.decode(refreshToken)
+    const userIdFromRefresToken = refreshTokenPayload!.userId
+    const deviceIdFromParam = req.params.deviceId
+    const deviceIdFromDB = await findSessionsFromDB(userIdFromRefresToken, deviceIdFromParam)
+
+    if(!deviceIdFromDB){
+        res.sendStatus(403)
+        return
+    }
+    const foundDevice = await findDevice(deviceIdFromParam)
     if (!foundDevice) {
         res.sendStatus(404)
         return
