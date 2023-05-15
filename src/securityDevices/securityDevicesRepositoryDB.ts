@@ -56,7 +56,7 @@ export async function updateDeviceByUserId(userId : ObjectId, dateOfCreating : s
     return await devicesCollectionInsert.updateOne({userId : userId},{$set : {refreshToken : newRefreshToken, "device.lastActiveDate": dateOfCreating}})
 }
 export async function deleteAllDevicesExcludeCurrentDB(deviceId :string) {
-    return await devicesCollectionOutput.deleteMany({_id : {$not : {deviceId}}})
+    return await devicesCollectionOutput.deleteMany({$not : {_id : deviceId}})
 }
 export async function createNewRequestDB(ip :string, device : string, baseUrl : string) {
     return await requestsCollectionInsert.insertOne({
