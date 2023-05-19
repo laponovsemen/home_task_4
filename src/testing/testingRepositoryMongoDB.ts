@@ -3,6 +3,7 @@ import {Response,Request} from "express";
 import {deleteAllPosts} from "../posts/postsRepositoryMongoDB";
 import {deleteAllUsers} from "../users/usersRepositoryMongoDB";
 import {deleteAllComments} from "../comments/commentsRepositoryMongoDB";
+import {deleteAllDevices} from "../securityDevices/securityDevicesRepositoryDB";
 
 
 

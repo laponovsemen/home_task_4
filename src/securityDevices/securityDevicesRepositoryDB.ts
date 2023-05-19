@@ -54,6 +54,9 @@ export async function findDeviceById(deviceId: string) {
 export async function deleteDeviceByIdDB(deviceId: string) {
     return await devicesCollectionOutput.deleteOne({"device.deviceId": new ObjectId(deviceId)})
 }
+export async function deleteAllDevices() {
+    return await devicesCollectionOutput.deleteMany({})
+}
 
 export async function findSessionsFromDB(userId: string, deviceId: string) {
     return await devicesCollectionOutput.findOne({$and: [{userId: new ObjectId(userId)}, {'device.deviceId': new ObjectId(deviceId)}]})
