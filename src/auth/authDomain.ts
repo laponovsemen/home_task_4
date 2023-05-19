@@ -17,7 +17,7 @@ import {
     createUnconfirmedUser, updateCodeOfUserConfirmation
 } from "../users/usersRepositoryMongoDB";
 import {v4 as uuidv4} from 'uuid'
-import {deleteDeviceById, saveDeviceToDB, updateDeviceByUserId} from "../securityDevices/securityDevicesRepositoryDB";
+import {deleteDeviceByIdDB, saveDeviceToDB, updateDeviceByUserId} from "../securityDevices/securityDevicesRepositoryDB";
 import {createNewDevice} from "../securityDevices/securityDevicesDomain";
 import jwt from "jsonwebtoken";
 import {mongoObjectId} from "../common";
@@ -73,7 +73,7 @@ export async function Logout(req: Request, res: Response) {
     } else {
         await addOldTokensAsProhibitedDB("refresh", refreshToken)
         const payload : any = jwt.decode(refreshToken!)
-        await deleteDeviceById(payload.deviceId)
+        await deleteDeviceByIdDB(payload.deviceId)
         res.sendStatus(204)
     }
 }

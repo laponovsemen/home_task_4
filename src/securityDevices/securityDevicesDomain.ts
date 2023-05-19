@@ -3,7 +3,7 @@ import {randomUUID} from "crypto";
 import {DeviceInputModel, DeviceViewModel} from "../appTypes";
 import {
     deleteAllDevicesExcludeCurrentDB,
-    deleteDeviceById,
+    deleteDeviceByIdDB,
     findDeviceById,
     findSessionsFromDB,
     getAllDevicesForSpecifiedUserDB,
@@ -42,14 +42,20 @@ export async function deleteDeviceByDeviceId(req: Request, res: Response) {
     const refreshTokenPayload: any = jwt.decode(refreshToken)
     const userIdFromRefresToken = refreshTokenPayload!.userId
     const deviceIdFromParam = req.params.deviceId
-
+    console.log({deviceIdFromParam})
     const foundDevice = await findDeviceById(deviceIdFromParam)
 
-    if (!foundDevice) return res.sendStatus(404)
+    if (!foundDevice) {
+        console.log('404')
+        return res.sendStatus(404)
+    }
 
-    if (foundDevice.userId !== new ObjectId(userIdFromRefresToken)) return res.sendStatus(403)
-
-    await deleteDeviceById(deviceIdFromParam)
+    if (foundDevice.userId !== new ObjectId(userIdFromRefresToken)) {
+        console.log('403')
+        return res.sendStatus(403)
+    }
+    console.log('204')
+    await deleteDeviceByIdDB(deviceIdFromParam)
     return res.sendStatus(204)
 
 }
