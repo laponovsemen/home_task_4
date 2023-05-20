@@ -23,7 +23,7 @@ export async function getAllDevicesForSpecifiedUser(req: Request, res: Response)
             return value.device
         })
 
-        res.send(result).status(200)
+        res.status(200).send(result)
     } catch (e) {
         res.sendStatus(400)
     }
