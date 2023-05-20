@@ -183,7 +183,8 @@ export async function refreshToken(req: Request, res: Response) {
         return
     } else {
         const dateOfCreating = new Date().toISOString()
-        const deviceId = mongoObjectId()
+        const payload : any = jwt.decode(refreshToken)
+        const deviceId = payload.deviceId
         const newRefreshToken = await jwtService.createRefreshJWT(user, dateOfCreating, deviceId)
         const newAccessToken = await jwtService.createAccessJWT(user, dateOfCreating, deviceId)
 
