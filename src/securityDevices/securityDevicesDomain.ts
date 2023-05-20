@@ -37,8 +37,8 @@ export async function getAllSecurityDevices(req: Request, res: Response) {
 export async function deleteAllDevicesExcludeCurrent(req: Request, res: Response) {
     const refreshToken = req.cookies.refreshToken
     const refreshTokenPayload: any = jwt.decode(refreshToken)
-    const deviceIdFromRefreshToken = refreshTokenPayload!.deviceId
-    const userIdFromRefreshToken = refreshTokenPayload!.userId
+    const deviceIdFromRefreshToken = new ObjectId(refreshTokenPayload!.deviceId)
+    const userIdFromRefreshToken = new ObjectId(refreshTokenPayload!.userId)
     await deleteAllDevicesExcludeCurrentDB(userIdFromRefreshToken, deviceIdFromRefreshToken)
     res.sendStatus(204)
 }
