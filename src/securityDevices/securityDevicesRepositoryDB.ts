@@ -72,7 +72,7 @@ export async function updateDeviceByUserId(userId: ObjectId, dateOfCreating: str
 }
 
 export async function deleteAllDevicesExcludeCurrentDB(userId: ObjectId, deviceId: ObjectId) {
-    const filter = {$and: [{userId}, {$ne: {'device.deviceId': deviceId}}]}
+    const filter = {$and: [{userId}, {'device.deviceId': {$ne: deviceId}}]}
     return await devicesCollectionOutput.deleteMany(filter)
 }
 
