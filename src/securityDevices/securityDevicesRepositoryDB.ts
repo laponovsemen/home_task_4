@@ -47,7 +47,7 @@ export async function getAllDevicesForSpecifiedUserDB(userId: ObjectId) {
 export async function findDeviceById(deviceId: string) {
     const device = await devicesCollectionOutput.findOne({"device.deviceId": new ObjectId(deviceId)})
     const devices = await devicesCollectionOutput.find().toArray()
-    console.log({device: device!.device, devices})
+    //console.log({device: device!.device, devices})
     return device
 }
 
