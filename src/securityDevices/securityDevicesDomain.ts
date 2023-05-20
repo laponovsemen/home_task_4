@@ -42,7 +42,7 @@ export async function deleteDeviceByDeviceId(req: Request, res: Response) {
     const refreshToken = req.cookies.refreshToken
     const refreshTokenPayload: any = jwt.decode(refreshToken)
     const userIdFromRefresToken = refreshTokenPayload!.userId
-    const deviceIdFromParam = req.params.deviceId
+    const deviceIdFromParam : string = req.params.deviceId
     console.log({deviceIdFromParam})
     const foundDevice = await findDeviceById(deviceIdFromParam)
 
@@ -51,7 +51,7 @@ export async function deleteDeviceByDeviceId(req: Request, res: Response) {
         return res.sendStatus(404)
     }
 
-    if (foundDevice.userId !== new ObjectId(userIdFromRefresToken)) {
+    if (!foundDevice.userId.equals(userIdFromRefresToken)) {
         console.log('403')
         return res.sendStatus(403)
     }

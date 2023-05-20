@@ -22,6 +22,7 @@ export const jwtService = {
         //console.log(token)
         return token
     },
+
     async  createRefreshJWT(user: userViewModel, dateOfCreation : string, deviceId : string){
         const token: string = jwt.sign({userId : user._id,
             login: user.accountData.login,
