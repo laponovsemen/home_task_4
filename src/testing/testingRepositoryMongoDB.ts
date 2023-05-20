@@ -12,7 +12,7 @@ export async function  deleteAllInformation(req: Request, res: Response) {
     await deleteAllPosts()
     await deleteAllUsers()
     await deleteAllComments()
-    //await deleteAllDevices()
+    await deleteAllDevices()
 
     //    6469386f07cb3634f9e3eb98
 
