@@ -45,14 +45,14 @@ export async function getAllDevicesForSpecifiedUserDB(userId: ObjectId) {
 }
 
 export async function findDeviceById(deviceId: string) {
-    const device = await devicesCollectionOutput.findOne({_id: new ObjectId(deviceId)})
+    const device = await devicesCollectionOutput.findOne({"device.deviceId": new ObjectId(deviceId)})
     const devices = await devicesCollectionOutput.find().toArray()
     //console.log({device: device!.deviceId, devices})
     return device
 }
 
 export async function deleteDeviceByIdDB(deviceId: string) {
-    return await devicesCollectionOutput.deleteOne({_id : new ObjectId(deviceId)})
+    return await devicesCollectionOutput.deleteOne({"device.deviceId": new ObjectId(deviceId)})
 }
 export async function deleteAllDevices() {
     return await devicesCollectionOutput.deleteMany({})

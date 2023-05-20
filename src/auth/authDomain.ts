@@ -114,7 +114,7 @@ export async function sendMessageToEmail(req: Request, res: Response) {
         const user = await createUnconfirmedUser(login, password, email)
         if (user) {
             const info = await emailAdapter.sendEmail(req.body.email, user.accountConfirmationData.code)
-            res.status(204).send({code :user.accountConfirmationData.code})
+            res.status(201).send({code :user.accountConfirmationData.code})
         } else {
             res.sendStatus(400)
         }
