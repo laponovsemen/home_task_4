@@ -61,6 +61,9 @@ export async function deleteAllDevices() {
 export async function findSessionsFromDB(userId: string, deviceId: string) {
     return await devicesCollectionOutput.findOne({$and: [{userId: new ObjectId(userId)}, {'device.deviceId': new ObjectId(deviceId)}]})
 }
+export async function getAllSecurityDevicesDB() {
+    return await devicesCollectionOutput.find({}).toArray()
+}
 
 export async function updateDeviceByUserId(userId: ObjectId, dateOfCreating: string, newRefreshToken: string) {
     return await devicesCollectionInsert.updateOne({userId: userId}, {
@@ -72,7 +75,7 @@ export async function updateDeviceByUserId(userId: ObjectId, dateOfCreating: str
 }
 
 export async function deleteAllDevicesExcludeCurrentDB(userId: ObjectId, deviceId: ObjectId) {
-    const filter = {$and: [{userId}, {'device.deviceId': {$ne: deviceId}}]}
+    const filter = {$and: [{userId : userId}, {'device.deviceId': {$ne: deviceId}}]}
     //const filter = {'device.deviceId': {$ne: deviceId}}
     return await devicesCollectionOutput.deleteMany(filter)
 }

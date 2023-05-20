@@ -6,7 +6,7 @@ import {
     deleteDeviceByIdDB,
     findDeviceById,
     findSessionsFromDB,
-    getAllDevicesForSpecifiedUserDB,
+    getAllDevicesForSpecifiedUserDB, getAllSecurityDevicesDB,
     saveDeviceToDB
 } from "./securityDevicesRepositoryDB";
 import {jwtService} from "../jwtDomain";
@@ -18,7 +18,7 @@ export async function getAllDevicesForSpecifiedUser(req: Request, res: Response)
         //console.log("info " + req.cookies.refreshToken)
         const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken)
         const devices = await getAllDevicesForSpecifiedUserDB(userId!)
-        console.log("info " + userId)
+        //console.log("info " + userId)
         const result = devices.map(value => {
             return value.device
         })
@@ -28,11 +28,15 @@ export async function getAllDevicesForSpecifiedUser(req: Request, res: Response)
         res.sendStatus(400)
     }
 }
+export async function getAllSecurityDevices(req: Request, res: Response) {
+    const result = await getAllSecurityDevicesDB()
+    res.status(200).send(result)
+}
 
 export async function deleteAllDevicesExcludeCurrent(req: Request, res: Response) {
     const refreshToken = req.cookies.refreshToken
     const refreshTokenPayload: any = jwt.decode(refreshToken)
-    const deviceIdFromRefreshToken = new ObjectId(refreshTokenPayload!.deviceId)
+    const deviceIdFromRefreshToken = refreshTokenPayload!.deviceId
     const userIdFromRefreshToken = new ObjectId(refreshTokenPayload!.userId)
     await deleteAllDevicesExcludeCurrentDB(userIdFromRefreshToken, deviceIdFromRefreshToken)
     res.sendStatus(204)
