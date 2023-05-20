@@ -48,7 +48,7 @@ export async function deleteDeviceByDeviceId(req: Request, res: Response) {
 
     if (!foundDevice) {
         console.log('404')
-        return res.sendStatus(461)
+        return res.sendStatus(404)
     }
 
     if (!foundDevice.userId.equals(userIdFromRefresToken)) {
