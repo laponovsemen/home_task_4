@@ -17,7 +17,8 @@ export async function getAllDevicesForSpecifiedUser(req: Request, res: Response)
     try {
         //console.log("info " + req.cookies.refreshToken)
         const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken)
-        const devices = await getAllDevicesForSpecifiedUserDB(userId!)
+
+        const devices = await getAllDevicesForSpecifiedUserDB(new ObjectId(userId!))
         //console.log("info " + userId)
         const result = devices.map(value => {
             return value.device
@@ -37,7 +38,7 @@ export async function deleteAllDevicesExcludeCurrent(req: Request, res: Response
     const refreshToken = req.cookies.refreshToken
     const refreshTokenPayload: any = jwt.decode(refreshToken)
     const deviceIdFromRefreshToken = refreshTokenPayload!.deviceId
-    const userIdFromRefreshToken = new ObjectId(refreshTokenPayload!.userId)
+    const userIdFromRefreshToken = refreshTokenPayload!.userId
     await deleteAllDevicesExcludeCurrentDB(userIdFromRefreshToken, deviceIdFromRefreshToken)
     res.sendStatus(204)
 }
