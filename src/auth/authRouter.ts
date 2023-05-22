@@ -2,7 +2,7 @@ import {Router} from "express";
 import {
     UserEmailValidation,
     UserLoginOrEmailValidation,
-    UserLoginValidation,
+    UserLoginValidation, UserNewPasswordValidation,
     UserPasswordValidation
 } from "../users/usersValidation";
 import {ValidationErrors} from "../common";
@@ -20,7 +20,7 @@ export const authRouter = Router({})
 
 authRouter.post("/login",requestsCounterMiddleware, UserLoginOrEmailValidation, UserPasswordValidation, ValidationErrors, Login)
 authRouter.post("/password-recovery",requestsCounterMiddleware,UserEmailValidation,  ValidationErrors, passwordRecovery)
-authRouter.post("/new-password",requestsCounterMiddleware,  newPassword)
+authRouter.post("/new-password",requestsCounterMiddleware,UserNewPasswordValidation, ValidationErrors,  newPassword)
 authRouter.post("/refresh-token",refreshToken)
 authRouter.post("/registration",requestsCounterMiddleware, UserEmailValidation,UserLoginValidation,  UserPasswordValidation, ValidationErrors, sendMessageToEmail)
 authRouter.post("/registration-confirmation",requestsCounterMiddleware,  registrationConfirmation)
