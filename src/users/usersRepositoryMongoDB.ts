@@ -138,9 +138,31 @@ export async function confirmUserStatus(code : string)  {
     }
 
 }
+export async function updateUserAsUnconfirmed(email : string, code : string, dateOfExpiary : Date)  {
+    const foundUser = await usersCollectionOutput.findOne({"accountData.email": email})
+    if(foundUser) {
+        const confirmedUser = await usersCollectionInsert.updateOne({_id: new ObjectId(foundUser!._id)},
+            {
+                $set: {
+                    accountConfirmationData: {
+                        isConfirmed: false,
+                        code: code,
+                        codeDateOfExpiary: dateOfExpiary
+                    }
+                }
+            })
+        return true
+    } else {
+        return false
+    }
+
+}
 
 export async function checkUserExistanceByEmail(email : string) {
     return !!await usersCollectionOutput.findOne({"accountData.email": email})
+}
+export async function findUserByCode(code : string) {
+    return await usersCollectionOutput.findOne({"accountConfirmationData.code": code})
 }
 export async function updateCodeOfUserConfirmation(email : string, code : string) {
     await usersCollectionInsert.updateOne({"accountData.email" : email}, {$set : {"accountConfirmationData.code" : code}})

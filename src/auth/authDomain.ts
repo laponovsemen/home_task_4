@@ -14,13 +14,15 @@ import {
     checkUserExistance, checkUserExistanceByEmail,
     codeVerification,
     confirmUserStatus,
-    createUnconfirmedUser, updateCodeOfUserConfirmation
+    createUnconfirmedUser, findUserByCode, updateCodeOfUserConfirmation, updateUserAsUnconfirmed
 } from "../users/usersRepositoryMongoDB";
 import {v4 as uuidv4} from 'uuid'
 import {deleteDeviceByIdDB, saveDeviceToDB, updateDeviceByUserId} from "../securityDevices/securityDevicesRepositoryDB";
 import {createNewDevice} from "../securityDevices/securityDevicesDomain";
 import jwt from "jsonwebtoken";
 import {mongoObjectId} from "../common";
+import add from "date-fns/add";
+import {addHours} from "date-fns";
 
 
 
@@ -167,22 +169,38 @@ export async function registrationEmailResending(req: Request, res: Response) {
 export async function passwordRecovery(req: Request, res: Response) { // ask question
     const email = req.body.email
     const userExists = await checkUserExistanceByEmail(email)
-
-
     const code = await createEmailSendCode()
-    await updateCodeOfUserConfirmation(email, code)
-    await emailAdapter.sendEmailForPasswordRecovery(req.body.email, code)
-    res.sendStatus(204)
+    const dateOfExpiary = addHours(new Date, 12)
+    if(!userExists){
+        await emailAdapter.sendEmailForPasswordRecovery(req.body.email, code)
+        res.sendStatus(204)
+    } else {
+        await updateUserAsUnconfirmed(email, code, dateOfExpiary)
+        await updateCodeOfUserConfirmation(email, code)
+        await emailAdapter.sendEmailForPasswordRecovery(email, code)
+        res.sendStatus(204)
+    }
+
+
+
+
+
 
 }
 export async function newPassword(req: Request, res: Response) { // ask question
-    /*const email = req.body.email
-    const userExists = await checkUserExistanceByEmail(email)
+    const newPassword = req.body.newPassword
+    const recoveryCode = req.body.recoveryCode
+    const user = await findUserByCode(recoveryCode)
+
+    if(!user){
+        res.sendStatus(400)
+    } else if(user.accountConfirmationData.codeDateOfExpiary! < new Date() || recoveryCode !== user.accountConfirmationData.code!) {
+        res.sendStatus(400)
+    }
 
 
     const code = await createEmailSendCode()
-    await updateCodeOfUserConfirmation(email, code)
-    await emailAdapter.sendEmailForPasswordRecovery(req.body.email, code)*/
+    await confirmUserStatus(code.toString())
     res.sendStatus(204)
 
 }
