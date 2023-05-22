@@ -167,6 +167,9 @@ export async function findUserByCode(code : string) {
 export async function updateCodeOfUserConfirmation(email : string, code : string) {
     await usersCollectionInsert.updateOne({"accountData.email" : email}, {$set : {"accountConfirmationData.code" : code}})
 }
+export async function updateUserPasswordByEmail(email : string, password : string) {
+    await usersCollectionInsert.updateOne({"accountData.email" : email}, {$set : {"accountData.password" : password}})
+}
 
 export async function checkingForUserConfirmationStatus(email : string) {
     const foundUser = await usersCollectionOutput.findOne({"accountData.email" : email})

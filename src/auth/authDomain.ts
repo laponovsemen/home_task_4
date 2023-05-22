@@ -11,10 +11,15 @@ import {ObjectId} from "mongodb";
 import {emailAdapter} from "./emailAdapter";
 import {
     checkingForUserConfirmationStatus,
-    checkUserExistance, checkUserExistanceByEmail,
+    checkUserExistance,
+    checkUserExistanceByEmail,
     codeVerification,
     confirmUserStatus,
-    createUnconfirmedUser, findUserByCode, updateCodeOfUserConfirmation, updateUserAsUnconfirmed
+    createUnconfirmedUser,
+    findUserByCode,
+    updateCodeOfUserConfirmation,
+    updateUserAsUnconfirmed,
+    updateUserPasswordByEmail
 } from "../users/usersRepositoryMongoDB";
 import {v4 as uuidv4} from 'uuid'
 import {deleteDeviceByIdDB, saveDeviceToDB, updateDeviceByUserId} from "../securityDevices/securityDevicesRepositoryDB";
@@ -194,13 +199,17 @@ export async function newPassword(req: Request, res: Response) { // ask question
 
     if(!user){
         res.sendStatus(400)
+        return
     } else if(user.accountConfirmationData.codeDateOfExpiary! < new Date() || recoveryCode !== user.accountConfirmationData.code!) {
         res.sendStatus(400)
+        return
     }
 
 
     const code = await createEmailSendCode()
+
     await confirmUserStatus(code.toString())
+    await updateUserPasswordByEmail(user?.accountData.email, newPassword )
     res.sendStatus(204)
 
 }
