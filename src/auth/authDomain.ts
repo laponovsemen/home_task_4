@@ -164,6 +164,28 @@ export async function registrationEmailResending(req: Request, res: Response) {
         res.sendStatus(204)
     }
 }
+export async function passwordRecovery(req: Request, res: Response) { // ask question
+    const email = req.body.email
+    const userExists = await checkUserExistanceByEmail(email)
+
+
+    const code = await createEmailSendCode()
+    await updateCodeOfUserConfirmation(email, code)
+    await emailAdapter.sendEmailForPasswordRecovery(req.body.email, code)
+    res.sendStatus(204)
+
+}
+export async function newPassword(req: Request, res: Response) { // ask question
+    /*const email = req.body.email
+    const userExists = await checkUserExistanceByEmail(email)
+
+
+    const code = await createEmailSendCode()
+    await updateCodeOfUserConfirmation(email, code)
+    await emailAdapter.sendEmailForPasswordRecovery(req.body.email, code)*/
+    res.sendStatus(204)
+
+}
 
 export async function refreshToken(req: Request, res: Response) {
     const refreshToken = req.cookies.refreshToken

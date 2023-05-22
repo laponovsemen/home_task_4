@@ -8,7 +8,7 @@ import {
 import {ValidationErrors} from "../common";
 import {
     giveUserInformation,
-    Login, Logout, refreshToken,
+    Login, Logout, newPassword, passwordRecovery, refreshToken,
     registrationConfirmation,
     registrationEmailResending,
     sendMessageToEmail
@@ -19,6 +19,8 @@ import {requestsCounterMiddleware} from "../securityDevices/securityDevicesMiddl
 export const authRouter = Router({})
 
 authRouter.post("/login",requestsCounterMiddleware, UserLoginOrEmailValidation, UserPasswordValidation, ValidationErrors, Login)
+authRouter.post("/password-recovery",requestsCounterMiddleware,UserEmailValidation,  ValidationErrors, passwordRecovery)
+authRouter.post("/new-password",requestsCounterMiddleware,  newPassword)
 authRouter.post("/refresh-token",refreshToken)
 authRouter.post("/registration",requestsCounterMiddleware, UserEmailValidation,UserLoginValidation,  UserPasswordValidation, ValidationErrors, sendMessageToEmail)
 authRouter.post("/registration-confirmation",requestsCounterMiddleware,  registrationConfirmation)
