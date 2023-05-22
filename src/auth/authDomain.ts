@@ -198,10 +198,10 @@ export async function newPassword(req: Request, res: Response) { // ask question
     const user = await findUserByCode(recoveryCode)
 
     if(!user){
-        res.sendStatus(400)
+        res.status(400).send({ errorsMessages: [{ message: "no user found", field: "user" }] })
         return
     } else if(user.accountConfirmationData.codeDateOfExpiary! < new Date() || recoveryCode !== user.accountConfirmationData.code!) {
-        res.sendStatus(400)
+        res.status(400).send({ errorsMessages: [{ message: "code is invalid", field: "recoveryCode" }] })
         return
     }
 
