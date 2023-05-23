@@ -36,6 +36,7 @@ export const userSchema = new mongoose.Schema<userInputModel>({
         login: {type: String, require: true},
         email: {type: String, require: true},
         createdAt: {type: Date, require: true},
+        password : {type: String, require: true},
     },
     accountConfirmationData: {
         isConfirmed: {type: Boolean, require: true},
@@ -61,7 +62,7 @@ export const sessionSchema = new mongoose.Schema<SessionsInputModel>({
         ip: {type: String, require: true},                  // string IP address of device during signing in
         title: {type: String, require: true},               // string Device name: for example Chrome 105 (received by parsing http header "user-agent"
         lastActiveDate: {type: String, require: true},      // string Date of the last generating of refresh/access tokens
-        deviceId: {type: String, require: true}           // string Id of connected device session
+        deviceId: {type: ObjectId, require: true}           // string Id of connected device session
     },
     refreshToken : {type: String, require: true},
 

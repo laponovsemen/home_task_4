@@ -6,7 +6,6 @@ import {ObjectId} from "mongodb";
 import {createEmailSendCode} from "../auth/authDomain";
 import add from 'date-fns/add'
 import {usersModel} from "../mongo/mongooseSchemas";
-import {getAllUsers} from "./usersDomain";
 
 
 export async function getAllUsersDB(paginationCriteria : usersPaginationCriteriaType) {
@@ -179,37 +178,5 @@ export async function checkingForUserConfirmationStatus(email : string) {
 }
 
 
-export class UsersRepositoryMongoDB {
-    async checkingForUserConfirmationStatus(email : string) {
-        const foundUser = await usersModel.findOne({"accountData.email" : email})
-        return foundUser!.accountConfirmationData.isConfirmed
-    }
-}
 
-export interface US {
-    test(): Promise<void>
-}
-export class UsersService implements US{
-    private userRepo: UsersRepositoryMongoDB
-    constructor(userRepo: UsersRepositoryMongoDB) {
-        this.userRepo = userRepo
-    }
 
-    async test(): Promise<void>{
-        await this.userRepo.checkingForUserConfirmationStatus('')
-    }
-}
-
-export class UserCont {
-    private uS: US = new UsersService(new UsersRepositoryMongoDB())
-    constructor(uS: US) {
-        this.uS = uS
-    }
-
-    async getAllUsers(){
-        return this.uS.test()
-    }
-
-}
-
-const UC = new UserCont(new UsersService(new UsersRepositoryMongoDB()))

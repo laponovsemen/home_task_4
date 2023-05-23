@@ -34,7 +34,7 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
                 login: "login",
                 email : "igorlaponov01011972@gmail.com",
                 password : "password"
-            }).expect(201)
+            }).expect(204)
         expect(registration.body.code).toEqual(expect.any(String))
         const registrationCode = registration.body.code
 
@@ -102,7 +102,7 @@ describe("TEST OF CHECKING CONNECTED DEVICES", () => {
                 login: "login",
                 email : "igorlaponov01011972@gmail.com",
                 password : "password"
-            }).expect(201)
+            }).expect(204)
         expect(registration.body.code).toEqual(expect.any(String))
         const registrationCode = registration.body.code
 
