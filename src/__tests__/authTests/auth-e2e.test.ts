@@ -1,11 +1,13 @@
-// @ts-ignore
 import request from "supertest";
-import {app} from "../../src/settings";
 import exp = require("constants");
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+import {app} from "../../settings";
+dotenv.config()
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
-const mongoURI = "mongodb+srv://simsbury65:incubator@cluster0.vai5lbz.mongodb.net/?retryWrites=true&w=majority"
+const mongoURI = process.env.MONGO_URL!
+
 describe("TESTING OF CREATING USER AND AUTH", () => {
     beforeAll(async () => {
         /* Connecting to the database. */
@@ -14,7 +16,7 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
 
     afterAll(async () => {
         /* Closing database connection after each test. */
-        await mongoose.connection.close()
+        await mongoose.disconnect()
     })
     it("should authorize user //auth is correct", async () => {
         await request(app).delete("/testing/all-data").set(auth, basic)

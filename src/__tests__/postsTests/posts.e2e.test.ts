@@ -1,12 +1,23 @@
-// @ts-ignore
 import request from "supertest"
-import {app} from "../../src/settings";
 import {before} from "node:test";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import {app} from "../../settings";
+dotenv.config()
 export const auth = 'Authorization'
 export const basic = 'Basic YWRtaW46cXdlcnR5'
-
+const mongoURI = process.env.MONGO_URL!
 //POSTS ROUTE
 describe("TESTING OF CREATING POST", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("should create post", async () => {
         await request(app).delete("/testing/all-data").set(auth, basic)
         const createdBlog = await request(app)
@@ -42,6 +53,15 @@ describe("TESTING OF CREATING POST", () => {
 })
 
 describe("TESTING OF UPDATING POST BY ID", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("should create post and by updating it must return 400 status code and array of errors", async () => {
         await request(app).delete("/testing/all-data").set(auth, basic)
         const createdBlog = await request(app)
@@ -153,6 +173,15 @@ describe("TESTING OF UPDATING POST BY ID", () => {
 })
 
 describe("TESTING OF DELETING POST BY ID", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("should create post", async () => {
         await request(app).delete("/testing/all-data").set(auth, basic)
         const createdBlog = await request(app)
@@ -189,6 +218,15 @@ describe("TESTING OF DELETING POST BY ID", () => {
 })
 
 describe("TESTING OF READING POST BY ID", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("should create post", async () => {
         await request(app).delete("/testing/all-data").set(auth, basic)
         const createdBlog = await request(app)

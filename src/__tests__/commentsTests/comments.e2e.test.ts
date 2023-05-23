@@ -1,11 +1,27 @@
-// @ts-ignore
 import request from "supertest";
-import {app} from "../../src/settings";
 import exp = require("constants");
 import {randomUUID} from "crypto";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import {app} from "../../settings";
+dotenv.config()
+
+
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
+
+const mongoURI = process.env.MONGO_URL!
+
 describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("should create user, blog, pot, comment , auth and get comments //auth is correct", async () => {
         request(app).delete("/testing/all-data").set(auth, basic)
         const createdBlog = await request(app)

@@ -1,18 +1,30 @@
-// @ts-ignore
 import request from "supertest";
-import {app} from "../../src/settings";
 import exp = require("constants");
 import {ObjectId} from "mongodb";
 import {cookie} from "express-validator";
-import {refreshToken} from "../../src/auth/authDomain";
-// @ts-ignore
+
 import jwt from "jsonwebtoken";
-import {mongoObjectId} from "../../src/common";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import {app} from "../../settings";
+import {mongoObjectId} from "../../common";
+
+dotenv.config()
+const mongoURI = process.env.MONGO_URL!
 
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
 
 describe("TEST OF CHECKING CONNECTED DEVICES", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     jest.setTimeout(30000)
     it("creating user, login 4 times and check devices", async () => {
         await request(app).delete("/testing/all-data")

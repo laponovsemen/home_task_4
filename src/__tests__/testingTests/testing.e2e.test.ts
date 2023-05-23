@@ -1,10 +1,23 @@
-// @ts-ignore
 import request from "supertest"
-import {app} from "../../src/settings";
 import {before} from "node:test";
 import {auth, basic} from "../postsTests/posts.e2e.test";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import {app} from "../../settings";
+dotenv.config()
+
+const mongoURI = process.env.MONGO_URL!
 //TESTING ROUTE
 describe("testing od deleting all data  ", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("testing od deleting all data // correct authorization ",async () => {
         request(app)
             .delete("/testing/all-data")

@@ -1,15 +1,17 @@
-// @ts-ignore
 import request from "supertest"
-import {app} from "../../src/settings";
 import {before} from "node:test";
-import {delay} from "../../src/common";
 import mongoose from "mongoose";
+
+import dotenv from "dotenv";
+import {app} from "../../settings";
+import {delay} from "../../common";
+dotenv.config()
 
 
 
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
-const mongoURI = "mongodb://0.0.0.0:27017/forum"
+const mongoURI = process.env.MONGO_URL!
 //BLOGS ROUTE
 describe("TESTING OF GETTING ALL BLOGS", () => {
     beforeAll(async () => {
@@ -216,6 +218,15 @@ describe("TESTING OF DELETING BLOG BY ID", () => {
 })
 
 describe("TESTING OF UPDATING BLOG BY ID", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("should return status code 400 if blog wiyh no fields", async () => {
         await request(app).delete("/testing/all-data").set(auth, basic)
         await request(app).put("/blogs/399482304723908").set(auth, basic).expect(400)
@@ -291,6 +302,15 @@ describe("TESTING OF UPDATING BLOG BY ID", () => {
 })
 
 describe("TESTING OF CREATING POST FOR SPECIFIED BLOG", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("should return status code 200 BY CREATING POSTS FOR SPECIFIED BLOG", async () => {
 
         await request(app).delete("/testing/all-data")
@@ -351,6 +371,15 @@ describe("TESTING OF CREATING POST FOR SPECIFIED BLOG", () => {
 })
 
 describe("TESTING OF CREATING POSTS FOR SPECIFIC BLOG", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("should return STATRUS CODE 201 and created  POST //Authorization field is correct", async () => {
         request(app).delete("/testing/all-data").set(auth, basic)
         const createdBlog = await request(app)
