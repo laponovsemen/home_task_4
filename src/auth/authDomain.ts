@@ -1,12 +1,9 @@
 import {Request, Response} from "express";
 import {
-    accessTokenSpoilness,
-    addOldTokensAsProhibitedDB,
     LoginDB,
-    refreshTokenSpoilness
+
 } from "./authRepositoryMongoDB";
 import {jwtService} from "../jwtDomain";
-import {usersCollectionOutput} from "../users/usersDomain";
 import {ObjectId} from "mongodb";
 import {emailAdapter} from "./emailAdapter";
 import {
@@ -25,9 +22,9 @@ import {v4 as uuidv4} from 'uuid'
 import {deleteDeviceByIdDB, saveDeviceToDB, updateDeviceByUserId} from "../securityDevices/securityDevicesRepositoryDB";
 import {createNewDevice} from "../securityDevices/securityDevicesDomain";
 import jwt from "jsonwebtoken";
-import {mongoObjectId} from "../common";
-import add from "date-fns/add";
 import {addHours} from "date-fns";
+import {usersModel} from "../mongo/mongooseSchemas";
+import {randomUUID} from "crypto";
 
 
 
@@ -40,14 +37,12 @@ export async function Login(req: Request, res: Response) {
         try {
             // deviceId
             const dateOfCreation = new Date().toISOString()
-            const deviceId = mongoObjectId()
+            const deviceId = randomUUID()
             const accessJWT = await jwtService.createAccessJWT(result, dateOfCreation, deviceId)
             const refreshJWT = await jwtService.createRefreshJWT(result, dateOfCreation, deviceId) //deviceId
 
             const payload: any = jwt.decode(refreshJWT)
-            const lastActiveDate = new Date(payload.iat * 1000).toISOString()
 
-            // const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress
             const ip = req.ip
             const title =  req.headers["user-agent"] || 'Default UA'
             const userId = result._id
@@ -75,10 +70,9 @@ export async function Login(req: Request, res: Response) {
 }
 export async function Logout(req: Request, res: Response) {
     const refreshToken = req.cookies.refreshToken
-    if(!await jwtService.JWTverify(refreshToken) || await refreshTokenSpoilness(refreshToken)){
+    if(!await jwtService.JWTverify(refreshToken)){
         res.sendStatus(401)
     } else {
-        await addOldTokensAsProhibitedDB("refresh", refreshToken)
         const payload : any = jwt.decode(refreshToken!)
         await deleteDeviceByIdDB(payload.deviceId)
         res.sendStatus(204)
@@ -96,7 +90,7 @@ export async function giveUserInformation(req: Request, res: Response) {
             res.status(401).send(auth.split(" ")[1])
             return
         }
-        const userInfo = await usersCollectionOutput.findOne({_id: new ObjectId(userId!)})
+        const userInfo = await usersModel.findOne({_id: new ObjectId(userId!)})
         res.status(200).send({
             "email": userInfo?.accountData.email,
             "login": userInfo?.accountData.login,
@@ -222,10 +216,9 @@ export async function refreshToken(req: Request, res: Response) {
         res.sendStatus(401)
         return
     }
-    const user = await usersCollectionOutput.findOne({_id : new ObjectId(userId)})
+    const user = await usersModel.findOne({_id : new ObjectId(userId)})
     const tokensVerification = !jwtService.JWTverify(refreshToken)
         || !user
-        || await refreshTokenSpoilness(refreshToken)
 
     if(tokensVerification){
         res.sendStatus(401)
@@ -238,7 +231,7 @@ export async function refreshToken(req: Request, res: Response) {
         const newAccessToken = await jwtService.createAccessJWT(user, dateOfCreating, deviceId)
 
         await updateDeviceByUserId(userId, dateOfCreating, newRefreshToken)
-        await addOldTokensAsProhibitedDB("refresh", refreshToken)
+
 
         res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true,})
         res.send({"accessToken": newAccessToken}).status(200)

@@ -1,6 +1,7 @@
 import {ObjectId} from "mongodb";
 import * as cluster from "cluster";
 import {randomUUID} from "crypto";
+import {WithMongoId} from "./mongo/mongooseSchemas";
 
 export type APIErrorResultType = {
     errorsMessages : FieldErrorType[]
@@ -151,19 +152,13 @@ export type LoginInputModel = {
 export type commentInputModel = {
     content : string //string maxLength: 300 minLength: 20
 }
-export type commentInsertModel = {
+
+export type commentDBModel = WithMongoId<{
     content: string,
     commentatorInfo: commentatorInfoType,
     createdAt:	string,
     postId : ObjectId,
-}
-export type commentOutputModel = {
-    _id:	ObjectId,
-    content: string,
-    commentatorInfo: commentatorInfoType,
-    createdAt:	string,
-    postId : ObjectId,
-}
+}>
 export type commentViewModel = {
     id:	string,
     content: string,
@@ -208,14 +203,7 @@ export type SessionsInputModel = {
     device : DeviceViewModel
     refreshToken : string
 }
-export type RequestsInputModel = {
-    ip : string,
-    device : string,
-    lastActiveDate : Date,
-    baseUrl : string
-}
-export type RequestsOutputModel = {
-    _id : ObjectId
+export type RequestsDBModel = {
     ip : string,
     device : string,
     lastActiveDate : Date,

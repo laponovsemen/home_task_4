@@ -3,14 +3,24 @@ import request from "supertest"
 import {app} from "../../src/settings";
 import {before} from "node:test";
 import {delay} from "../../src/common";
+import mongoose from "mongoose";
 
 
 
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
-
+const mongoURI = "mongodb://0.0.0.0:27017/forum"
 //BLOGS ROUTE
 describe("TESTING OF GETTING ALL BLOGS", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("should return all blogs //auth is correct", async () => {
         await request(app).delete("/testing/all-data").set(auth, basic)
         const result = await request(app)
@@ -32,6 +42,15 @@ describe("TESTING OF GETTING ALL BLOGS", () => {
 })
 
 describe("TESTING OF CREATING BLOGS", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("should return STATRUS CODE 201 and created  blogs //Authorization field is correct", async () => {
         request(app).delete("/testing/all-data").set(auth, basic)
         const result = await request(app)
@@ -128,6 +147,15 @@ describe("TESTING OF CREATING BLOGS", () => {
 })
 
 describe("TESTING OF GETTING BLOG BY ID", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("should return status code 404 if blog not found is not found", async () => {
         await request(app).delete("/testing/all-data").set(auth, basic)
         await request(app).get("/blog/399482304723908").expect(404)
@@ -155,6 +183,15 @@ describe("TESTING OF GETTING BLOG BY ID", () => {
 })
 
 describe("TESTING OF DELETING BLOG BY ID", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("should return status code 404 if blog not found", async () => {
         await request(app).delete("/testing/all-data").set(auth, basic)
         await request(app).delete("/blogs/643899abf224160164b2ad25").set(auth, basic).expect(404)

@@ -1,28 +1,26 @@
 import {Request, Response} from "express";
-import {client} from "../db";
+
 import {
     BlogsPaginationCriteriaType,
     commentatorInfoType,
-    commentInsertModel,
-    commentOutputModel, CommentsPaginationCriteriaType,
+    CommentsPaginationCriteriaType,
     commentViewModel, PaginatorPostViewModelType, PostsPaginationCriteriaType
 } from "../appTypes";
 import {ObjectId} from "mongodb";
 import {mongoCommentSlicing, mongoUserSlicing} from "../common";
 import {getAllCommentsForSpecifiedPostDB, getAllPostsDB} from "../posts/postsRepositoryMongoDB";
+import {commentsModel} from "../mongo/mongooseSchemas";
 
-export const commentsCollectionInsert = client.db("forum").collection<commentInsertModel>("comments")
-export const commentsCollectionOutput = client.db("forum").collection<commentOutputModel>("comments")
 export async function  updateCommentById(req: Request, res : Response) {
     const commentId = req.params.id
-    const foundComment = await commentsCollectionOutput.findOne({_id: new ObjectId(commentId)})
+    const foundComment = await commentsModel.findOne({_id: new ObjectId(commentId)})
     if(foundComment){
         if(foundComment.commentatorInfo.userId.toString() !== req.body.user.id.toString()){
             console.log("comments user id is not the same as in JWT")
             res.sendStatus(403)
             return
         }
-        const updatedComment = await commentsCollectionInsert.updateOne({_id: new ObjectId(commentId)},
+        const updatedComment = await commentsModel.updateOne({_id: new ObjectId(commentId)},
             {$set:
                     {content: req.body.content,
                         commentatorInfo: foundComment.commentatorInfo,
@@ -47,13 +45,13 @@ export async function  updateCommentById(req: Request, res : Response) {
 
 export async function  deleteCommentById(req: Request, res : Response) {
     const commentId = req.params.id
-    const foundComment = await commentsCollectionOutput.findOne({_id: new ObjectId(commentId)})
+    const foundComment = await commentsModel.findOne({_id: new ObjectId(commentId)})
     if(foundComment){
         if(foundComment.commentatorInfo.userId.toString() !== req.body.user.id.toString()){
             res.sendStatus(403)
             return
         }else {
-            await commentsCollectionOutput.deleteOne({_id: new ObjectId(commentId)})
+            await commentsModel.deleteOne({_id: new ObjectId(commentId)})
             res.sendStatus(204)
             return
         }
@@ -65,7 +63,7 @@ export async function  deleteCommentById(req: Request, res : Response) {
 }
 export async function  getCommentById(req: Request, res : Response) {
     const commentId = req.params.id
-    const foundComment = await commentsCollectionOutput.findOne({_id: new ObjectId(commentId)})
+    const foundComment = await commentsModel.findOne({_id: new ObjectId(commentId)})
     if(foundComment){
         res.status(200).send(mongoCommentSlicing(foundComment))
     } else {
@@ -87,9 +85,9 @@ export async function  createCommentForSpecifiedPost(req: Request, res : Respons
         createdAt: createdAt,
         postId : new ObjectId(req.params.id)
     }
-    const insertedComment = await commentsCollectionInsert.insertOne(newComment)
+    const insertedComment = await commentsModel.create(newComment)
     res.status(201).send({
-        id: insertedComment.insertedId,
+        id: insertedComment._id,
         content: content,
         commentatorInfo: commentatorInfo,
         createdAt: createdAt

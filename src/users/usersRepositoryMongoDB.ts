@@ -1,10 +1,11 @@
 import {APIErrorResultType, userInputModel, usersPaginationCriteriaType} from "../appTypes";
-import {usersCollectionInsert, usersCollectionOutput} from "./usersDomain";
-import {blogsCollectionOutput} from "../blogs/blogsRepositoryMongoDB";
+
+
 import {mongoBlogSlicing, mongoUserSlicing} from "../common";
 import {ObjectId} from "mongodb";
 import {createEmailSendCode} from "../auth/authDomain";
 import add from 'date-fns/add'
+import {usersModel} from "../mongo/mongooseSchemas";
 
 
 export async function getAllUsersDB(paginationCriteria : usersPaginationCriteriaType) {
@@ -22,16 +23,16 @@ export async function getAllUsersDB(paginationCriteria : usersPaginationCriteria
 
     let filter: {$or? : any[]}  = {$or : searchParams}
     if(searchParams.length === 0 ) filter = {}
-    const totalCount = await usersCollectionOutput.countDocuments(filter)
+    const totalCount = await usersModel.countDocuments(filter)
     const ToSkip = (paginationCriteria.pageSize * (paginationCriteria.pageNumber - 1))
     const pagesCount = Math.ceil(totalCount / pageSize)
 
-    const result = await usersCollectionOutput
+    const result = await usersModel
         .find(filter)
         .sort({[sortBy] : sortDirection})
         .skip(ToSkip)
         .limit(pageSize)
-        .toArray()
+
 
     return {
         pagesCount : pagesCount,
@@ -43,11 +44,11 @@ export async function getAllUsersDB(paginationCriteria : usersPaginationCriteria
 }
 
 export async function deleteAllUsers() {
-    await usersCollectionOutput.deleteMany({})
+    await usersModel.deleteMany({})
 }
 
 export async function findUserByIdDB(userId : string){
-    return await usersCollectionOutput.findOne({_id : new ObjectId(userId)})
+    return await usersModel.findOne({_id : new ObjectId(userId)})
 }
 
 export async function createUnconfirmedUser(login : string, password : string, email: string) {
@@ -68,7 +69,7 @@ export async function createUnconfirmedUser(login : string, password : string, e
             })
         }
     }
-    const newlyCreatedUser = await usersCollectionInsert.insertOne(newUnconfirmedUser)
+    const newlyCreatedUser = await usersModel.collection.insertOne(newUnconfirmedUser)
     return {
         id : newlyCreatedUser.insertedId,
         accountData : {
@@ -87,8 +88,8 @@ export async function createUnconfirmedUser(login : string, password : string, e
     }
 }
 export async function checkUserExistance(login : string, password : string, email: string) {
-    const foundUserByLogin = await usersCollectionOutput.findOne({"accountData.login" : login})
-    const foundUserByEmail = await usersCollectionOutput.findOne({"accountData.email" : email})
+    const foundUserByLogin = await usersModel.findOne({"accountData.login" : login})
+    const foundUserByEmail = await usersModel.findOne({"accountData.email" : email})
     let errors: APIErrorResultType = {errorsMessages : []}
     if(foundUserByLogin) errors.errorsMessages.push({message: "user with such login already exists", field : "login"})
     if(foundUserByEmail) errors.errorsMessages.push({message: "user with such email already exists", field : "email"})
@@ -106,11 +107,11 @@ export async function codeVerification(code : string)  {
 }
 export async function findUserExistanceByVerificationCode(code : string)  {
     // @ts-ignore
-    return !!await usersCollectionOutput.findOne({"accountConfirmationData.code" : code})// question
+    return !!await usersModel.findOne({"accountConfirmationData.code" : code})// question
 }
 export async function finduserCodeSpoilness(code : string)  {
     // @ts-ignore
-    const foundUser = await usersCollectionOutput.findOne({"accountConfirmationData.code": code})// question
+    const foundUser = await usersModel.findOne({"accountConfirmationData.code": code})// question
     if(foundUser && foundUser.accountConfirmationData.codeDateOfExpiary) {
         return foundUser.accountConfirmationData.codeDateOfExpiary >= new Date();
     } else {
@@ -120,9 +121,9 @@ export async function finduserCodeSpoilness(code : string)  {
 }
 
 export async function confirmUserStatus(code : string)  {
-    const foundUser = await usersCollectionOutput.findOne({"accountConfirmationData.code": code})
+    const foundUser = await usersModel.findOne({"accountConfirmationData.code": code})
     if(foundUser) {
-        const confirmedUser = await usersCollectionInsert.updateOne({_id: new ObjectId(foundUser!._id)},
+        const confirmedUser = await usersModel.updateOne({_id: new ObjectId(foundUser!._id)},
             {
                 $set: {
                     accountConfirmationData: {
@@ -139,9 +140,9 @@ export async function confirmUserStatus(code : string)  {
 
 }
 export async function updateUserAsUnconfirmed(email : string, code : string, dateOfExpiary : Date)  {
-    const foundUser = await usersCollectionOutput.findOne({"accountData.email": email})
+    const foundUser = await usersModel.findOne({"accountData.email": email})
     if(foundUser) {
-        const confirmedUser = await usersCollectionInsert.updateOne({_id: new ObjectId(foundUser!._id)},
+        const confirmedUser = await usersModel.updateOne({_id: new ObjectId(foundUser!._id)},
             {
                 $set: {
                     accountConfirmationData: {
@@ -159,19 +160,19 @@ export async function updateUserAsUnconfirmed(email : string, code : string, dat
 }
 
 export async function checkUserExistanceByEmail(email : string) {
-    return !!await usersCollectionOutput.findOne({"accountData.email": email})
+    return !!await usersModel.findOne({"accountData.email": email})
 }
 export async function findUserByCode(code : string) {
-    return await usersCollectionOutput.findOne({"accountConfirmationData.code": code})
+    return await usersModel.findOne({"accountConfirmationData.code": code})
 }
 export async function updateCodeOfUserConfirmation(email : string, code : string) {
-    await usersCollectionInsert.updateOne({"accountData.email" : email}, {$set : {"accountConfirmationData.code" : code}})
+    await usersModel.updateOne({"accountData.email" : email}, {$set : {"accountConfirmationData.code" : code}})
 }
 export async function updateUserPasswordByEmail(email : string, password : string) {
-    await usersCollectionInsert.updateOne({"accountData.email" : email}, {$set : {"accountData.password" : password}})
+    await usersModel.updateOne({"accountData.email" : email}, {$set : {"accountData.password" : password}})
 }
 
 export async function checkingForUserConfirmationStatus(email : string) {
-    const foundUser = await usersCollectionOutput.findOne({"accountData.email" : email})
+    const foundUser = await usersModel.findOne({"accountData.email" : email})
     return foundUser!.accountConfirmationData.isConfirmed
 }

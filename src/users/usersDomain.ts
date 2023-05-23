@@ -7,13 +7,11 @@ import {
     userViewModel
 } from "../appTypes";
 import {findUserByIdDB, getAllUsersDB} from "./usersRepositoryMongoDB";
-import {client} from "../db";
-import {randomUUID} from "crypto";
 import {ObjectId} from "mongodb";
 import {mongoUserSlicing} from "../common";
+import {usersModel} from "../mongo/mongooseSchemas";
 
-export const usersCollectionInsert = client.db("forum").collection<userInputModel>("users")
-export const usersCollectionOutput = client.db("forum").collection<userViewModel>("users")
+
 
 export async function getAllUsers(req: Request, res:Response) {
     const sortBy : string = req.query.sortBy ? req.query.sortBy.toString() : "createdAt"
@@ -40,9 +38,10 @@ export async function createUser(req: Request, res:Response) {
     const email : string = req.body.email
     const password : string = req.body.password
     const dateOfCreation = new Date()
-    const newCreatedUser = await usersCollectionInsert.insertOne({
-
-
+    //domain layer createdId = userService.createUser(dto)
+    //const user = userQueryRepo.getUserById(createdId)
+    //res.send(user)
+    const newCreatedUser = await usersModel.create({
         accountData : {
             login : login,
             email : email,
@@ -56,7 +55,7 @@ export async function createUser(req: Request, res:Response) {
         }
     })
     res.status(201).send({
-        id : newCreatedUser.insertedId,
+        id : newCreatedUser._id,
         login : login,
         email : email,
         createdAt: dateOfCreation
@@ -64,7 +63,7 @@ export async function createUser(req: Request, res:Response) {
 }
 
 export async function deleteUserById(req: Request, res:Response) {
-    const deletedUser = await usersCollectionOutput.deleteOne({_id : new ObjectId(req.params.id)})
+    const deletedUser = await usersModel.deleteOne({_id : new ObjectId(req.params.id)})
     if(deletedUser.deletedCount === 1){
         res.sendStatus(204)
 

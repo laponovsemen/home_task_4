@@ -1,6 +1,6 @@
-import {usersCollectionOutput} from "../users/usersDomain";
-import {commentsCollectionOutput} from "./commentsDomain";
+import { commentsModel} from "../mongo/mongooseSchemas";
+
 
 export async function deleteAllComments() {
-    await commentsCollectionOutput.deleteMany({})
+    await commentsModel.deleteMany({})
 }

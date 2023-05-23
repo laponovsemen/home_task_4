@@ -1,7 +1,7 @@
 import {
     BlogInsertModelType,
     BlogViewModelType,
-    commentatorInfoType, commentOutputModel, commentViewModel,
+    commentatorInfoType, commentDBModel, commentViewModel,
     PostViewModelType,
     userViewModel
 } from "./appTypes";
@@ -73,7 +73,7 @@ export const mongoUserSlicing = ( Obj2: userViewModel) =>  {
         createdAt:	Obj2.accountData.createdAt,
     }
 }
-export const mongoCommentSlicing = ( Obj2: commentOutputModel) =>  {
+export const mongoCommentSlicing = ( Obj2: commentDBModel) =>  {
     return {
         id : Obj2._id,
         content: Obj2.content,

@@ -2,9 +2,20 @@
 import request from "supertest";
 import {app} from "../../src/settings";
 import exp = require("constants");
+import mongoose from "mongoose";
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
+const mongoURI = "mongodb+srv://simsbury65:incubator@cluster0.vai5lbz.mongodb.net/?retryWrites=true&w=majority"
 describe("TESTING OF CREATING USER AND AUTH", () => {
+    beforeAll(async () => {
+        /* Connecting to the database. */
+        await mongoose.connect(mongoURI)
+    })
+
+    afterAll(async () => {
+        /* Closing database connection after each test. */
+        await mongoose.connection.close()
+    })
     it("should authorize user //auth is correct", async () => {
         await request(app).delete("/testing/all-data").set(auth, basic)
         const user = await request(app)

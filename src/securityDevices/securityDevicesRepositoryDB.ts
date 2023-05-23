@@ -1,24 +1,11 @@
-import {client} from "../db";
-import {
-    DeviceInputModel,
-    DeviceViewModel, RequestsInputModel,
-    RequestsOutputModel,
-    SessionsInputModel,
-    SessionsViewModel,
-    userViewModel
-} from "../appTypes";
-import {randomUUID} from "crypto";
+
+import { DeviceInputModel} from "../appTypes";
 import {ObjectId} from "mongodb";
-import {refreshToken} from "../auth/authDomain";
-import {mongoObjectId} from "../common";
 import jwt from "jsonwebtoken";
 import {subMinutes, subSeconds} from "date-fns";
+import {requestsModel, sessionModel} from "../mongo/mongooseSchemas";
 
 
-const devicesCollectionOutput = client.db("forum").collection<SessionsViewModel>("securityDevices")
-const devicesCollectionInsert = client.db("forum").collection<SessionsInputModel>("securityDevices")
-const requestsCollectionInsert = client.db("forum").collection<RequestsInputModel>("Requests")
-const requestsCollectionOutput = client.db("forum").collection<RequestsOutputModel>("Requests")
 
 export async function saveDeviceToDB(deviceToSave: DeviceInputModel, refreshToken: string, userId: ObjectId) {
     const ip = deviceToSave.ip
@@ -33,40 +20,40 @@ export async function saveDeviceToDB(deviceToSave: DeviceInputModel, refreshToke
         lastActiveDate: lastActiveDate,
         deviceId: new ObjectId(deviceId)
     }
-    await devicesCollectionInsert.insertOne({
+    await sessionModel.insertMany([{
         userId: userId,
         device: device,
         refreshToken: refreshToken,
-    })
+    }])
 }
 
 export async function getAllDevicesForSpecifiedUserDB(userId: ObjectId) {
-    return await devicesCollectionOutput.find({userId: userId}).toArray()
+    return await sessionModel.find({userId: userId})
 }
 
 export async function findDeviceById(deviceId: string) {
-    const device = await devicesCollectionOutput.findOne({"device.deviceId": new ObjectId(deviceId)})
-    const devices = await devicesCollectionOutput.find().toArray()
+    const device = await sessionModel.findOne({"device.deviceId": new ObjectId(deviceId)})
+    const devices = await sessionModel.find()
     //console.log({device: device!.deviceId, devices})
     return device
 }
 
 export async function deleteDeviceByIdDB(deviceId: string) {
-    return await devicesCollectionOutput.deleteOne({"device.deviceId": new ObjectId(deviceId)})
+    return await sessionModel.deleteOne({"device.deviceId": new ObjectId(deviceId)})
 }
 export async function deleteAllDevices() {
-    return await devicesCollectionOutput.deleteMany({})
+    return await sessionModel.deleteMany({})
 }
 
 export async function findSessionsFromDB(userId: string, deviceId: string) {
-    return await devicesCollectionOutput.findOne({$and: [{userId: new ObjectId(userId)}, {'device.deviceId': new ObjectId(deviceId)}]})
+    return await sessionModel.findOne({$and: [{userId: new ObjectId(userId)}, {'device.deviceId': new ObjectId(deviceId)}]})
 }
 export async function getAllSecurityDevicesDB() {
-    return await devicesCollectionOutput.find({}).toArray()
+    return await sessionModel.find({})
 }
 
 export async function updateDeviceByUserId(userId: ObjectId, dateOfCreating: string, newRefreshToken: string) {
-    return await devicesCollectionInsert.updateOne({userId: userId}, {
+    return await sessionModel.updateOne({userId: userId}, {
         $set: {
             refreshToken: newRefreshToken,
             "device.lastActiveDate": dateOfCreating
@@ -77,21 +64,23 @@ export async function updateDeviceByUserId(userId: ObjectId, dateOfCreating: str
 export async function deleteAllDevicesExcludeCurrentDB(userId: ObjectId, deviceId: ObjectId) {
     const filter = {$and: [{userId : userId}, {'device.deviceId': {$ne: deviceId}}]}
     //const filter = {'device.deviceId': {$ne: deviceId}}
-    return await devicesCollectionOutput.deleteMany(filter)
+    return await sessionModel.deleteMany(filter)
 }
 
 export async function createNewRequestDB(ip: string, device: string, baseUrl: string) {
-    return await requestsCollectionInsert.insertOne({
+    const result = await requestsModel.collection.insertOne({
         ip,
         device: device,
         lastActiveDate: new Date(),
         baseUrl: baseUrl
-    })
+    });
+
+    return result
 }
 
 export async function readLastRequests(ip: string, device: string, baseUrl: string) {
     const date = new Date().toISOString()
-    return requestsCollectionOutput.find({
+    return requestsModel.find({
         $and:
             [
                 {ip: ip},
@@ -99,5 +88,5 @@ export async function readLastRequests(ip: string, device: string, baseUrl: stri
                 {baseUrl: baseUrl},
                 {lastActiveDate: {$gt: subSeconds(new Date(date), 10)}}
             ]
-    }).toArray();
+    });
 }

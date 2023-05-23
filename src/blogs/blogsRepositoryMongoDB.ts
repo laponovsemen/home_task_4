@@ -7,16 +7,12 @@ import {
 } from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 import {createNewBlogId, mongoBlogSlicing, mongoPostSlicing} from "../common";
-import {client} from "../db";
 import {ObjectId} from "mongodb";
+import {blogsModel} from "../mongo/mongooseSchemas";
 
-
-
-export const blogsCollectionInsert = client.db("forum").collection<BlogInsertModelType>("blogs")
-export const blogsCollectionOutput = client.db("forum").collection<BlogViewModelType>("blogs")
 export async function getBlogById(req: Request, res: Response) {
      if(req.params.id) {
-        const mongoBlog = await blogsCollectionOutput
+        const mongoBlog = await blogsModel
             .findOne({_id: new ObjectId(req.params.id)},
                 {projection : {id : 1, name: 1,description: 1, websiteUrl: 1, isMembership: 1, createdAt: 1}})
          if(mongoBlog){
@@ -36,19 +32,19 @@ export async function getAllBlogsDB(blogsPagination : BlogsPaginationCriteriaTyp
         filter.name = {$regex : blogsPagination.searchNameTerm, $options: 'i' }
     }
     const pageSize = blogsPagination.pageSize
-    const totalCount = await blogsCollectionOutput.countDocuments(filter)
+    const totalCount = await blogsModel.countDocuments(filter)
     const pagesCount = Math.ceil(totalCount / pageSize)
     const page = blogsPagination.pageNumber
     const sortBy = blogsPagination.sortBy
     const sortDirection : "asc" | "desc"  = blogsPagination.sortDirection
     const ToSkip = (blogsPagination.pageSize * (blogsPagination.pageNumber - 1))
 
-    const result = await blogsCollectionOutput
+    const result = await blogsModel
         .find(filter)  //
         .sort({[sortBy] : sortDirection})
         .skip(ToSkip)
         .limit(pageSize)
-        .toArray()
+
     return {
         pagesCount : pagesCount,
         page : page,
@@ -67,7 +63,7 @@ export async function getAllBlogsDB(blogsPagination : BlogsPaginationCriteriaTyp
 
 export async function deleteBlogById(req: Request, res: Response) {
     if(req.params.id){
-        const result = await client.db("forum").collection("blogs").deleteOne({_id: new ObjectId(req.params.id)})
+        const result = await blogsModel.deleteOne({_id: new ObjectId(req.params.id)})
         if(result.deletedCount === 1){
             res.sendStatus(204)
         } else {
@@ -90,7 +86,7 @@ export async function createBlog(req: Request, res: Response) {
         isMembership: false,
     }
 
-    const result = await blogsCollectionInsert.insertOne(newBlog)  // Need to check / bad decision
+    const result = await blogsModel.collection.insertOne(newBlog)  // Need to check / bad decision
 
     res.status(201).send({
         id: result.insertedId,
@@ -103,12 +99,12 @@ export async function createBlog(req: Request, res: Response) {
 }
 
 export async function deleteAllBlogs() {
-    await client.db("forum").collection<BlogViewModelType>("blogs").deleteMany({})
+    await blogsModel.deleteMany({})
 
 }
 
 export async function updateBlog(req: Request, res: Response) {
-    const blogToUpdate = await client.db("forum").collection<BlogViewModelType>("blogs").findOne({_id : new ObjectId(req.params.id)})
+    const blogToUpdate = await blogsModel.findOne({_id : new ObjectId(req.params.id)})
     if(blogToUpdate) {
         const updatedBlog = {
             id: req.params.id,
@@ -118,8 +114,7 @@ export async function updateBlog(req: Request, res: Response) {
             createdAt: blogToUpdate.createdAt,
             isMembership: blogToUpdate.isMembership,
         }
-        await client.db("forum")
-            .collection("blogs")
+        await blogsModel
             .updateOne( { _id : new ObjectId(req.params.id) },{ $set: {
                     name : updatedBlog.name,
                     description : updatedBlog.description,
@@ -134,7 +129,7 @@ export async function updateBlog(req: Request, res: Response) {
 }
 
 export async function CheckingForBlogExistance(blogId : string) : Promise<boolean> {
-    const foundBlog = await blogsCollectionOutput.findOne({_id : new ObjectId(blogId)})
+    const foundBlog = await blogsModel.findOne({_id : new ObjectId(blogId)})
     if(foundBlog){
         return true
     } else {
