@@ -18,34 +18,34 @@ export const postDataValidation = [PostTitleValidation,
     PostShortDescriptionValidation,
     PostContentValidation,
     PostBlogIdValidation,
-    postsRepository.PostValidationErrors]
+    postsRepository.PostValidationErrors.bind(postsRepository)]
 
 postsRouter.get("/:id/comments",
-    commentsController.getAllCommentsForSpecifiedPost)
+    commentsController.getAllCommentsForSpecifiedPost.bind(commentsController))
 
 postsRouter.post("/:id/comments",
     apiMiddleware.JSONWebTokenMiddleware,
     apiMiddleware.PostExistanceMiddleware,
     commentContentValidation,
     apiMiddleware.ValidationErrors,
-    commentsController.createCommentForSpecifiedPost)
+    commentsController.createCommentForSpecifiedPost.bind(commentsController))
 
 postsRouter.get("",
-    postsController.getAllPosts)
+    postsController.getAllPosts.bind(postsController))
 
 postsRouter.post("",
     apiMiddleware.basicAuthGuardMiddleware,
     postDataValidation,
-    postsRepository.createPost)
+    postsRepository.createPost.bind(postsRepository))
 
 postsRouter.get("/:id",
-    postsRepository.getPostById)
+    postsRepository.getPostById.bind(postsRepository))
 
 postsRouter.put("/:id",
     apiMiddleware.basicAuthGuardMiddleware,
     postDataValidation,
-    postsRepository.updatePost)
+    postsRepository.updatePost.bind(postsRepository))
 
 postsRouter.delete("/:id",
     apiMiddleware.basicAuthGuardMiddleware,
-    postsRepository.deletePostById)
+    postsRepository.deletePostById.bind(postsRepository))

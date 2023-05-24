@@ -7,7 +7,7 @@ import {APIMiddleware} from "../common";
 export const usersRouter = Router({})
 
 usersRouter.get("",
-    usersController.getAllUsers)
+    usersController.getAllUsers.bind(usersController))
 
 usersRouter.post("",
     apiMiddleware.basicAuthGuardMiddleware,
@@ -15,8 +15,8 @@ usersRouter.post("",
     UserEmailValidation,
     UserPasswordValidation,
     apiMiddleware.ValidationErrors,
-    usersController.createUser)
+    usersController.createUser.bind(usersController))
 
 usersRouter.delete("/:id",
     apiMiddleware.basicAuthGuardMiddleware,
-    usersController.deleteUserById)
+    usersController.deleteUserById.bind(usersController))

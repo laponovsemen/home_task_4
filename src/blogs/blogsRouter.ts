@@ -12,15 +12,15 @@ export const blogsRouter = Router({})
 const blogDataValidation = [BlogNameValidation, BlogDescriptionValidation, BlogWebsiteUrlValidation, apiMiddleware.ValidationErrors]
 
 blogsRouter.get("",
-    blogsController.getAllBlogs)
+    blogsController.getAllBlogs.bind(blogsController))
 
 blogsRouter.post("",
     apiMiddleware.basicAuthGuardMiddleware,
     blogDataValidation,
-    blogsRepository.createBlog)
+    blogsRepository.createBlog.bind(blogsRepository))
 
 blogsRouter.get("/:id/posts",
-    blogsController.getAllPostsForSpecificBlog)
+    blogsController.getAllPostsForSpecificBlog.bind(blogsController))
 
 blogsRouter.post("/:id/posts",
     apiMiddleware.basicAuthGuardMiddleware,
@@ -28,16 +28,16 @@ blogsRouter.post("/:id/posts",
     PostShortDescriptionValidation,
     PostContentValidation,
     apiMiddleware.ValidationErrors,
-    blogsController.createPostForSpecificBlog)
+    blogsController.createPostForSpecificBlog.bind(blogsController))
 
 blogsRouter.get("/:id",
-    blogsRepository.getBlogById)
+    blogsRepository.getBlogById.bind(blogsRepository))
 
 blogsRouter.put("/:id",
     apiMiddleware.basicAuthGuardMiddleware,
     blogDataValidation,
-    blogsRepository.updateBlog)
+    blogsRepository.updateBlog.bind(blogsRepository))
 
 blogsRouter.delete("/:id",
     apiMiddleware.basicAuthGuardMiddleware,
-    blogsRepository.deleteBlogById)
+    blogsRepository.deleteBlogById.bind(blogsRepository))

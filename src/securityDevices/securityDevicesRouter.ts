@@ -9,12 +9,12 @@ export const securityDevicesRouter = Router({})
 
 securityDevicesRouter.get("",
     jwtService.jwtVerificationMiddleware,
-    securityDevicesController.getAllDevicesForSpecifiedUser)
+    securityDevicesController.getAllDevicesForSpecifiedUser.bind(securityDevicesController))
 
 securityDevicesRouter.delete("",
     jwtService.jwtVerificationMiddleware,
-    securityDevicesController.deleteAllDevicesExcludeCurrent)
+    securityDevicesController.deleteAllDevicesExcludeCurrent.bind(securityDevicesController))
 
 securityDevicesRouter.delete("/:deviceId",
     jwtService.jwtVerificationMiddleware,
-    securityDevicesController.deleteDeviceByDeviceId)
+    securityDevicesController.deleteDeviceByDeviceId.bind(securityDevicesController))

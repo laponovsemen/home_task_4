@@ -15,22 +15,22 @@ authRouter.post("/login",
     UserLoginOrEmailValidation,
     UserPasswordValidation,
     apiMiddleware.ValidationErrors,
-    authController.Login)
+    authController.Login.bind(authController))
 
 authRouter.post("/password-recovery",
     securityDevicesMiddleware.requestsCounterMiddleware,
     UserEmailValidation,
     apiMiddleware.ValidationErrors,
-    authController.passwordRecovery)
+    authController.passwordRecovery.bind(authController))
 
 authRouter.post("/new-password",
     securityDevicesMiddleware.requestsCounterMiddleware,
     UserNewPasswordValidation,
     apiMiddleware.ValidationErrors,
-    authController.newPassword)
+    authController.newPassword.bind(authController))
 
 authRouter.post("/refresh-token",
-    authController.refreshToken)
+    authController.refreshToken.bind(authController))
 
 authRouter.post("/registration",
     securityDevicesMiddleware.requestsCounterMiddleware,
@@ -38,22 +38,22 @@ authRouter.post("/registration",
     UserLoginValidation,
     UserPasswordValidation,
     apiMiddleware.ValidationErrors,
-    authController.sendMessageToEmail)
+    authController.sendMessageToEmail.bind(authController))
 
 authRouter.post("/registration-confirmation",
     securityDevicesMiddleware.requestsCounterMiddleware,
-    authController.registrationConfirmation)
+    authController.registrationConfirmation.bind(authController))
 
 authRouter.post("/registration-email-resending",
     securityDevicesMiddleware.requestsCounterMiddleware,
     UserEmailValidation,
     apiMiddleware.ValidationErrors,
-    authController.registrationEmailResending)
+    authController.registrationEmailResending.bind(authController))
 
 authRouter.post("/logout",
-    authController.Logout)
+    authController.Logout.bind(authController))
 
 authRouter.get("/me",
-    authController.giveUserInformation)
+    authController.giveUserInformation.bind(authController))
 
 const SECRET_KEY = 'My-secret-key'
