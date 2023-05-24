@@ -1,9 +1,9 @@
 import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-dotenv.config()
+import {appSettings} from "../app-settings";
+
 
 const dbName = 'forum'
-const mongoURI = process.env.MONGO_URL || `mongodb://0.0.0.0:27017/${dbName}`
+const mongoURI = appSettings.MONGO_URL
 
 
 

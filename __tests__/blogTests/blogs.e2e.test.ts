@@ -1,11 +1,9 @@
+// @ts-ignore
 import request from "supertest"
-import {before} from "node:test";
 import mongoose from "mongoose";
-
-import dotenv from "dotenv";
-import {app} from "../../settings";
-import {delay} from "../../common";
-dotenv.config()
+require('dotenv').config()
+import {delay} from "../../src/common";
+import {app} from "../../src";
 
 
 

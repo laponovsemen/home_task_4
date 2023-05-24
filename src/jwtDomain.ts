@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
+require('dotenv').config()
 import {userViewModel} from "./appTypes";
 import {ObjectId} from "mongodb";
 import {NextFunction, Request, Response} from "express";
 import {getAllDevicesForSpecifiedUserDB} from "./securityDevices/securityDevicesRepositoryDB";
 import {findUserByIdDB} from "./users/usersRepositoryMongoDB";
-dotenv.config()
+
 
 const secretKey = process.env.SECRET_KEY
 

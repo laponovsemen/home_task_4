@@ -1,12 +1,13 @@
+// @ts-ignore
 import request from "supertest"
 import {before} from "node:test";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-import {app} from "../../settings";
-dotenv.config()
+import {appSettings} from "../../src/app-settings";
+import {app} from "../../src";
+
 export const auth = 'Authorization'
 export const basic = 'Basic YWRtaW46cXdlcnR5'
-const mongoURI = process.env.MONGO_URL!
+const mongoURI = appSettings.MONGO_URL
 //POSTS ROUTE
 describe("TESTING OF CREATING POST", () => {
     beforeAll(async () => {

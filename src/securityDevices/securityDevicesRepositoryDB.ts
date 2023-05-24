@@ -12,13 +12,13 @@ export async function saveDeviceToDB(deviceToSave: DeviceInputModel, refreshToke
     const title = deviceToSave.title
     const lastActiveDate = deviceToSave.lastActiveDate
     const payload: any = jwt.decode(refreshToken)
-    const deviceId = payload.deviceId
+    const deviceId :string = payload.deviceId
 
     const device = {
         ip: ip,
         title: title,
         lastActiveDate: lastActiveDate,
-        deviceId: new ObjectId(deviceId)
+        deviceId: deviceId
     }
     await sessionModel.insertMany([{
         userId: userId,
@@ -42,7 +42,7 @@ export async function deleteDeviceByIdDB(deviceId: string) {
     return await sessionModel.deleteOne({"device.deviceId": new ObjectId(deviceId)})
 }
 export async function deleteAllDevices() {
-    return await sessionModel.deleteMany({})
+    await sessionModel.deleteMany({})
 }
 
 export async function findSessionsFromDB(userId: string, deviceId: string) {

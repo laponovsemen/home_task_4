@@ -2,7 +2,9 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  rootDir: 'src/__tests__'
+  rootDir: './__tests__',
+  testRegex: '.e2e.test.ts$',
+  testTimeout: 100000,
 };
 /*
 module.exports = {

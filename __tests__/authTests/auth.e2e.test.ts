@@ -1,12 +1,13 @@
+// @ts-ignore
 import request from "supertest";
-import exp = require("constants");
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-import {app} from "../../settings";
-dotenv.config()
+
+import {appSettings} from "../../src/app-settings";
+import {app} from "../../src";
+
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
-const mongoURI = process.env.MONGO_URL!
+const mongoURI = appSettings.MONGO_URL
 
 describe("TESTING OF CREATING USER AND AUTH", () => {
     beforeAll(async () => {
@@ -19,7 +20,7 @@ describe("TESTING OF CREATING USER AND AUTH", () => {
         await mongoose.disconnect()
     })
     it("should authorize user //auth is correct", async () => {
-        await request(app).delete("/testing/all-data").set(auth, basic)
+        //await request(app).delete("/testing/all-data")
         const user = await request(app)
             .post("/users")
             .set(auth, basic)

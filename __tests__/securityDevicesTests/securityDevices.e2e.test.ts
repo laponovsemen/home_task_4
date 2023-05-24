@@ -1,16 +1,16 @@
+// @ts-ignore
 import request from "supertest";
 import exp = require("constants");
 import {ObjectId} from "mongodb";
 import {cookie} from "express-validator";
 
+// @ts-ignore
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-import {app} from "../../settings";
-import {mongoObjectId} from "../../common";
+import {appSettings} from "../../src/app-settings";
+import {app} from "../../src";
 
-dotenv.config()
-const mongoURI = process.env.MONGO_URL!
+const mongoURI = appSettings.MONGO_URL
 
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'

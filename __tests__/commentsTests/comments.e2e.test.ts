@@ -1,10 +1,9 @@
+// @ts-ignore
 import request from "supertest";
 import exp = require("constants");
 import {randomUUID} from "crypto";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-import {app} from "../../settings";
-dotenv.config()
+import {app} from "../../src";
 
 
 const auth = 'Authorization'
