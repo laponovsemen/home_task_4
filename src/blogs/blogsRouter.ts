@@ -1,24 +1,43 @@
 import {Router} from 'express'
-import {createBlog, deleteBlogById, getBlogById, updateBlog} from "./blogsRepositoryMongoDB";
 import {
     BlogDescriptionValidation,
     BlogNameValidation,
     BlogWebsiteUrlValidation,
 } from "./blogValidators";
-import {basicAuthGuardMiddleware, ValidationErrors} from "../common";
-import {createPostForSpecificBlog, getAllBlogs, getAllPostsForSpecificBlog} from "./blogDomain";
-import {postDataValidation} from "../posts/postsRouter";
 import {PostContentValidation, PostShortDescriptionValidation, PostTitleValidation} from "../posts/postsValidator";
+import {apiMiddleware, blogsController, blogsRepository} from "../composition-root";
 
 export const blogsRouter = Router({})
 
-const blogDataValidation = [BlogNameValidation, BlogDescriptionValidation, BlogWebsiteUrlValidation, ValidationErrors]
+const blogDataValidation = [BlogNameValidation, BlogDescriptionValidation, BlogWebsiteUrlValidation, apiMiddleware.ValidationErrors]
 
-blogsRouter.get("", getAllBlogs)
-blogsRouter.post("", basicAuthGuardMiddleware, blogDataValidation, createBlog)
-blogsRouter.get("/:id/posts", getAllPostsForSpecificBlog)
-blogsRouter.post("/:id/posts", basicAuthGuardMiddleware, PostTitleValidation, PostShortDescriptionValidation, PostContentValidation, ValidationErrors, createPostForSpecificBlog)
+blogsRouter.get("",
+    blogsController.getAllBlogs)
 
-blogsRouter.get("/:id", getBlogById)
-blogsRouter.put("/:id",basicAuthGuardMiddleware,blogDataValidation, updateBlog)
-blogsRouter.delete("/:id",basicAuthGuardMiddleware, deleteBlogById)
+blogsRouter.post("",
+    apiMiddleware.basicAuthGuardMiddleware,
+    blogDataValidation,
+    blogsRepository.createBlog)
+
+blogsRouter.get("/:id/posts",
+    blogsController.getAllPostsForSpecificBlog)
+
+blogsRouter.post("/:id/posts",
+    apiMiddleware.basicAuthGuardMiddleware,
+    PostTitleValidation,
+    PostShortDescriptionValidation,
+    PostContentValidation,
+    apiMiddleware.ValidationErrors,
+    blogsController.createPostForSpecificBlog)
+
+blogsRouter.get("/:id",
+    blogsRepository.getBlogById)
+
+blogsRouter.put("/:id",
+    apiMiddleware.basicAuthGuardMiddleware,
+    blogDataValidation,
+    blogsRepository.updateBlog)
+
+blogsRouter.delete("/:id",
+    apiMiddleware.basicAuthGuardMiddleware,
+    blogsRepository.deleteBlogById)

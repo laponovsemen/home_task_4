@@ -1,14 +1,20 @@
 import {Router} from "express";
-import {basicAuthGuardMiddleware, JSONWebTokenMiddleware, ValidationErrors} from "../common";
-import {getAllBlogs} from "../blogs/blogDomain";
-import {createBlog} from "../blogs/blogsRepositoryMongoDB";
-import {deleteCommentById, getCommentById, updateCommentById} from "./commentsDomain";
 import {commentContentValidation} from "./commentsValidation";
+import {apiMiddleware, commentsController} from "../composition-root";
 
 export const commentsRouter = Router({})
 
 
 
-commentsRouter.put("/:id",JSONWebTokenMiddleware, commentContentValidation, ValidationErrors, updateCommentById)
-commentsRouter.delete("/:id", JSONWebTokenMiddleware,  deleteCommentById)
-commentsRouter.get("/:id", getCommentById)
+commentsRouter.put("/:id",
+    apiMiddleware.JSONWebTokenMiddleware,
+    commentContentValidation,
+    apiMiddleware.ValidationErrors,
+    commentsController.updateCommentById.bind(commentsController))
+
+commentsRouter.delete("/:id",
+    apiMiddleware.JSONWebTokenMiddleware,
+    commentsController.deleteCommentById.bind(commentsController))
+
+commentsRouter.get("/:id",
+    commentsController.getCommentById.bind(commentsController))

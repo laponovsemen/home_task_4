@@ -1,15 +1,14 @@
 // @ts-ignore
 import request from "supertest";
-import exp = require("constants");
-import {randomUUID} from "crypto";
 import mongoose from "mongoose";
 import {app} from "../../src";
+import {appSettings} from "../../src/app-settings";
 
 
 const auth = 'Authorization'
 const basic = 'Basic YWRtaW46cXdlcnR5'
 
-const mongoURI = process.env.MONGO_URL!
+const mongoURI = appSettings.MONGO_URL
 
 describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
     beforeAll(async () => {

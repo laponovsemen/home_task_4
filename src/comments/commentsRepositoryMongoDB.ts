@@ -1,6 +1,7 @@
 import { commentsModel} from "../mongo/mongooseSchemas";
 
-
-export async function deleteAllComments() {
-    await commentsModel.deleteMany({})
+export class CommentsRepository {
+    async deleteAllComments() {
+        await commentsModel.deleteMany({})
+    }
 }

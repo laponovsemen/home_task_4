@@ -1,10 +1,9 @@
+// @ts-ignore
 import request from "supertest"
 import {before} from "node:test";
 import {auth, basic} from "../postsTests/posts.e2e.test";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-import {app} from "../../settings";
-dotenv.config()
+import {app} from "../../src";
 
 const mongoURI = process.env.MONGO_URL!
 //TESTING ROUTE

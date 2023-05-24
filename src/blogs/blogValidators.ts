@@ -1,6 +1,4 @@
 import {body} from "express-validator";
-import {NextFunction, Request, Response} from "express";
-import {ValidationErrors} from "../common";
 
 const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
 

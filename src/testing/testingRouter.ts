@@ -1,9 +1,8 @@
 import {Router} from 'express'
-import {deleteAllInformation} from "./testingRepositoryMongoDB";
-import {getAllSecurityDevices} from "../securityDevices/securityDevicesDomain";
+import {securityDevicesController, testingRepository} from "../composition-root";
 
 export const testingRouter = Router({})
 
 
-testingRouter.delete("", deleteAllInformation)
-testingRouter.get("/all-security-devices", getAllSecurityDevices)
+testingRouter.delete("", testingRepository.deleteAllInformation)
+testingRouter.get("/all-security-devices", securityDevicesController.getAllSecurityDevices)

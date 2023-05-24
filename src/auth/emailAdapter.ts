@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 
-export const emailAdapter = {
+export class EmailAdapter {
     async sendEmail(email : string, code : string) {
         let transport = nodemailer.createTransport({
             service : "gmail",
@@ -23,7 +23,7 @@ export const emailAdapter = {
         })
         //console.log(info)
         return info
-    },
+    }
     async sendEmailForPasswordRecovery(email : string, recoveryCode : string) {
         let transport = nodemailer.createTransport({
             service : "gmail",
