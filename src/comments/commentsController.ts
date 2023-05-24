@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
 import {
     BlogsPaginationCriteriaType,
-    commentatorInfoType,
+    commentatorInfoType, commentDBModel,
     CommentsPaginationCriteriaType,
-    commentViewModel, PaginatorPostViewModelType, PostsPaginationCriteriaType
+    commentViewModel, likersInfoType, PaginatorPostViewModelType, PostsPaginationCriteriaType
 } from "../appTypes";
 import {ObjectId} from "mongodb";
 import {commentsModel} from "../mongo/mongooseSchemas";
@@ -85,18 +85,34 @@ export class CommentsController {
         }
         const createdAt = new Date().toISOString()
 
-        const newComment = {
+        const newComment = { // problem with _id ask on support
             content: content,
             commentatorInfo: commentatorInfo,
             createdAt: createdAt,
-            postId: new ObjectId(req.params.id)
+            postId: new ObjectId(req.params.id),
+            likesInfo: {
+                likesCount: 0,//  Total likes for parent item
+
+                dislikesCount: 0,//    Total dislikes for parent item
+
+                myStatus : "None",
+                likersInfo: []
+            }
         }
         const insertedComment = await commentsModel.create(newComment)
         res.status(201).send({
             id: insertedComment._id,
             content: content,
             commentatorInfo: commentatorInfo,
-            createdAt: createdAt
+            createdAt: createdAt,
+            likesInfo: {
+                likesCount: 0,//  Total likes for parent item
+
+                dislikesCount: 0,//    Total dislikes for parent item
+
+                myStatus : "None",
+                likersInfo: []
+            }
         })
     }
     async getAllCommentsForSpecifiedPost(req: Request, res: Response) {

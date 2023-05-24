@@ -158,7 +158,20 @@ export type commentDBModel = WithMongoId<{
     commentatorInfo: commentatorInfoType,
     createdAt:	string,
     postId : ObjectId,
+    likesInfo: {
+        likesCount: number//  Total likes for parent item
+
+        dislikesCount: number//    Total dislikes for parent item
+
+        myStatus : "None"| "Like" | "Dislike"
+        likersInfo: likersInfoType[]
+    }
 }>
+
+export type likersInfoType = {
+    userId : ObjectId,
+    status : "None"| "Like" | "Dislike",
+}
 export type commentViewModel = {
     id:	string,
     content: string,

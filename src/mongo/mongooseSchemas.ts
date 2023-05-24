@@ -4,7 +4,7 @@ import { WithId } from 'mongodb'
 import {
     BlogInputModelType,
     BlogInsertModelType,
-    BlogViewModelType, commentDBModel,
+    BlogViewModelType, commentDBModel, likersInfoType,
     PostInputModelType, PostInsertModelType,
     PostViewModelType, RequestsDBModel, SessionsInputModel, userInputModel
 } from "../appTypes";
@@ -54,6 +54,17 @@ export const commentSchema = new mongoose.Schema<commentDBModel>({
     },
     createdAt:	{type: String, require: true},
     postId : {type: ObjectId, require: true},
+    likesInfo: {
+        likesCount: {type :Number , require : true},//  Total likes for parent item
+
+        dislikesCount: {type :Number , require : true} ,//    Total dislikes for parent item
+
+        myStatus : {type :String , require : true},
+        likersInfo: [{
+            userId : {type :ObjectId , require : true},
+            status : {type :String , require : true}
+        }]
+    }
 });
 
 export const sessionSchema = new mongoose.Schema<SessionsInputModel>({
