@@ -10,13 +10,13 @@ usersRouter.get("",
     usersController.getAllUsers.bind(usersController))
 
 usersRouter.post("",
-    apiMiddleware.basicAuthGuardMiddleware,
+    apiMiddleware.basicAuthGuardMiddleware.bind(apiMiddleware),
     UserLoginValidation,
     UserEmailValidation,
     UserPasswordValidation,
-    apiMiddleware.ValidationErrors,
+    apiMiddleware.ValidationErrors.bind(apiMiddleware),
     usersController.createUser.bind(usersController))
 
 usersRouter.delete("/:id",
-    apiMiddleware.basicAuthGuardMiddleware,
+    apiMiddleware.basicAuthGuardMiddleware.bind(apiMiddleware),
     usersController.deleteUserById.bind(usersController))

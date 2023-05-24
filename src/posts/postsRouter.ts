@@ -24,17 +24,17 @@ postsRouter.get("/:id/comments",
     commentsController.getAllCommentsForSpecifiedPost.bind(commentsController))
 
 postsRouter.post("/:id/comments",
-    apiMiddleware.JSONWebTokenMiddleware,
-    apiMiddleware.PostExistanceMiddleware,
+    apiMiddleware.JSONWebTokenMiddleware.bind(apiMiddleware),
+    apiMiddleware.PostExistanceMiddleware.bind(apiMiddleware),
     commentContentValidation,
-    apiMiddleware.ValidationErrors,
+    apiMiddleware.ValidationErrors.bind(apiMiddleware),
     commentsController.createCommentForSpecifiedPost.bind(commentsController))
 
 postsRouter.get("",
     postsController.getAllPosts.bind(postsController))
 
 postsRouter.post("",
-    apiMiddleware.basicAuthGuardMiddleware,
+    apiMiddleware.basicAuthGuardMiddleware.bind(apiMiddleware),
     postDataValidation,
     postsRepository.createPost.bind(postsRepository))
 
@@ -42,10 +42,10 @@ postsRouter.get("/:id",
     postsRepository.getPostById.bind(postsRepository))
 
 postsRouter.put("/:id",
-    apiMiddleware.basicAuthGuardMiddleware,
+    apiMiddleware.basicAuthGuardMiddleware.bind(apiMiddleware),
     postDataValidation,
     postsRepository.updatePost.bind(postsRepository))
 
 postsRouter.delete("/:id",
-    apiMiddleware.basicAuthGuardMiddleware,
+    apiMiddleware.basicAuthGuardMiddleware.bind(apiMiddleware),
     postsRepository.deletePostById.bind(postsRepository))

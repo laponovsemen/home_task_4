@@ -9,13 +9,13 @@ import {apiMiddleware, blogsController, blogsRepository} from "../composition-ro
 
 export const blogsRouter = Router({})
 
-const blogDataValidation = [BlogNameValidation, BlogDescriptionValidation, BlogWebsiteUrlValidation, apiMiddleware.ValidationErrors]
+const blogDataValidation = [BlogNameValidation, BlogDescriptionValidation, BlogWebsiteUrlValidation, apiMiddleware.ValidationErrors.bind(apiMiddleware)]
 
 blogsRouter.get("",
     blogsController.getAllBlogs.bind(blogsController))
 
 blogsRouter.post("",
-    apiMiddleware.basicAuthGuardMiddleware,
+    apiMiddleware.basicAuthGuardMiddleware.bind(apiMiddleware),
     blogDataValidation,
     blogsRepository.createBlog.bind(blogsRepository))
 
@@ -23,21 +23,21 @@ blogsRouter.get("/:id/posts",
     blogsController.getAllPostsForSpecificBlog.bind(blogsController))
 
 blogsRouter.post("/:id/posts",
-    apiMiddleware.basicAuthGuardMiddleware,
+    apiMiddleware.basicAuthGuardMiddleware.bind(apiMiddleware),
     PostTitleValidation,
     PostShortDescriptionValidation,
     PostContentValidation,
-    apiMiddleware.ValidationErrors,
+    apiMiddleware.ValidationErrors.bind(apiMiddleware),
     blogsController.createPostForSpecificBlog.bind(blogsController))
 
 blogsRouter.get("/:id",
     blogsRepository.getBlogById.bind(blogsRepository))
 
 blogsRouter.put("/:id",
-    apiMiddleware.basicAuthGuardMiddleware,
+    apiMiddleware.basicAuthGuardMiddleware.bind(apiMiddleware),
     blogDataValidation,
     blogsRepository.updateBlog.bind(blogsRepository))
 
 blogsRouter.delete("/:id",
-    apiMiddleware.basicAuthGuardMiddleware,
+    apiMiddleware.basicAuthGuardMiddleware.bind(apiMiddleware),
     blogsRepository.deleteBlogById.bind(blogsRepository))

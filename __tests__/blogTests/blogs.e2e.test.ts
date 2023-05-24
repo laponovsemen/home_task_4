@@ -2,8 +2,9 @@
 import request from "supertest"
 import mongoose from "mongoose";
 require('dotenv').config()
-import {delay} from "../../src/common";
+
 import {app} from "../../src";
+import {Common} from "../../src/common";
 
 
 
@@ -331,7 +332,7 @@ describe("TESTING OF CREATING POST FOR SPECIFIED BLOG", () => {
                     blogId: blogId
                 })
                 .expect(201)
-           await delay(30)
+           await new Common().delay(30)
         }
 
         const allPostsForspecifiedBlogASC = await request(app).get(`/blogs/${blogId}/posts`).query({sortDirection: "asc"})

@@ -11,43 +11,43 @@ import {apiMiddleware, authController, securityDevicesMiddleware} from "../compo
 export const authRouter = Router({})
 
 authRouter.post("/login",
-    securityDevicesMiddleware.requestsCounterMiddleware,
+    securityDevicesMiddleware.requestsCounterMiddleware.bind(securityDevicesMiddleware),
     UserLoginOrEmailValidation,
     UserPasswordValidation,
-    apiMiddleware.ValidationErrors,
+    apiMiddleware.ValidationErrors.bind(apiMiddleware),
     authController.Login.bind(authController))
 
 authRouter.post("/password-recovery",
-    securityDevicesMiddleware.requestsCounterMiddleware,
+    securityDevicesMiddleware.requestsCounterMiddleware.bind(securityDevicesMiddleware),
     UserEmailValidation,
-    apiMiddleware.ValidationErrors,
+    apiMiddleware.ValidationErrors.bind(apiMiddleware),
     authController.passwordRecovery.bind(authController))
 
 authRouter.post("/new-password",
-    securityDevicesMiddleware.requestsCounterMiddleware,
+    securityDevicesMiddleware.requestsCounterMiddleware.bind(securityDevicesMiddleware),
     UserNewPasswordValidation,
-    apiMiddleware.ValidationErrors,
+    apiMiddleware.ValidationErrors.bind(apiMiddleware),
     authController.newPassword.bind(authController))
 
 authRouter.post("/refresh-token",
     authController.refreshToken.bind(authController))
 
 authRouter.post("/registration",
-    securityDevicesMiddleware.requestsCounterMiddleware,
+    securityDevicesMiddleware.requestsCounterMiddleware.bind(securityDevicesMiddleware),
     UserEmailValidation,
     UserLoginValidation,
     UserPasswordValidation,
-    apiMiddleware.ValidationErrors,
+    apiMiddleware.ValidationErrors.bind(apiMiddleware),
     authController.sendMessageToEmail.bind(authController))
 
 authRouter.post("/registration-confirmation",
-    securityDevicesMiddleware.requestsCounterMiddleware,
+    securityDevicesMiddleware.requestsCounterMiddleware.bind(securityDevicesMiddleware),
     authController.registrationConfirmation.bind(authController))
 
 authRouter.post("/registration-email-resending",
-    securityDevicesMiddleware.requestsCounterMiddleware,
+    securityDevicesMiddleware.requestsCounterMiddleware.bind(securityDevicesMiddleware),
     UserEmailValidation,
-    apiMiddleware.ValidationErrors,
+    apiMiddleware.ValidationErrors.bind(apiMiddleware),
     authController.registrationEmailResending.bind(authController))
 
 authRouter.post("/logout",

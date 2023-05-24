@@ -7,13 +7,13 @@ export const commentsRouter = Router({})
 
 
 commentsRouter.put("/:id",
-    apiMiddleware.JSONWebTokenMiddleware,
+    apiMiddleware.JSONWebTokenMiddleware.bind(apiMiddleware),
     commentContentValidation,
-    apiMiddleware.ValidationErrors,
+    apiMiddleware.ValidationErrors.bind(apiMiddleware),
     commentsController.updateCommentById.bind(commentsController))
 
 commentsRouter.delete("/:id",
-    apiMiddleware.JSONWebTokenMiddleware,
+    apiMiddleware.JSONWebTokenMiddleware.bind(apiMiddleware),
     commentsController.deleteCommentById.bind(commentsController))
 
 commentsRouter.get("/:id",
