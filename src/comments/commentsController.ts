@@ -136,7 +136,7 @@ export class CommentsController {
                 dislikesCount: 0,//    Total dislikes for parent item
 
                 myStatus : "None",
-                likersInfo: []
+
             }
         }
         const insertedComment = await commentsModel.create(newComment)
