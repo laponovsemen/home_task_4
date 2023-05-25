@@ -29,9 +29,10 @@ export const testingRepository = new TestingRepository(blogsRepository,
     securityDevicesRepository,
     usersRepository)
 
-export const commentsController = new CommentsController(commentsRepository, common, postsRepository)
-export const usersController = new UsersController(usersRepository, common)
 export const jwtService = new JwtService()
+export const commentsController = new CommentsController(commentsRepository, common, postsRepository , jwtService)
+export const usersController = new UsersController(usersRepository, common)
+
 export const apiMiddleware = new APIMiddleware(common, jwtService,usersRepository,postsRepository)
 export const securityDevicesMiddleware = new SecurityDevicesMiddleware(securityDevicesRepository)
 export const authRepository = new AuthRepository()
