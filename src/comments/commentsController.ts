@@ -134,7 +134,7 @@ export class CommentsController {
                 likesCount: 0,//  Total likes for parent item
 
                 dislikesCount: 0,//    Total dislikes for parent item
-
+                likersInfo: [],
                 myStatus : "None",
 
             }
@@ -151,7 +151,7 @@ export class CommentsController {
                 dislikesCount: 0,//    Total dislikes for parent item
 
                 myStatus : "None",
-                likersInfo: []
+
             }
         })
     }
