@@ -182,7 +182,7 @@ export class CommentsController {
             sortDirection: sortDirection,
             postId: postId,
         }
-        const result = await this.postsRepository.getAllCommentsForSpecifiedPostDB(PaginationCriteria, userId)
+        const result = await this.postsRepository.getAllCommentsForSpecifiedPostDB(PaginationCriteria, userId!)
         if (result) {
             res.send(result).status(200)
         } else {

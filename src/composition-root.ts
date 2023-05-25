@@ -17,10 +17,11 @@ import {UsersController} from "./users/usersController";
 import {PostsController} from "./posts/postsController";
 
 export const common = new Common()
+export const jwtService = new JwtService()
 export const commentsRepository = new CommentsRepository()
 export const emailAdapter = new EmailAdapter()
 export const securityDevicesRepository = new SecurityDevicesRepository()
-export const postsRepository = new PostsRepository(common)
+export const postsRepository = new PostsRepository(common, jwtService)
 export const blogsRepository = new BlogsRepository(common)
 export const usersRepository = new UsersRepository(common, emailAdapter)
 export const testingRepository = new TestingRepository(blogsRepository,
@@ -29,7 +30,7 @@ export const testingRepository = new TestingRepository(blogsRepository,
     securityDevicesRepository,
     usersRepository)
 
-export const jwtService = new JwtService()
+
 export const commentsController = new CommentsController(commentsRepository, common, postsRepository , jwtService)
 export const usersController = new UsersController(usersRepository, common)
 
