@@ -69,6 +69,7 @@ export class CommentsController {
                 }
 
                 await this.commentsRepository.updateLikesAndDislikesCounters(commentId)
+                res.sendStatus(204)
             } else {
                 console.log("user is not found by id")
                 res.sendStatus(401)
@@ -105,25 +106,19 @@ export class CommentsController {
         if (foundComment) {
             if(req.headers.authorization?.split(" ")[1]) {
                 const userId = await this.jwtService.getUserIdByToken(req.headers.authorization.split(" ")[1])
-
                 const usersLikesStatus = foundComment.likesInfo.likersInfo
                 //console.log("usersLikesStatus" + usersLikesStatus)
+
                 for(let i = 0; i < usersLikesStatus.length ; i++){
                     console.log((usersLikesStatus[i].userId.toString()) === userId!.toString() , "dfs;dfl;sd")
-
                     if((usersLikesStatus[i].userId.toString()) === userId!.toString()){
-
                         userLikeStatus = usersLikesStatus[i].status
                         break
-
-
                     }
                 }
-
             }
 
             const commentToSend = this.common.mongoCommentSlicing(foundComment)
-
             // @ts-ignore
             commentToSend.likesInfo.myStatus = userLikeStatus
             res.status(200).send(commentToSend)
