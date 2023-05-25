@@ -10,10 +10,13 @@ import {commentsModel} from "../mongo/mongooseSchemas";
 import {CommentsRepository} from "./commentsRepositoryMongoDB";
 import {Common} from "../common";
 import {PostsRepository} from "../posts/postsRepositoryMongoDB";
+import {jwtService} from "../composition-root";
+import {JwtService} from "../jwtDomain";
 export class CommentsController {
     constructor(protected commentsRepository : CommentsRepository,
                 protected common : Common,
-                protected postsRepository : PostsRepository) {
+                protected postsRepository : PostsRepository,
+                protected jwtService : JwtService) {
     }
     async updateCommentById(req: Request, res: Response) {
         const commentId = req.params.id
@@ -35,6 +38,43 @@ export class CommentsController {
                         }
                 })
             if (updatedComment.modifiedCount === 1) {
+                console.log("comment modified")
+                res.sendStatus(204)
+                return
+            } else {
+                console.log("comment is not found by id")
+                res.sendStatus(404)
+                return
+            }
+
+        } else {
+            console.log("comment is not found by id")
+            res.sendStatus(404)
+        }
+    }
+    async changeLikeStatusOfComment(req: Request, res: Response) {
+        const commentId = req.params.id
+        const foundComment = await commentsModel.findOne({_id: new ObjectId(commentId)})
+        if (foundComment) {
+            const likesCountToAdd = req.body.likeStatus === "Like" ? 1 : 0
+            const deslikesCountToAdd = req.body.likeStatus === "Dislike" ? 1 : 0
+            const userId = await this.jwtService.getUserIdByToken(req.headers.authorization!.split(" ")[1])
+            const likedComment = await commentsModel.updateOne({_id: new ObjectId(commentId)},
+                {
+                    $set:
+                        {
+                            likesInfo : {
+                                likesCount : foundComment.likesInfo.likesCount += likesCountToAdd,
+                                dislikesCount : foundComment.likesInfo.dislikesCount += deslikesCountToAdd,
+                                likersInfo : {
+                                    userId : new ObjectId(userId!),
+                                    status : req.body.likeStatus
+                                }
+
+                            }
+                        }
+                })
+            if (likedComment.modifiedCount === 1) {
                 console.log("comment modified")
                 res.sendStatus(204)
                 return

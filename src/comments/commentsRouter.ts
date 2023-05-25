@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {commentContentValidation} from "./commentsValidation";
+import {commentContentValidation, commentsLikeStatusValidation} from "./commentsValidation";
 import {apiMiddleware, commentsController} from "../composition-root";
 
 export const commentsRouter = Router({})
@@ -11,6 +11,12 @@ commentsRouter.put("/:id",
     commentContentValidation,
     apiMiddleware.ValidationErrors.bind(apiMiddleware),
     commentsController.updateCommentById.bind(commentsController))
+
+commentsRouter.put("/:id/like-status",
+    apiMiddleware.JSONWebTokenMiddleware.bind(apiMiddleware),
+    commentsLikeStatusValidation,
+    apiMiddleware.ValidationErrors.bind(apiMiddleware),
+    commentsController.changeLikeStatusOfComment.bind(commentsController))
 
 commentsRouter.delete("/:id",
     apiMiddleware.JSONWebTokenMiddleware.bind(apiMiddleware),
