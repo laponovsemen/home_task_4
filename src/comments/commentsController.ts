@@ -3,7 +3,7 @@ import {
     BlogsPaginationCriteriaType,
     commentatorInfoType, commentDBModel,
     CommentsPaginationCriteriaType,
-    commentViewModel, likersInfoType, PaginatorPostViewModelType, PostsPaginationCriteriaType
+    commentViewModel, likersInfoType, PaginatorPostViewModelType, PostsPaginationCriteriaType, statusType
 } from "../appTypes";
 import {ObjectId} from "mongodb";
 import {commentsModel} from "../mongo/mongooseSchemas";
@@ -56,33 +56,24 @@ export class CommentsController {
         const commentId = req.params.id
         const foundComment = await commentsModel.findOne({_id: new ObjectId(commentId)})
         if (foundComment) {
-            const likesCountToAdd = req.body.likeStatus === "Like" ? 1 : 0
-            const deslikesCountToAdd = req.body.likeStatus === "Dislike" ? 1 : 0
+            /*const likesCountToAdd = req.body.likeStatus === "Like" ? 1 : 0
+            const deslikesCountToAdd = req.body.likeStatus === "Dislike" ? 1 : 0*/
+            const likeStatus = req.body.likeStatus
             const userId = await this.jwtService.getUserIdByToken(req.headers.authorization!.split(" ")[1])
-            const addUsertoLikersInfo = await commentsModel.updateOne({_id: new ObjectId(commentId)},
-                {
-                    $set:
-                        {
-                            likesInfo : {
-                                likesCount : foundComment.likesInfo.likesCount += likesCountToAdd,
-                                dislikesCount : foundComment.likesInfo.dislikesCount += deslikesCountToAdd,
-                                likersInfo : {
-                                    userId : new ObjectId(userId!),
-                                    status : req.body.likeStatus
-                                }
+            if(userId){
+                const userAlreadyLikedComment = this.commentsRepository.findUserInLikeInfoByObjectId(userId)
+                if(!userAlreadyLikedComment){
+                    const addUsertoLikersInfo = await this.commentsRepository.pushUserToLikersInfo(userId!.toString(), commentId, likeStatus)
+                } else {
+                    const updatedUserinLikersInfo = await this.commentsRepository.changeLikeStatusOfUserInLikersInfo(userId!.toString(), commentId, likeStatus)
+                }
 
-                            }
-                        }
-                })
-            if (addUsertoLikersInfo.modifiedCount === 1) {
-                console.log("comment modified")
-                res.sendStatus(204)
-                return
+                await this.commentsRepository.updateLikesAndDislikesCounters(commentId)
             } else {
-                console.log("comment is not found by id")
-                res.sendStatus(404)
-                return
+                console.log("user is not found by id")
+                res.sendStatus(401)
             }
+
 
         } else {
             console.log("comment is not found by id")
@@ -109,7 +100,7 @@ export class CommentsController {
     }
     async getCommentById(req: Request, res: Response) {
         const commentId = req.params.id
-        let userLikeStatus : "None" | "Like" | "Dislike" = "None"
+        let userLikeStatus : statusType = statusType.None
         const foundComment = await commentsModel.findOne({_id: new ObjectId(commentId)})
         if (foundComment) {
             if(req.headers.authorization?.split(" ")[1]) {
@@ -132,6 +123,8 @@ export class CommentsController {
             }
 
             const commentToSend = this.common.mongoCommentSlicing(foundComment)
+
+            // @ts-ignore
             commentToSend.likesInfo.myStatus = userLikeStatus
             res.status(200).send(commentToSend)
 

@@ -170,7 +170,12 @@ export type commentDBModel = WithMongoId<{
 
 export type likersInfoType = {
     userId : ObjectId,
-    status : "None"| "Like" | "Dislike",
+    status : statusType,
+}
+export enum statusType {
+    "None",
+    "Like",
+    "Dislike",
 }
 export type commentViewModel = {
     id:	string,
