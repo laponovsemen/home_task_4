@@ -173,9 +173,9 @@ export type likersInfoType = {
     status : statusType,
 }
 export enum statusType {
-    "None",
-    "Like",
-    "Dislike",
+    "None"="None",
+    "Like" = "Like",
+    "Dislike" = "Dislike",
 }
 export type commentViewModel = {
     id:	string,
