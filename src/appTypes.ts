@@ -160,9 +160,7 @@ export type commentDBModel = WithMongoId<{
     postId : ObjectId,
     likesInfo: {
         likesCount: number//  Total likes for parent item
-
         dislikesCount: number//    Total dislikes for parent item
-
         myStatus : "None"| "Like" | "Dislike"
         likersInfo: likersInfoType[]
     }

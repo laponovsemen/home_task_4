@@ -10,6 +10,7 @@ import {JwtService} from "./jwtDomain";
 import {UsersRepository} from "./users/usersRepositoryMongoDB";
 import {PostsRepository} from "./posts/postsRepositoryMongoDB";
 import {v4 as uuidv4} from "uuid";
+import {ObjectId} from "mongodb";
 
 export class Common{
     constructor() {
@@ -54,6 +55,28 @@ export class Common{
                  dislikesCount:Obj2.likesInfo.dislikesCount,
                  likesCount: Obj2.likesInfo.likesCount,
                  myStatus: Obj2.likesInfo.myStatus,
+                }
+        }
+    }
+    mongoGetAllCommentsSlicing = (Obj2: commentDBModel, userId: ObjectId) => {
+        let myStatus = Obj2.likesInfo.myStatus
+        const likersInfo = Obj2.likesInfo.likersInfo
+        for(let i = 0; i < likersInfo.length; i++){
+            if(userId.toString() === likersInfo[i].userId.toString()){
+                myStatus = likersInfo[i].status
+                break
+            }
+        }
+        return {
+            id: Obj2._id,
+            content: Obj2.content,
+            commentatorInfo: Obj2.commentatorInfo,
+            createdAt: Obj2.createdAt,
+
+            likesInfo: {
+                 dislikesCount:Obj2.likesInfo.dislikesCount,
+                 likesCount: Obj2.likesInfo.likesCount,
+                 myStatus: myStatus,
                 }
         }
     }

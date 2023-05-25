@@ -168,6 +168,8 @@ export class CommentsController {
         })
     }
     async getAllCommentsForSpecifiedPost(req: Request, res: Response) {
+
+        const userId = await this.jwtService.getUserIdByToken(req.headers.authorization!.split(" ")[1])
         const postId = req.params.id
         const pageNumber: number = req.query.pageNumber ? parseInt(req.query.pageNumber.toString(), 10) : 1
         const pageSize: number = req.query.pageSize ? parseInt(req.query.pageSize.toString(), 10) : 10
@@ -180,7 +182,7 @@ export class CommentsController {
             sortDirection: sortDirection,
             postId: postId,
         }
-        const result = await this.postsRepository.getAllCommentsForSpecifiedPostDB(PaginationCriteria)
+        const result = await this.postsRepository.getAllCommentsForSpecifiedPostDB(PaginationCriteria, userId)
         if (result) {
             res.send(result).status(200)
         } else {

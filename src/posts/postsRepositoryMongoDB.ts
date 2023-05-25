@@ -10,9 +10,11 @@ import {ObjectId, Sort, WithId} from "mongodb";
 import {validationResult} from "express-validator";
 import {blogsModel, commentsModel, postsModel} from "../mongo/mongooseSchemas";
 import {Common} from "../common";
+import {JwtService} from "../jwtDomain";
 
 export class PostsRepository {
-    constructor(protected common : Common) {
+    constructor(protected common : Common,
+                protected jwtService : JwtService) {
     }
 
     async getPostById(req: Request, res: Response) {
@@ -56,7 +58,7 @@ export class PostsRepository {
 
     }
 
-    async getAllCommentsForSpecifiedPostDB(commentsPagination: CommentsPaginationCriteriaType) {
+    async getAllCommentsForSpecifiedPostDB(commentsPagination: CommentsPaginationCriteriaType, userId : ObjectId) {
         const postId = commentsPagination.postId
         const pageSize = commentsPagination.pageSize
         const totalCount = await commentsModel.countDocuments({postId: new ObjectId(postId)})
@@ -79,12 +81,13 @@ export class PostsRepository {
             .skip(ToSkip)
             .limit(pageSize)
         if (result) {
+            const items = result.map(item => this.common.mongoGetAllCommentsSlicing(item, userId))
             return {
                 pageSize: pageSize,
                 totalCount: totalCount,
                 pagesCount: pagesCount,
                 page: page,
-                items: result.map(item => this.common.mongoCommentSlicing(item))
+                items: items
             }
         } else {
             return null
