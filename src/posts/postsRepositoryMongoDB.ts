@@ -59,7 +59,7 @@ export class PostsRepository {
     async getAllCommentsForSpecifiedPostDB(commentsPagination: CommentsPaginationCriteriaType) {
         const postId = commentsPagination.postId
         const pageSize = commentsPagination.pageSize
-        const totalCount = await postsModel.countDocuments({postId: new ObjectId(postId)})
+        const totalCount = await commentsModel.countDocuments({postId: new ObjectId(postId)})
 
         if (totalCount < 1) {
             return null
