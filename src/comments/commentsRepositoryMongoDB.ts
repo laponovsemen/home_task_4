@@ -6,10 +6,16 @@ export class CommentsRepository {
     async deleteAllComments() {
         await commentsModel.deleteMany({})
     }
-    async findUserInLikeInfoByObjectId(userId : ObjectId) {
-        return !!await commentsModel.findOne({"likesInfo.likersInfo.userId" : userId})
+    async findUserInLikeInfoByObjectId(commentId: string, userId : ObjectId) {
+        const comment = await commentsModel.findOne({_id: new ObjectId(commentId)})
+        const likerInfo = comment!.likesInfo.likersInfo.find( (likes) => {return (likes.userId.toString() === userId.toString())})
+        if(likerInfo){
+            return true
+        } else {
+            return false
+        }
     }
-    async pushUserToLikersInfo(userId : string, commentId : string,likeStatus : statusType ) {
+    async pushUserToLikersInfo(userId : string, commentId : string, likeStatus : statusType ) {
         const foundComment = await commentsModel.findOne({_id : new ObjectId(commentId)})
         foundComment!.likesInfo.likersInfo.push({userId : new ObjectId(userId)  , status : likeStatus})
         await foundComment!.save()

@@ -53,6 +53,7 @@ export class CommentsController {
         }
     }
     async changeLikeStatusOfComment(req: Request, res: Response) {
+        debugger;
         const commentId = req.params.id
         const foundComment = await commentsModel.findOne({_id: new ObjectId(commentId)})
         if (foundComment) {
@@ -61,7 +62,7 @@ export class CommentsController {
             const likeStatus = req.body.likeStatus
             const userId = await this.jwtService.getUserIdByToken(req.headers.authorization!.split(" ")[1])
             if(userId){
-                const userAlreadyLikedComment = this.commentsRepository.findUserInLikeInfoByObjectId(userId)
+                const userAlreadyLikedComment = await this.commentsRepository.findUserInLikeInfoByObjectId(commentId, userId)
                 if(!userAlreadyLikedComment){
                     const addUsertoLikersInfo = await this.commentsRepository.pushUserToLikersInfo(userId!.toString(), commentId, likeStatus)
                 } else {
@@ -102,12 +103,12 @@ export class CommentsController {
     async getCommentById(req: Request, res: Response) {
         const commentId = req.params.id
         let userLikeStatus : statusType = statusType.None
-        const foundComment = await commentsModel.findOne({_id: new ObjectId(commentId)})
+        const foundComment = await commentsModel.findOne({_id: new ObjectId(commentId)}).lean().exec()
         if (foundComment) {
             if(req.headers.authorization?.split(" ")[1]) {
                 const userId = await this.jwtService.getUserIdByToken(req.headers.authorization.split(" ")[1])
                 const usersLikesStatus = foundComment.likesInfo.likersInfo
-                //console.log("usersLikesStatus" + usersLikesStatus)
+                console.log("usersLikesStatus " + usersLikesStatus + typeof usersLikesStatus + " end")
 
                 for(let i = 0; i < usersLikesStatus.length ; i++){
                     console.log((usersLikesStatus[i].userId.toString()) === userId!.toString() , "dfs;dfl;sd")
@@ -119,7 +120,7 @@ export class CommentsController {
             }
 
             const commentToSend = this.common.mongoCommentSlicing(foundComment)
-            // @ts-ignore
+
             commentToSend.likesInfo.myStatus = userLikeStatus
             res.status(200).send(commentToSend)
 

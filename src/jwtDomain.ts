@@ -38,7 +38,6 @@ export class JwtService {
     }
 
     async getUserIdByToken(token: string) {
-
         try {
             const result: any = jwt.verify(token, secretKey!)
             //console.log("Object id " + new ObjectId(result.userId))

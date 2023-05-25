@@ -101,6 +101,7 @@ describe("CREATEING COMMENTS FOR SPECIFIED POST TESTFLOW", () => {
                 createdAt: expect.any(String),
                 id: expect.any(String)
             })
+        //http://localhost:8080/comments/646f748d05499080fde26c66/like-status
         const commentId = createdComment.body.id
 
         const wrongId = "6452328cf49782a0f0000000"
@@ -195,21 +196,18 @@ describe("CREATING COMMENTS FOR Likes procedures testing", () => {
             .expect(201)
         const postId = createdPost.body.id
 
-        const createdUser = await request(app)
-            .post("/users")
-            .set(auth, basic)
-            .send({
-                login: "login",
-                password: "password",
-                email: "simsbury65@gmail.com"
-            }).expect(201)
+        for(let i = 0; i < 4 ; i++){
+            await request(app)
+                .post("/users")
+                .set(auth, basic)
+                .send({
+                    login: `login${i}`,
+                    password: "password",
+                    email: "simsbury65@gmail.com"
+                }).expect(201)
+        }
 
-        expect(createdUser.body).toEqual({
-            id: expect.any(String),
-            login: "login",
-            email: "simsbury65@gmail.com",
-            createdAt: expect.any(String),
-        })
+
 
         const login = await request(app)
             .post("/auth/login")
@@ -250,12 +248,12 @@ describe("CREATING COMMENTS FOR Likes procedures testing", () => {
                 },
             })
         const commentId = createdComment.body.id
-        /*await request(app)
+        await request(app)
             .put(`/comments/${commentId}/like-status`)
             .set(auth, JWTAuth)
             .send({
                 likeStatus: "Like"
-            }).expect(204)*/
+            }).expect(204)
 
         const likedComment = await request(app)
             .get(`/comments/${commentId}`)
@@ -263,7 +261,7 @@ describe("CREATING COMMENTS FOR Likes procedures testing", () => {
             .expect(200)
         expect(likedComment.body).toEqual({
             commentatorInfo: {
-                userId: "646f4459986fb5854cc23fe3",
+                userId: expect.any(String),
                 userLogin: "login",
             },
             content: "stringstringstringst",
