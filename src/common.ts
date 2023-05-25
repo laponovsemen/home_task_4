@@ -49,6 +49,7 @@ export class Common{
             content: Obj2.content,
             commentatorInfo: Obj2.commentatorInfo,
             createdAt: Obj2.createdAt,
+
             likesInfo: {
                  dislikesCount:Obj2.likesInfo.dislikesCount,
                  likesCount: Obj2.likesInfo.likesCount,
