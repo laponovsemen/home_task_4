@@ -184,7 +184,7 @@ export class CommentsController {
         if (result) {
             res.send(result).status(200)
         } else {
-            res.sendStatus(404)
+            res.sendStatus(409)
         }
     }
 }

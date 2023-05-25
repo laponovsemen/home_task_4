@@ -371,7 +371,7 @@ describe("CREATING COMMENTS FOR Likes procedures testing", () => {
             .expect(200)
         expect(likedComment.body).toEqual({
             commentatorInfo: {
-                userId: "646f4459986fb5854cc23fe3",
+                userId: expect.any(String),
                 userLogin: "login",
             },
             content: "stringstringstringst",
