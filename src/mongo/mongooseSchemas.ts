@@ -7,7 +7,7 @@ import {
     commentDBModel,
     PostDBModel,
     RequestsDBModel,
-    SessionsInputModel,
+    SessionsInputModel, statusType,
     userInputModel
 } from "../appTypes";
 
@@ -32,13 +32,20 @@ export const postSchema = new mongoose.Schema<PostDBModel>({
     blogName:	{ type: String, require: true },
     createdAt : { type: String, require: true },
     extendedLikesInfo : {
-        likesCount : { type: Number, require: true },
-        dislikesCount : { type: Number, require: true },
-        myStatus : { type: String, require: true },
-        newestLikes : {description : { type: String, require: true },
-            addedAt : { type: Date, require: true },
-            userId : { type: ObjectId, require: true },
-            login : { type: String, require: true }}
+        likesCount: {type: Number, require: true},
+        dislikesCount: {type: Number, require: true},
+        myStatus: {type: String, require: true},
+        newestLikes: {
+        addedAt: {type: Date, require: true},
+        userId: {type: ObjectId, require: true},
+        login: {type: String, require: true}
+        },
+        likersInfo:{
+            addedAt : {type: Date, require: true},
+            userId : {type: ObjectId, require: true},
+            login : { type: String, require: true },
+            status : { type: String, require: true },
+        }
     }
 })
 

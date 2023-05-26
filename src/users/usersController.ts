@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {
-    PostInsertModelType,
+
     sortDirectionType,
     userInputModel,
     usersPaginationCriteriaType,

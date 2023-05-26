@@ -16,6 +16,7 @@ export class PostsController {
         const pageSize: number = req.query.pageSize ? parseInt(req.query.pageSize.toString(), 10) : 10
         const sortBy: string = req.query.sortBy ? req.query.sortBy.toString() : "createdAt"
         const sortDirection: "asc" | "desc" = req.query.sortDirection === "asc" ? "asc" : "desc"
+        // controller не должкен знать о всех бизнес движениях
         const PaginationCriteria: BlogsPaginationCriteriaType = {
             pageNumber: pageNumber,
             pageSize: pageSize,
@@ -39,7 +40,6 @@ export class PostsController {
                     const addUsertoLikersInfo = await this.postsRepository.pushUserToLikersInfo(userId!.toString(),
                         postId,
                         likeStatus,
-                        description,
                         userlogin)
                 } else {
                     const updatedUserinLikersInfo = await this.postsRepository.changeLikeStatusOfUserInLikersInfo(userId!.toString(),

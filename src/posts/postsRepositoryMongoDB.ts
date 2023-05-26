@@ -41,13 +41,12 @@ export class PostsRepository {
             return false
         }
     }
-    async pushUserToLikersInfo(userId : string, postId : string, likeStatus : statusType, description : string, login : string) {
+    async pushUserToLikersInfo(userId : string, postId : string, likeStatus : statusType, login : string) {
         const addedAt = new Date()
         const foundPost = await postsModel.findOne({_id : new ObjectId(postId)})
         foundPost!.extendedLikesInfo.likersInfo.push({
             userId : new ObjectId(userId),
             status : likeStatus,
-            description : description,
             addedAt : addedAt,
             login : login,
         })
@@ -177,6 +176,7 @@ export class PostsRepository {
 
     async createPost(req: Request, res: Response) {
         const blog = await blogsModel.findOne({_id: new ObjectId(req.body.blogId)})
+        const  likeStatus : statusType = statusType.None
         if (blog) {
             const newPost: PostDBModel = {
                 title: req.body.title,

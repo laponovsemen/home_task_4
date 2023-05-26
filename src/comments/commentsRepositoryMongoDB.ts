@@ -17,7 +17,7 @@ export class CommentsRepository {
     }
     async pushUserToLikersInfo(userId : string, commentId : string, likeStatus : statusType ) {
         const foundComment = await commentsModel.findOne({_id : new ObjectId(commentId)})
-        foundComment!.likesInfo.likersInfo.push({userId : new ObjectId(userId)  , status : likeStatus})
+        foundComment!.likesInfo.likersInfo.push({userId : new ObjectId(userId) , status : likeStatus})
         await foundComment!.save()
     }
     async changeLikeStatusOfUserInLikersInfo(userId : string, commentId : string,likeStatus : statusType ) {

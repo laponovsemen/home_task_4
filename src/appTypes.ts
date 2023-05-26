@@ -174,22 +174,25 @@ export type commentDBModel = WithMongoId<{
     likesInfo: {
         likesCount: number//  Total likes for parent item
         dislikesCount: number//    Total dislikes for parent item
-        myStatus : "None"| "Like" | "Dislike"
-        likersInfo: likersInfoType[]
+        myStatus : statusType
+        likersInfo: commentLikersInfoType[]
     }
 }>
 
-export type likersInfoType = {
-    description : string,
-    addedAt : Date,
-    userId : ObjectId,
-    login : string
+    export type likersInfoType = {
+        addedAt : Date,
+        userId : ObjectId,
+        login : string
+    status : statusType,
+}
+    export type commentLikersInfoType = {
+    userId : ObjectId
     status : statusType,
 }
 export enum statusType {
-    "None"="None",
-    "Like" = "Like",
-    "Dislike" = "Dislike",
+    None="None",
+    Like = "Like",
+    Dislike = "Dislike",
 }
 export type commentViewModel = {
     id:	string,

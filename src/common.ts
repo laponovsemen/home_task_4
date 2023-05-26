@@ -11,6 +11,7 @@ import {UsersRepository} from "./users/usersRepositoryMongoDB";
 import {PostsRepository} from "./posts/postsRepositoryMongoDB";
 import {v4 as uuidv4} from "uuid";
 import {ObjectId} from "mongodb";
+import {WithMongoId} from "./mongo/mongooseSchemas";
 
 export class Common{
     constructor() {
@@ -25,7 +26,7 @@ export class Common{
             createdAt: Obj2.createdAt
         }
     }
-    mongoPostSlicing = (Obj2: PostDBModel) => {
+    mongoPostSlicing = (Obj2: WithMongoId<PostDBModel>) => {
         return {
             id: Obj2._id,
             title: Obj2.title,
