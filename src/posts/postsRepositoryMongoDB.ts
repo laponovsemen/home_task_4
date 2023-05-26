@@ -1,12 +1,13 @@
 import {
+    BlogsPaginationCriteriaType,
+    CommentsPaginationCriteriaType,
+    PostDBModel,
+    PostInputModelType,
     PostsPaginationCriteriaType,
-    PaginatorPostViewModelType,
-    PostInsertModelType,
-    PostViewModelType,
-    PostInputModelType, BlogViewModelType, BlogsPaginationCriteriaType, CommentsPaginationCriteriaType
+    statusType
 } from "../appTypes";
 import {NextFunction, Request, Response} from "express";
-import {ObjectId, Sort, WithId} from "mongodb";
+import {ObjectId} from "mongodb";
 import {validationResult} from "express-validator";
 import {blogsModel, commentsModel, postsModel} from "../mongo/mongooseSchemas";
 import {Common} from "../common";
@@ -131,14 +132,19 @@ export class PostsRepository {
     async createPost(req: Request, res: Response) {
         const blog = await blogsModel.findOne({_id: new ObjectId(req.body.blogId)})
         if (blog) {
-            const newPost: PostInsertModelType = {
+            const newPost: PostDBModel = {
                 title: req.body.title,
                 shortDescription: req.body.shortDescription,
                 content: req.body.content,
                 blogId: req.body.blogId,
                 blogName: blog.name,
                 createdAt: new Date().toISOString(),
-
+                extendedLikesInfo : {
+                    likesCount : 0,
+                    dislikesCount : 0,
+                    myStatus : statusType.None,
+                    newestLikes : []
+                }
             }
 
             const insertedPost = await postsModel.create(newPost)
@@ -151,6 +157,12 @@ export class PostsRepository {
                     blogId: newPost.blogId,
                     blogName: newPost.blogName,
                     createdAt: newPost.createdAt,
+                    extendedLikesInfo: {
+                        likesCount: 0,
+                        dislikesCount: 0,
+                        myStatus: statusType.None,
+                        newestLikes: []
+                    }
                 }
             )
         } else {

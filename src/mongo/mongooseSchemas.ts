@@ -2,11 +2,13 @@ import {ObjectId} from "mongodb";
 import mongoose from 'mongoose'
 import { WithId } from 'mongodb'
 import {
-    BlogInputModelType,
     BlogInsertModelType,
-    BlogViewModelType, commentDBModel, likersInfoType,
-    PostInputModelType, PostInsertModelType,
-    PostViewModelType, RequestsDBModel, SessionsInputModel, userInputModel
+    BlogViewModelType,
+    commentDBModel,
+    PostDBModel,
+    RequestsDBModel,
+    SessionsInputModel,
+    userInputModel
 } from "../appTypes";
 
 //question about id
@@ -22,13 +24,22 @@ export const blogSchema = new mongoose.Schema<BlogInsertModelType>({
     createdAt : {type : String, require : true}
 })
 
-export const postSchema = new mongoose.Schema<PostInsertModelType>({
+export const postSchema = new mongoose.Schema<PostDBModel>({
     title : { type: String, require: true },          //    maxLength: 30
     shortDescription : { type: String, require: true },   //maxLength: 100
     content : { type: String, require: true },     // maxLength: 1000
     blogId : { type: String, require: true },
     blogName:	{ type: String, require: true },
     createdAt : { type: String, require: true },
+    extendedLikesInfo : {
+        likesCount : { type: Number, require: true },
+        dislikesCount : { type: Number, require: true },
+        myStatus : { type: String, require: true },
+        newestLikes : {description : { type: String, require: true },
+            addedAt : { type: Date, require: true },
+            userId : { type: ObjectId, require: true },
+            login : { type: String, require: true }}
+    }
 })
 
 export const userSchema = new mongoose.Schema<userInputModel>({
@@ -88,7 +99,7 @@ export const requestsSchema = new mongoose.Schema<RequestsDBModel>({
 });
 
 export const blogsModel = mongoose.model<BlogViewModelType>('blogs', blogSchema)
-export const postsModel = mongoose.model<PostInsertModelType>('posts', postSchema)
+export const postsModel = mongoose.model<PostDBModel>('posts', postSchema)
 
 export const usersModel = mongoose.model<userInputModel>('users', userSchema)
 export const commentsModel = mongoose.model<commentDBModel>('comments', commentSchema)

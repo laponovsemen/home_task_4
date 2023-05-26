@@ -1,6 +1,6 @@
 import {
     BlogInsertModelType,
-    PostInsertModelType,
+    PostDBModel,
     BlogViewModelType,
     PostViewModelType,
     BlogsPaginationCriteriaType

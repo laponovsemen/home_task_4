@@ -47,15 +47,27 @@ export type PostViewModelType = {
     createdAt : string
 }
 
-export type PostInsertModelType = {
+export type PostDBModel = {
     title:	string,
     shortDescription:	string,
     content:	string,
     blogId:	string,
     blogName:	string,
-    createdAt : string
+    createdAt : string,
+    extendedLikesInfo : ExtendedLikesInfoType
 }
-
+export type ExtendedLikesInfoType = {
+    likesCount : number,
+    dislikesCount : number,
+    myStatus : statusType,
+    newestLikes : NewestLikesType[]
+}
+export type NewestLikesType = {
+    description : string,
+    addedAt : Date,
+    userId : ObjectId,
+    login : string
+}
 export type PaginatorPostViewModelType = {
     pagesCount	: number
     page: number
