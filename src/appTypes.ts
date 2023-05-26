@@ -60,7 +60,8 @@ export type ExtendedLikesInfoType = {
     likesCount : number,
     dislikesCount : number,
     myStatus : statusType,
-    newestLikes : NewestLikesType[]
+    newestLikes : NewestLikesType[],
+    likersInfo : likersInfoType[]
 }
 export type NewestLikesType = {
     description : string,
@@ -179,7 +180,10 @@ export type commentDBModel = WithMongoId<{
 }>
 
 export type likersInfoType = {
+    description : string,
+    addedAt : Date,
     userId : ObjectId,
+    login : string
     status : statusType,
 }
 export enum statusType {

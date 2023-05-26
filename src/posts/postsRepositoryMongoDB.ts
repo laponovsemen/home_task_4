@@ -31,6 +31,52 @@ export class PostsRepository {
             res.sendStatus(404)
         }
     }
+    async findUserInLikeInfoByObjectId(postId: string, userId : ObjectId) {
+        const post = await postsModel.findOne({_id: new ObjectId(postId)})
+        const likersInfo = post!.extendedLikesInfo.likersInfo
+        const likerInfo = likersInfo.find((likes) => {return (likes.userId.toString() === userId.toString())})
+        if(likerInfo){
+            return true
+        } else {
+            return false
+        }
+    }
+    async pushUserToLikersInfo(userId : string, postId : string, likeStatus : statusType, description : string, login : string) {
+        const addedAt = new Date()
+        const foundPost = await postsModel.findOne({_id : new ObjectId(postId)})
+        foundPost!.extendedLikesInfo.likersInfo.push({
+            userId : new ObjectId(userId),
+            status : likeStatus,
+            description : description,
+            addedAt : addedAt,
+            login : login,
+        })
+        await foundPost!.save()
+    }
+    async changeLikeStatusOfUserInLikersInfo(userId : string, postId : string, likeStatus : statusType) {
+        const foundPost = await postsModel.findOne({_id : new ObjectId(postId)})
+        const likersInfo = foundPost!.extendedLikesInfo.likersInfo
+        for(let i = 0; i < likersInfo.length; i++){
+            if(likersInfo[i].userId.toString() === userId){
+                likersInfo[i].status = likeStatus
+                break
+            }
+        }
+        await foundPost!.save()
+    }
+    async updateLikesAndDislikesCounters( postId : string) {
+        const foundPost = await postsModel.findOne({_id : new ObjectId(postId)})
+        const likersInfo = foundPost!.extendedLikesInfo.likersInfo
+        let likesCounter = 0
+        let dislikesCounter = 0
+        for(let i = 0; i < likersInfo.length; i++){
+            if(likersInfo[i].status === statusType.Like)  likesCounter++ ;
+            if(likersInfo[i].status === statusType.Dislike)  dislikesCounter++ ;
+        }
+        foundPost!.extendedLikesInfo.likesCount = likesCounter
+        foundPost!.extendedLikesInfo.dislikesCount = dislikesCounter
+        await foundPost!.save()
+    }
 
     async getAllPostsDB(postsPagination: BlogsPaginationCriteriaType) {
 
@@ -143,7 +189,8 @@ export class PostsRepository {
                     likesCount : 0,
                     dislikesCount : 0,
                     myStatus : statusType.None,
-                    newestLikes : []
+                    newestLikes : [],
+                    likersInfo : []
                 }
             }
 

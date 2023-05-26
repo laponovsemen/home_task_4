@@ -39,7 +39,7 @@ export const securityDevicesMiddleware = new SecurityDevicesMiddleware(securityD
 export const authRepository = new AuthRepository()
 export const securityDevicesController = new SecurityDevicesController(jwtService, securityDevicesRepository)
 export const blogsController = new BlogsController(blogsRepository, postsRepository)
-export const postsController = new PostsController(postsRepository)
+export const postsController = new PostsController(postsRepository,jwtService)
 export const authController = new AuthController(authRepository,
     securityDevicesRepository,
     securityDevicesController,

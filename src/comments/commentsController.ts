@@ -53,7 +53,6 @@ export class CommentsController {
         }
     }
     async changeLikeStatusOfComment(req: Request, res: Response) {
-        debugger;
         const commentId = req.params.id
         const foundComment = await commentsModel.findOne({_id: new ObjectId(commentId)})
         if (foundComment) {

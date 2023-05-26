@@ -48,6 +48,17 @@ export class JwtService {
             return null
         }
     }
+    async getUserLoginByToken(token: string) {
+        try {
+            const result: any = jwt.verify(token, secretKey!)
+            //console.log("Object id " + new ObjectId(result.userId))
+            //console.log("   result" + result.toString() )
+            return result.login
+        } catch (e) {
+            console.log(e + " error")
+            return null
+        }
+    }
 
     async JWTverify(token: string) {
         try {

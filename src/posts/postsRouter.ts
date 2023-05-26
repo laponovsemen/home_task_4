@@ -5,7 +5,7 @@ import {
     PostShortDescriptionValidation,
     PostTitleValidation,
 } from "./postsValidator";
-import {commentContentValidation} from "../comments/commentsValidation";
+import {commentContentValidation, commentsLikeStatusValidation} from "../comments/commentsValidation";
 import {
     apiMiddleware,
     commentsController,
@@ -19,6 +19,12 @@ export const postDataValidation = [PostTitleValidation,
     PostContentValidation,
     PostBlogIdValidation,
     postsRepository.PostValidationErrors.bind(postsRepository)]
+
+postsRouter.put("/:id/like-status",
+    apiMiddleware.JSONWebTokenMiddleware.bind(apiMiddleware),
+    commentsLikeStatusValidation,
+    apiMiddleware.ValidationErrors.bind(apiMiddleware),
+    postsController.changeLikeStatusOfPost.bind(postsController))
 
 postsRouter.get("/:id/comments",
     commentsController.getAllCommentsForSpecifiedPost.bind(commentsController))
