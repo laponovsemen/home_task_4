@@ -275,7 +275,8 @@ export class PostsRepository {
                 likesCount : 0,
                 dislikesCount : 0,
                 myStatus : statusType.None,
-                newestLikes : []
+                newestLikes : [],
+                likersInfo : []
             }
         })
         return {
