@@ -1,7 +1,7 @@
 import {
 
-    BlogViewModelType, commentDBModel,
-    PostViewModelType,
+    BlogViewModelType, commentDBModel, PostDBModel,
+    PostViewModelType, statusType,
     userViewModel
 } from "./appTypes";
 import {NextFunction, Request, Response} from "express";
@@ -25,7 +25,7 @@ export class Common{
             createdAt: Obj2.createdAt
         }
     }
-    mongoPostSlicing = (Obj2: PostViewModelType) => {
+    mongoPostSlicing = (Obj2: PostDBModel) => {
         return {
             id: Obj2._id,
             title: Obj2.title,
@@ -34,6 +34,12 @@ export class Common{
             blogId: Obj2.blogId,
             blogName: Obj2.blogName,
             createdAt: Obj2.createdAt,
+            extendedLikesInfo : {
+                likesCount : Obj2.extendedLikesInfo.likesCount,
+                dislikesCount :Obj2.extendedLikesInfo.dislikesCount,
+                myStatus : Obj2.extendedLikesInfo.myStatus,
+                newestLikes : Obj2.extendedLikesInfo.newestLikes
+            }
         }
     }
     mongoUserSlicing = (Obj2: userViewModel) => {

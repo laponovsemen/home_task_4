@@ -223,7 +223,13 @@ export class PostsRepository {
             content: content,
             blogId: blogId,
             blogName: blogName,
-            createdAt: createdAt
+            createdAt: createdAt,
+            extendedLikesInfo : {
+                likesCount : 0,
+                dislikesCount : 0,
+                myStatus : statusType.None,
+                newestLikes : []
+            }
         })
         return {
             id: createdPost.insertedId,
@@ -232,7 +238,13 @@ export class PostsRepository {
             content: content,
             blogId: blogId,
             blogName: blogName,
-            createdAt: createdAt
+            createdAt: createdAt,
+            extendedLikesInfo : {
+                likesCount : 0,
+                dislikesCount : 0,
+                myStatus : statusType.None,
+                newestLikes : []
+            }
         }
     }
 
