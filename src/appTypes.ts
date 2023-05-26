@@ -64,7 +64,6 @@ export type ExtendedLikesInfoType = {
     likersInfo : likersInfoType[]
 }
 export type NewestLikesType = {
-    description : string,
     addedAt : Date,
     userId : ObjectId,
     login : string
@@ -182,7 +181,7 @@ export type commentDBModel = WithMongoId<{
     export type likersInfoType = {
         addedAt : Date,
         userId : ObjectId,
-        login : string
+        login : string,
     status : statusType,
 }
     export type commentLikersInfoType = {

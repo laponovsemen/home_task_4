@@ -1,6 +1,6 @@
 import {
     BlogsPaginationCriteriaType,
-    CommentsPaginationCriteriaType,
+    CommentsPaginationCriteriaType, likersInfoType,
     PostDBModel,
     PostInputModelType,
     PostsPaginationCriteriaType,
@@ -73,6 +73,13 @@ export class PostsRepository {
         }
         foundPost!.extendedLikesInfo.likesCount = likesCounter
         foundPost!.extendedLikesInfo.dislikesCount = dislikesCounter
+        await foundPost!.save()
+    }
+    async updateNewestLikes( postId : string) {
+        const foundPost = await postsModel.findOne({_id : new ObjectId(postId)})
+        let likersInfo = foundPost!.extendedLikesInfo.likersInfo
+        likersInfo = likersInfo.sort((a, b) => a.addedAt > b.addedAt ? 1 : -1).slice(0,3);
+
         await foundPost!.save()
     }
 

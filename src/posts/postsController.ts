@@ -48,6 +48,7 @@ export class PostsController {
                 }
 
                 await this.postsRepository.updateLikesAndDislikesCounters(postId)
+                await this.postsRepository.updateNewestLikes(postId)
                 res.sendStatus(204)
             } else {
                 console.log("user is not found by id")
