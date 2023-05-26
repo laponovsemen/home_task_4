@@ -156,8 +156,9 @@ export class APIMiddleware {
             console.log("no header field")
             return
         }
-
+        console.log(req.headers.authorization + " req.headers.authorization")
         const token = req.headers.authorization.split(" ")[1]
+        console.log(token + " token")
         const userId = await this.jwtService.getUserIdByToken(token)
         if (userId) {
             const foundUser = await this.usersRepository.findUserByIdDB(userId.toString())

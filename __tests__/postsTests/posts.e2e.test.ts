@@ -69,6 +69,49 @@ describe("TESTING OF CREATING POST", () => {
         },
             "shortDescription": "description",
                 "title": "post title"})
+        const resultOfReadingAllPosts = await request(app)
+            .get(`/posts`)
+            .set(auth, basic)
+            .expect(200)
+        //expect(resultOfReadingAllPosts.body).toEqual(Array)
+
+        const user = await request(app)
+            .post(`/users`)
+            .set(auth, basic)
+            .send({
+                login : "Hleb",
+                password : "string",
+                email : "simsbury65@gmail.com"
+            })
+            .expect(201)
+
+        /*expect(user.body).toEqual({
+            "email": "simsbury65@gmail.com",
+            "login": "Hleb",
+            "password": "string",
+        })*/
+
+        const login = await request(app)
+            .post(`/auth/login`)
+            .set(auth, basic)
+            .send({
+                loginOrEmail : "Hleb",
+                password : "string"
+            })
+
+        expect(login.body).toEqual({
+            accessToken : expect.any(String)
+        })
+
+        const likedPosts = await request(app)
+            .put(`/posts/${result.body.id}/like-status`)
+            .set("authorization", `refreshToken= ${login.body.accessToken}`)
+            .send({
+                likeStatus : "Like"
+            })
+            .expect(204)
+
+
     })
 })
 

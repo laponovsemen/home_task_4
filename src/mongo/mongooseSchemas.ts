@@ -40,12 +40,12 @@ export const postSchema = new mongoose.Schema<PostDBModel>({
             userId: {type: ObjectId, require: true},
             login: {type: String, require: true}
         }],
-        likersInfo:{
+        likersInfo:[{
             addedAt : {type: Date, require: true},
             userId : {type: ObjectId, require: true},
             login : { type: String, require: true },
             status : { type: String, require: true },
-        }
+        }]
     }
 })
 

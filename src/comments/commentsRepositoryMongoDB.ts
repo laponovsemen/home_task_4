@@ -8,12 +8,9 @@ export class CommentsRepository {
     }
     async findUserInLikeInfoByObjectId(commentId: string, userId : ObjectId) {
         const comment = await commentsModel.findOne({_id: new ObjectId(commentId)})
-        const likerInfo = comment!.likesInfo.likersInfo.find( (likes) => {return (likes.userId.toString() === userId.toString())})
-        if(likerInfo){
-            return true
-        } else {
-            return false
-        }
+        const likerInfo = comment!.likesInfo.likersInfo//.find( (likes) => {return (likes.userId.toString() === userId.toString())})
+        console.log(likerInfo)
+        return !!likerInfo;
     }
     async pushUserToLikersInfo(userId : string, commentId : string, likeStatus : statusType ) {
         const foundComment = await commentsModel.findOne({_id : new ObjectId(commentId)})
