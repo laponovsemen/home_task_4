@@ -35,11 +35,11 @@ export const postSchema = new mongoose.Schema<PostDBModel>({
         likesCount: {type: Number, require: true},
         dislikesCount: {type: Number, require: true},
         myStatus: {type: String, require: true},
-        newestLikes: {
-        addedAt: {type: Date, require: true},
-        userId: {type: ObjectId, require: true},
-        login: {type: String, require: true}
-        },
+        newestLikes: [{
+            addedAt: {type: Date, require: true},
+            userId: {type: ObjectId, require: true},
+            login: {type: String, require: true}
+        }],
         likersInfo:{
             addedAt : {type: Date, require: true},
             userId : {type: ObjectId, require: true},
