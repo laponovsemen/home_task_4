@@ -33,13 +33,9 @@ export class PostsRepository {
     }
     async findUserInLikeInfoByObjectId(postId: string, userId : ObjectId) {
         const post = await postsModel.findOne({_id: new ObjectId(postId)})
-        const likersInfo = post!.extendedLikesInfo.likersInfo
-        const likerInfo = likersInfo.find((likes) => {return (likes.userId.toString() === userId.toString())})
-        if(likerInfo){
-            return true
-        } else {
-            return false
-        }
+        //const likersInfo =
+        const likerInfo = post!.extendedLikesInfo.likersInfo.find((likes) => {return (likes.userId.toString() === userId.toString())})
+        return !!likerInfo;
     }
     async pushUserToLikersInfo(userId : string, postId : string, likeStatus : statusType, login : string) {
         const addedAt = new Date()
