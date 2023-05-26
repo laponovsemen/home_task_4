@@ -176,7 +176,6 @@ export class PostsRepository {
 
     async createPost(req: Request, res: Response) {
         const blog = await blogsModel.findOne({_id: new ObjectId(req.body.blogId)})
-        const  likeStatus : statusType = statusType.None
         if (blog) {
             const newPost: PostDBModel = {
                 title: req.body.title,
