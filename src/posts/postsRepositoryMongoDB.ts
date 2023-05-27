@@ -27,11 +27,12 @@ export class PostsRepository {
             const result = await postsModel.findOne({_id: new ObjectId(postId)})
             if (result) {
                 let myStatus : statusType
-                const userId = await this.jwtService.getUserIdByToken(req.headers.authorization!.split(" ")[1])
-                if(!userId){
+                if(!req.headers.authorization){
                     myStatus = statusType.None
                 } else {
-                    myStatus = await this.likesRepository.getMyLikeStatusForPost(userId, new ObjectId(postId))
+                    const userId = await this.jwtService.getUserIdByToken(req.headers.authorization.split(" ")[1])
+
+                    myStatus = await this.likesRepository.getMyLikeStatusForPost(userId!, new ObjectId(postId))
                 }
                 const foundPost = this.common.mongoPostSlicing(result)
 
