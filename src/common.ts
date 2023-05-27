@@ -109,6 +109,7 @@ export class Common{
 
         const filter = {$and: [{parentId: postId}, {parentType: parentModel.post}]}
         const likersInfo = await this.likesRepository.getAllLikesByFilter(filter) //likesModel.find(filter)
+        //console.log(likersInfo , "likersInfo")
         for (let i = 0; i < likersInfo.length; i++) {
             if (userId.toString() === likersInfo[i].userId.toString()) {
                 myStatus = likersInfo[i].status

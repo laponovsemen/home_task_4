@@ -130,14 +130,23 @@ export class PostsRepository {
 
         if (result) {
             if (userId) {
-                const items = result.map(item => this.common.mongoGetAllPostsSlicing(item, userId))
+                const items =  result.map(item => {return this.common.mongoGetAllPostsSlicing(item, userId)})
+                const array = await Promise.all(items)
+                console.log({
+                    pageSize: pageSize,
+                    totalCount: totalCount,
+                    pagesCount: pagesCount,
+                    page: page,
+                    items: array
+                } , "its fucking result")
                 return {
                     pageSize: pageSize,
                     totalCount: totalCount,
                     pagesCount: pagesCount,
                     page: page,
-                    items: items
+                    items: array
                 }
+
             } else{
                 return {
                     pageSize: pageSize,
