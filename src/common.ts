@@ -1,6 +1,6 @@
 import {
 
-    BlogViewModelType, commentDBModel, PostDBModel,
+    BlogViewModelType, commentDBModel, NewestLikesType, PostDBModel,
     statusType,
     userViewModel
 } from "./appTypes";
@@ -24,6 +24,13 @@ export class Common{
             websiteUrl: Obj2.websiteUrl,
             isMembership: Obj2.isMembership,
             createdAt: Obj2.createdAt
+        }
+    }
+    NewestLikesTypeSlicing = (Obj2: NewestLikesType) => {
+        return {
+            addedAt : Obj2.addedAt,
+            userId : Obj2.userId,
+            login : Obj2.login
         }
     }
     mongoPostSlicing = (Obj2: WithMongoId<PostDBModel>) => {
