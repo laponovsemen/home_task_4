@@ -32,7 +32,7 @@ export class LikesRepository {
     }
     async changeLikeStatusOfUserInPostLikersInfo(userId :ObjectId, postId :ObjectId,  likeStatus : statusType){
 
-        const updatedLike = await  likesModel.updateOne({
+        const updatedLike = await  likesModel.updateOne( {
             parentId: postId,
             parentType : parentModel.post,
             userId },

@@ -91,7 +91,7 @@ export class PostsRepository {
         await postsModel.updateOne({_id : postId}, {
             $set:
                 {
-                    "extendedLikesInfo.likesCount": 1000,
+                    "extendedLikesInfo.likesCount": likesCounter,
                     "extendedLikesInfo.dislikesCount": dislikesCounter
                 }
         })
