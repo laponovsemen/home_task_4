@@ -33,6 +33,12 @@ export const likeSchema = new mongoose.Schema<LikeDBModel>({
 
 
 })
+
+export const newestLikeSchema = new mongoose.Schema<NewestLikesType>({
+    addedAt : {type: Date, require: true},
+    userId : {type: ObjectId, require: true},
+    login : {type: String, require: true}
+}, {_id : false})
 export const postSchema = new mongoose.Schema<PostDBModel>({
     title : { type: String, require: true },          //    maxLength: 30
     shortDescription : { type: String, require: true },   //maxLength: 100
@@ -44,11 +50,7 @@ export const postSchema = new mongoose.Schema<PostDBModel>({
         likesCount: {type: Number, require: true},
         dislikesCount: {type: Number, require: true},
         myStatus: {type: String, require: true},
-        newestLikes : [{
-            addedAt : {type: Date, require: true},
-            userId : {type: ObjectId, require: true},
-            login : {type: String, require: true}
-        }]
+        newestLikes : [newestLikeSchema]
     }
 })
 
