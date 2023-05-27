@@ -7,9 +7,12 @@ import {
 } from "../appTypes";
 import {BlogsRepository} from "./blogsRepositoryMongoDB";
 import {PostsRepository} from "../posts/postsRepositoryMongoDB";
+import {ObjectId} from "mongodb";
+import {JwtService} from "../jwtDomain";
 export class BlogsController{
     constructor(protected blogsRepository : BlogsRepository,
                 protected postsRepository : PostsRepository,
+                protected jwtService : JwtService
                 ) {
 
     };
@@ -50,6 +53,12 @@ export class BlogsController{
         const BlogExists : boolean = await this.blogsRepository.CheckingForBlogExistance(blogId)
 
         if(BlogExists) {
+            let userId : ObjectId | null
+            if(req.headers.authorization) {
+                userId = await this.jwtService.getUserIdByToken(req.headers.authorization.split(" ")[1])
+            } else {
+                userId = null
+            }
             const items = await this.postsRepository.getAllPostsForSpecificBlogDB(PaginationCriteria)
             res.status(200).send(items)
         } else {

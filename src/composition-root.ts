@@ -41,7 +41,7 @@ export const apiMiddleware = new APIMiddleware(common, jwtService,usersRepositor
 export const securityDevicesMiddleware = new SecurityDevicesMiddleware(securityDevicesRepository)
 export const authRepository = new AuthRepository()
 export const securityDevicesController = new SecurityDevicesController(jwtService, securityDevicesRepository)
-export const blogsController = new BlogsController(blogsRepository, postsRepository)
+export const blogsController = new BlogsController(blogsRepository, postsRepository, jwtService)
 export const postsController = new PostsController(postsRepository,jwtService, likesRepository)
 export const authController = new AuthController(authRepository,
     securityDevicesRepository,

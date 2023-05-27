@@ -205,7 +205,7 @@ export class PostsRepository {
         }
 
     }
-    async getAllPostsForSpecificBlogDB(PaginationCriteria: PostsPaginationCriteriaType) {
+    async getAllPostsForSpecificBlogDB(PaginationCriteria: PostsPaginationCriteriaType, userId : ObjectId | null) {
         const pageSize = PaginationCriteria.pageSize
         const totalCount = await postsModel.countDocuments({blogId: PaginationCriteria.blogId})
         const pagesCount = Math.ceil(totalCount / pageSize)
@@ -213,18 +213,44 @@ export class PostsRepository {
         const sortBy = PaginationCriteria.sortBy
         const sortDirection: 1 | -1 = PaginationCriteria.sortDirection
 
-        const foundItems = await postsModel
+        const result = await postsModel
             .find({blogId: PaginationCriteria.blogId})
             .sort({[sortBy]: sortDirection}) //{createdAt: 1}
             .skip((PaginationCriteria.pageNumber - 1) * pageSize)
             .limit(pageSize)
 
-        return {
-            pageSize: pageSize,
-            totalCount: totalCount,
-            pagesCount: pagesCount,
-            page: page,
-            items: foundItems.map(this.common.mongoPostSlicing)
+        if (result) {
+            if (userId) {
+                const items = result.map(item => {
+                    return this.common.mongoGetAllPostsSlicing(item, userId)
+                })
+                const array = await Promise.all(items)
+                console.log({
+                    pageSize: pageSize,
+                    totalCount: totalCount,
+                    pagesCount: pagesCount,
+                    page: page,
+                    items: array
+                }, "its fucking result")
+                return {
+                    pageSize: pageSize,
+                    totalCount: totalCount,
+                    pagesCount: pagesCount,
+                    page: page,
+                    items: array
+                }
+
+            } else {
+                return {
+                    pageSize: pageSize,
+                    totalCount: totalCount,
+                    pagesCount: pagesCount,
+                    page: page,
+                    items: result
+                }
+            }
+        }else {
+            return null
         }
 
     }
