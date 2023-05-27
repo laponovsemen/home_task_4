@@ -29,7 +29,7 @@ export class Common{
     }
     NewestLikesTypeSlicing = (Obj2: NewestLikesType) => {
         return {
-            addedAt : Obj2.addedAt,
+            addedAt : Obj2.addedAt.toString(),
             userId : Obj2.userId,
             login : Obj2.login
         }
