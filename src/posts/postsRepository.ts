@@ -1,4 +1,4 @@
-import {BlogViewModelType, PostViewModelType} from "../appTypes";
+import {BlogViewModelType} from "../appTypes";
 import {NextFunction, Request, Response} from "express";
 /*
 

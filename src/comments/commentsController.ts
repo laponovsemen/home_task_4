@@ -3,7 +3,7 @@ import {
     BlogsPaginationCriteriaType,
     commentatorInfoType, commentDBModel,
     CommentsPaginationCriteriaType,
-    commentViewModel, likersInfoType, PaginatorPostViewModelType, PostsPaginationCriteriaType, statusType
+    commentViewModel, PaginatorPostViewModelType, PostsPaginationCriteriaType, statusType
 } from "../appTypes";
 import {ObjectId} from "mongodb";
 import {commentsModel} from "../mongo/mongooseSchemas";

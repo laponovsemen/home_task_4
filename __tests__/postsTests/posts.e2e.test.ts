@@ -4,6 +4,7 @@ import {before} from "node:test";
 import mongoose from "mongoose";
 import {appSettings} from "../../src/app-settings";
 import {app} from "../../src";
+import {ObjectId} from "mongodb";
 
 export const auth = 'Authorization'
 export const basic = 'Basic YWRtaW46cXdlcnR5'
@@ -110,6 +111,30 @@ describe("TESTING OF CREATING POST", () => {
                 likeStatus : "Like"
             })
             .expect(204)
+
+        const foundPostAfterLike = await request(app)
+            .get(`/posts/${result.body.id}`)
+            .set(auth, basic)
+            .expect(200)
+        expect(foundPost.body).toEqual({"id": expect.any(String),
+            "blogId": blogId,
+            "blogName": "new blog",
+            "content": "new post content",
+            "createdAt": expect.any(String),
+            extendedLikesInfo: {
+                dislikesCount: 0,
+                likesCount: 0,
+                myStatus: "None",
+                newestLikes: [
+                    {
+                        addedAt : expect.any(Date),
+                        userId : expect.any(ObjectId),
+                        login : expect.any(String)
+                    }
+                ],
+            },
+            "shortDescription": "description",
+            "title": "post title",
 
 
     })
@@ -329,4 +354,5 @@ describe("TESTING OF READING POST BY ID", () => {
             "shortDescription": "description",
             "title": "post title"})
     })
+})
 })

@@ -15,10 +15,12 @@ import {BlogsRepository} from "./blogs/blogsRepositoryMongoDB";
 import {TestingRepository} from "./testing/testingRepositoryMongoDB";
 import {UsersController} from "./users/usersController";
 import {PostsController} from "./posts/postsController";
+import {LikesRepository} from "./likesRepositoryMongoDB";
 
 export const common = new Common()
 export const jwtService = new JwtService()
 export const commentsRepository = new CommentsRepository()
+export const likesRepository = new LikesRepository()
 export const emailAdapter = new EmailAdapter()
 export const securityDevicesRepository = new SecurityDevicesRepository()
 export const postsRepository = new PostsRepository(common, jwtService)
@@ -39,7 +41,7 @@ export const securityDevicesMiddleware = new SecurityDevicesMiddleware(securityD
 export const authRepository = new AuthRepository()
 export const securityDevicesController = new SecurityDevicesController(jwtService, securityDevicesRepository)
 export const blogsController = new BlogsController(blogsRepository, postsRepository)
-export const postsController = new PostsController(postsRepository,jwtService)
+export const postsController = new PostsController(postsRepository,jwtService, likesRepository)
 export const authController = new AuthController(authRepository,
     securityDevicesRepository,
     securityDevicesController,

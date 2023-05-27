@@ -4,7 +4,7 @@ import { WithId } from 'mongodb'
 import {
     BlogInsertModelType,
     BlogViewModelType,
-    commentDBModel,
+    commentDBModel, LikeDBModel, NewestLikesType, parentModel,
     PostDBModel,
     RequestsDBModel,
     SessionsInputModel, statusType,
@@ -23,7 +23,16 @@ export const blogSchema = new mongoose.Schema<BlogInsertModelType>({
     isMembership: {type : Boolean, require : true},
     createdAt : {type : String, require : true}
 })
+export const likeSchema = new mongoose.Schema<LikeDBModel>({
+    parentId: {type: ObjectId, require: true},
+    parentType : {type: String, require: true},
+    addedAt : {type: Date, require: true},
+    userId : {type: ObjectId, require: true},
+    login : { type: String, require: true },
+    status : { type: String, require: true },
 
+
+})
 export const postSchema = new mongoose.Schema<PostDBModel>({
     title : { type: String, require: true },          //    maxLength: 30
     shortDescription : { type: String, require: true },   //maxLength: 100
@@ -35,16 +44,10 @@ export const postSchema = new mongoose.Schema<PostDBModel>({
         likesCount: {type: Number, require: true},
         dislikesCount: {type: Number, require: true},
         myStatus: {type: String, require: true},
-        newestLikes: [{
-            addedAt: {type: Date, require: true},
-            userId: {type: ObjectId, require: true},
-            login: {type: String, require: true}
-        }],
-        likersInfo:[{
+        newestLikes : [{
             addedAt : {type: Date, require: true},
             userId : {type: ObjectId, require: true},
-            login : { type: String, require: true },
-            status : { type: String, require: true },
+            login : {type: String, require: true}
         }]
     }
 })
@@ -107,6 +110,7 @@ export const requestsSchema = new mongoose.Schema<RequestsDBModel>({
 
 export const blogsModel = mongoose.model<BlogViewModelType>('blogs', blogSchema)
 export const postsModel = mongoose.model<PostDBModel>('posts', postSchema)
+export const likesModel = mongoose.model<LikeDBModel>('likes', likeSchema)
 
 export const usersModel = mongoose.model<userInputModel>('users', userSchema)
 export const commentsModel = mongoose.model<commentDBModel>('comments', commentSchema)

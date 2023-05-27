@@ -4,11 +4,13 @@ import {PostsRepository} from "./postsRepositoryMongoDB";
 import {commentsModel, postsModel} from "../mongo/mongooseSchemas";
 import {ObjectId} from "mongodb";
 import {JwtService} from "../jwtDomain";
+import {LikesRepository} from "../likesRepositoryMongoDB";
 
 
 export class PostsController {
     constructor(protected postsRepository : PostsRepository,
-                protected jwtService : JwtService) {
+                protected jwtService : JwtService,
+                protected likesRepository : LikesRepository) {
     }
     async getAllPosts(req: Request, res: Response) {
         const searchNameTerm = req.query.searchNameTerm ? req.query.searchNameTerm.toString() : null
@@ -31,32 +33,33 @@ export class PostsController {
         const postId = req.params.id
         const likeStatus = req.body.likeStatus
         const foundPost = await postsModel.findOne({_id: new ObjectId(postId)})
-        if (foundPost) {
-            const userId = await this.jwtService.getUserIdByToken(req.headers.authorization!.split(" ")[1])
-            const userlogin = await this.jwtService.getUserLoginByToken(req.headers.authorization!.split(" ")[1])
-            if(userId){
-                const userAlreadyLikedPost = await this.postsRepository.findUserInLikeInfoByObjectId(postId, userId)
-                if(!userAlreadyLikedPost){
-                    const addUsertoLikersInfo = await this.postsRepository.pushUserToLikersInfo(userId!.toString(),
-                        postId,
-                        likeStatus,
-                        userlogin)
-                } else {
-                    const updatedUserinLikersInfo = await this.postsRepository.changeLikeStatusOfUserInLikersInfo(userId!.toString(),
-                        postId,
-                        likeStatus)
-                }
-
-                await this.postsRepository.updateLikesAndDislikesCounters(postId)
-                await this.postsRepository.updateNewestLikes(postId)
-                res.sendStatus(204)
-            } else {
-                console.log("user is not found by id")
-                res.sendStatus(401)
-            }
-        } else {
+        if (!foundPost) {
             console.log("comment is not found by id")
-            res.sendStatus(404)
+            return res.sendStatus(404)
+        } else {
+        const userId = await this.jwtService.getUserIdByToken(req.headers.authorization!.split(" ")[1])
+        const userlogin = await this.jwtService.getUserLoginByToken(req.headers.authorization!.split(" ")[1])
+        if (userId) {
+            const userAlreadyLikedPost = await this.likesRepository.findUserInPostLikeInfoByObjectId(new ObjectId(postId), userId)
+            if (!userAlreadyLikedPost) {
+                const addUsertoLikersInfo = await this.likesRepository.pushUserToPostLikersInfo(userId,
+                    new ObjectId(postId),
+                    likeStatus,
+                    userlogin)
+            } else {
+                const updatedUserinLikersInfo = await this.likesRepository.changeLikeStatusOfUserInPostLikersInfo(userId,
+                    new ObjectId(postId),
+                    likeStatus)
+            }
+
+            await this.postsRepository.updateLikesAndDislikesCounters(postId)
+            await this.postsRepository.updateNewestLikes(postId)
+            return res.sendStatus(204)
+        } else {
+            console.log("user is not found by id")
+            return res.sendStatus(401)
+        }
+
         }
     }
 }

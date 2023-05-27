@@ -1,6 +1,6 @@
 import {
     BlogsPaginationCriteriaType,
-    CommentsPaginationCriteriaType, likersInfoType,
+    CommentsPaginationCriteriaType, parentModel,
     PostDBModel,
     PostInputModelType,
     PostsPaginationCriteriaType,
@@ -9,7 +9,7 @@ import {
 import {NextFunction, Request, Response} from "express";
 import {ObjectId} from "mongodb";
 import {validationResult} from "express-validator";
-import {blogsModel, commentsModel, postsModel} from "../mongo/mongooseSchemas";
+import {blogsModel, commentsModel, likesModel, postsModel} from "../mongo/mongooseSchemas";
 import {Common} from "../common";
 import {JwtService} from "../jwtDomain";
 
@@ -19,9 +19,9 @@ export class PostsRepository {
     }
 
     async getPostById(req: Request, res: Response) {
-        const blogId = req.params.id
-        if (blogId) {
-            const result = await postsModel.findOne({_id: new ObjectId(blogId)})
+        const postId = req.params.id
+        if (postId) {
+            const result = await postsModel.findOne({_id: new ObjectId(postId)})
             if (result) {
                 res.status(200).send(this.common.mongoPostSlicing(result))
             } else {
@@ -31,7 +31,7 @@ export class PostsRepository {
             res.sendStatus(404)
         }
     }
-    async findUserInLikeInfoByObjectId(postId: string, userId : ObjectId) {
+    /*async findUserInLikeInfoByObjectId(postId: string, userId : ObjectId) {
         const post = await postsModel.findOne({_id: new ObjectId(postId)})
         //const likersInfo =
 
@@ -61,26 +61,37 @@ export class PostsRepository {
             }
         }
         await foundPost!.save()
-    }
+    }*/
     async updateLikesAndDislikesCounters( postId : string) {
-        const foundPost = await postsModel.findOne({_id : new ObjectId(postId)})
-        const likersInfo = foundPost!.extendedLikesInfo.likersInfo
+        const foundPost = await postsModel.findOne({_id : postId})
+        const foundLikesForSpecificPost = await likesModel.find({$and : [{ parentId : new ObjectId(postId)},
+                {parentType : parentModel.post}]}).lean().exec()
         let likesCounter = 0
         let dislikesCounter = 0
-        for(let i = 0; i < likersInfo.length; i++){
-            if(likersInfo[i].status === statusType.Like)  likesCounter++ ;
-            if(likersInfo[i].status === statusType.Dislike)  dislikesCounter++ ;
+        for(let i = 0; i < foundLikesForSpecificPost.length; i++){
+            if(foundLikesForSpecificPost[i].status === statusType.Like)  likesCounter++ ;
+            if(foundLikesForSpecificPost[i].status === statusType.Dislike)  dislikesCounter++ ;
         }
-        foundPost!.extendedLikesInfo.likesCount = likesCounter
+        foundPost!.extendedLikesInfo.likesCount = 1000//likesCounter
         foundPost!.extendedLikesInfo.dislikesCount = dislikesCounter
-        await foundPost!.save()
+        await postsModel.updateOne({_id : postId}, {
+            $set:
+                {
+                    "extendedLikesInfo.likesCount": 1000,
+                    "extendedLikesInfo.dislikesCount": dislikesCounter
+                }
+        })
     }
     async updateNewestLikes( postId : string) {
         const foundPost = await postsModel.findOne({_id : new ObjectId(postId)})
-        let likersInfo = foundPost!.extendedLikesInfo.likersInfo
-        likersInfo = likersInfo.sort((a, b) => a.addedAt > b.addedAt ? 1 : -1).slice(0,3);
+        const likesFilter = {$and :[{parentId : new ObjectId(postId)}, {parentType : parentModel.post}]}
+        const newestLikesToUpdate = await likesModel.find(likesFilter).sort({addedAt : "asc"}).limit(3)
 
+        foundPost!.extendedLikesInfo.newestLikes = newestLikesToUpdate
         await foundPost!.save()
+        console.log(newestLikesToUpdate, " newestLikesToUpdate")
+        console.log(foundPost!.extendedLikesInfo.newestLikes + "newestLikes")
+
     }
 
     async getAllPostsDB(postsPagination: BlogsPaginationCriteriaType) {
@@ -195,7 +206,6 @@ export class PostsRepository {
                     dislikesCount : 0,
                     myStatus : statusType.None,
                     newestLikes : [],
-                    likersInfo : []
                 }
             }
 

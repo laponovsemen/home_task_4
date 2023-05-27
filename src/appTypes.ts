@@ -37,15 +37,7 @@ export type PostInputModelType = {
     content: string, // maxLength: 1000
     blogId: string
 }
-export type PostViewModelType = {
-    _id:	ObjectId,
-    title:	string,
-    shortDescription:	string,
-    content:	string,
-    blogId:	string,
-    blogName:	string,
-    createdAt : string
-}
+
 
 export type PostDBModel = {
     title:	string,
@@ -61,7 +53,6 @@ export type ExtendedLikesInfoType = {
     dislikesCount : number,
     myStatus : statusType,
     newestLikes : NewestLikesType[],
-    likersInfo : likersInfoType[]
 }
 export type NewestLikesType = {
     addedAt : Date,
@@ -73,7 +64,7 @@ export type PaginatorPostViewModelType = {
     page: number
     pageSize: number
     totalCount: number
-    items : PostViewModelType[]
+    items : PostDBModel[]
 }
 export type PaginatorBlogViewModelType = {
     pagesCount	: number
@@ -178,13 +169,19 @@ export type commentDBModel = WithMongoId<{
     }
 }>
 
-    export type likersInfoType = {
+export type LikeDBModel = WithMongoId<{
+        parentId: ObjectId,
+        parentType : parentModel
         addedAt : Date,
         userId : ObjectId,
         login : string,
-    status : statusType,
+        status : statusType,
+}>
+export enum parentModel {
+    comment = "comment",
+    post = "post",
 }
-    export type commentLikersInfoType = {
+export type commentLikersInfoType = {
     userId : ObjectId
     status : statusType,
 }

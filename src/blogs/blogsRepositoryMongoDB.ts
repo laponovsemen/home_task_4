@@ -2,7 +2,7 @@ import {
     BlogInsertModelType,
     PostDBModel,
     BlogViewModelType,
-    PostViewModelType,
+
     BlogsPaginationCriteriaType
 } from "../appTypes";
 import {NextFunction, Request, Response} from "express";
