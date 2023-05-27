@@ -1,6 +1,7 @@
 import {
     BlogsPaginationCriteriaType,
-    CommentsPaginationCriteriaType, parentModel,
+    CommentsPaginationCriteriaType,
+    parentModel,
     PostDBModel,
     PostInputModelType,
     PostsPaginationCriteriaType,
@@ -12,10 +13,12 @@ import {validationResult} from "express-validator";
 import {blogsModel, commentsModel, likesModel, postsModel} from "../mongo/mongooseSchemas";
 import {Common} from "../common";
 import {JwtService} from "../jwtDomain";
+import {LikesRepository} from "../likesRepositoryMongoDB";
 
 export class PostsRepository {
     constructor(protected common : Common,
-                protected jwtService : JwtService) {
+                protected jwtService : JwtService,
+                protected likesRepository : LikesRepository) {
     }
 
     async getPostById(req: Request, res: Response) {
@@ -23,7 +26,17 @@ export class PostsRepository {
         if (postId) {
             const result = await postsModel.findOne({_id: new ObjectId(postId)})
             if (result) {
-                res.status(200).send(this.common.mongoPostSlicing(result))
+                let myStatus : statusType
+                const userId = await this.jwtService.getUserIdByToken(req.headers.authorization!.split(" ")[1])
+                if(!userId){
+                    myStatus = statusType.None
+                } else {
+                    myStatus = await this.likesRepository.getMyLikeStatusForPost(userId, new ObjectId(postId))
+                }
+                const foundPost = this.common.mongoPostSlicing(result)
+
+                foundPost.extendedLikesInfo.myStatus = myStatus
+                res.status(200).send()
             } else {
                 res.sendStatus(404)
             }

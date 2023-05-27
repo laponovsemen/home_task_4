@@ -114,7 +114,7 @@ describe("TESTING OF CREATING POST", () => {
 
         const foundPostAfterLike = await request(app)
             .get(`/posts/${result.body.id}`)
-            .set(auth, basic)
+            .set("authorization", `refreshToken= ${login.body.accessToken}`)
             .expect(200)
         expect(foundPost.body).toEqual({"id": expect.any(String),
             "blogId": blogId,

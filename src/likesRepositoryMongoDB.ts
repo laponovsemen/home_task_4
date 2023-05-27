@@ -21,6 +21,15 @@ export class LikesRepository {
             status : likeStatus,
         });
     }
+    async getMyLikeStatusForPost(userId :ObjectId, postId :ObjectId){
+        const filter = {$and :[{userId},{parentId : postId}, {parentType : parentModel.post}]}
+        const result = await likesModel.findOne(filter)
+        if(result){
+            return result.status
+        } else {
+            return statusType.None
+        }
+    }
     async changeLikeStatusOfUserInPostLikersInfo(userId :ObjectId, postId :ObjectId,  likeStatus : statusType){
 
         const updatedLike = await  likesModel.updateOne({
