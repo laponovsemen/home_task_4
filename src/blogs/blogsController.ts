@@ -59,7 +59,7 @@ export class BlogsController{
             } else {
                 userId = null
             }
-            const items = await this.postsRepository.getAllPostsForSpecificBlogDB(PaginationCriteria)
+            const items = await this.postsRepository.getAllPostsForSpecificBlogDB(PaginationCriteria,userId)
             res.status(200).send(items)
         } else {
             res.sendStatus(404)
