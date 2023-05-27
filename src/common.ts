@@ -1,6 +1,6 @@
 import {
 
-    BlogViewModelType, commentDBModel, NewestLikesType, PostDBModel,
+    BlogViewModelType, commentDBModel, ExtendedLikesInfoType, NewestLikesType, parentModel, PostDBModel,
     statusType,
     userViewModel
 } from "./appTypes";
@@ -11,10 +11,11 @@ import {UsersRepository} from "./users/usersRepositoryMongoDB";
 import {PostsRepository} from "./posts/postsRepositoryMongoDB";
 import {v4 as uuidv4} from "uuid";
 import {ObjectId} from "mongodb";
-import {WithMongoId} from "./mongo/mongooseSchemas";
+import {likesModel, WithMongoId} from "./mongo/mongooseSchemas";
+import {LikesRepository} from "./likesRepositoryMongoDB";
 
 export class Common{
-    constructor() {
+    constructor(protected likesRepository : LikesRepository) {
     }
     mongoBlogSlicing = (Obj2: BlogViewModelType) => {
         return {
@@ -100,6 +101,33 @@ export class Common{
                  likesCount: Obj2.likesInfo.likesCount,
                  myStatus: myStatus,
                 }
+        }
+    }
+    mongoGetAllPostsSlicing = async (Obj2: PostDBModel, userId: ObjectId) => {
+        const postId = Obj2._id
+        let myStatus = Obj2.extendedLikesInfo.myStatus
+
+        const filter = {$and: [{parentId: postId}, {parentType: parentModel.post}]}
+        const likersInfo = await this.likesRepository.getAllLikesByFilter(filter) //likesModel.find(filter)
+        for (let i = 0; i < likersInfo.length; i++) {
+            if (userId.toString() === likersInfo[i].userId.toString()) {
+                myStatus = likersInfo[i].status
+                break
+            }
+        }
+        return {
+            title:	Obj2.title,
+            shortDescription:	Obj2.shortDescription,
+            content:	Obj2.content,
+            blogId:	Obj2.blogId,
+            blogName:	Obj2.blogName,
+            createdAt : Obj2.createdAt,
+            extendedLikesInfo : {
+                likesCount : Obj2.extendedLikesInfo.likesCount,
+                dislikesCount : Obj2.extendedLikesInfo.dislikesCount,
+                myStatus : myStatus,
+                newestLikes : Obj2.extendedLikesInfo.newestLikes,
+            }
         }
     }
     delay = (milliseconds: number): Promise<void> => {

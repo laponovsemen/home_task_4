@@ -39,7 +39,7 @@ export type PostInputModelType = {
 }
 
 
-export type PostDBModel = {
+export type PostDBModel = WithMongoId<{
     title:	string,
     shortDescription:	string,
     content:	string,
@@ -47,7 +47,7 @@ export type PostDBModel = {
     blogName:	string,
     createdAt : string,
     extendedLikesInfo : ExtendedLikesInfoType
-}
+}>
 export type ExtendedLikesInfoType = {
     likesCount : number,
     dislikesCount : number,

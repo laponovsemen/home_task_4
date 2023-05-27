@@ -30,6 +30,9 @@ export class LikesRepository {
             return statusType.None
         }
     }
+    async getAllLikesByFilter(filter : any ){
+        return likesModel.find(filter)
+    }
     async changeLikeStatusOfUserInPostLikersInfo(userId :ObjectId, postId :ObjectId,  likeStatus : statusType){
 
         const updatedLike = await  likesModel.updateOne( {

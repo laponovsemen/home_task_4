@@ -111,7 +111,7 @@ export class PostsRepository {
 
     }
 
-    async getAllPostsDB(postsPagination: BlogsPaginationCriteriaType) {
+    async getAllPostsDB(postsPagination: BlogsPaginationCriteriaType, userId : ObjectId | null) {
 
         const pageSize = postsPagination.pageSize
         const totalCount = await postsModel.countDocuments({})
@@ -128,13 +128,35 @@ export class PostsRepository {
             .skip(ToSkip)
             .limit(pageSize)
 
-        return {
+        if (result) {
+            if (userId) {
+                const items = result.map(item => this.common.mongoGetAllPostsSlicing(item, userId))
+                return {
+                    pageSize: pageSize,
+                    totalCount: totalCount,
+                    pagesCount: pagesCount,
+                    page: page,
+                    items: items
+                }
+            } else{
+                return {
+                    pageSize: pageSize,
+                    totalCount: totalCount,
+                    pagesCount: pagesCount,
+                    page: page,
+                    items: result
+                }
+            }
+        } else {
+            return null
+        }
+        /*return {
             pageSize: pageSize,
             totalCount: totalCount,
             pagesCount: pagesCount,
             page: page,
             items: result.map(item => this.common.mongoPostSlicing(item))
-        }
+        }*/
 
     }
 
@@ -211,7 +233,7 @@ export class PostsRepository {
     async createPost(req: Request, res: Response) {
         const blog = await blogsModel.findOne({_id: new ObjectId(req.body.blogId)})
         if (blog) {
-            const newPost: PostDBModel = {
+            const newPost = {
                 title: req.body.title,
                 shortDescription: req.body.shortDescription,
                 content: req.body.content,

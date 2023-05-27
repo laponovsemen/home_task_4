@@ -26,7 +26,13 @@ export class PostsController {
             sortDirection: sortDirection,
             searchNameTerm: searchNameTerm
         }
-        const result = await this.postsRepository.getAllPostsDB(PaginationCriteria)
+        let userId : ObjectId | null
+        if(req.headers.authorization) {
+            userId = await this.jwtService.getUserIdByToken(req.headers.authorization.split(" ")[1])
+        } else {
+            userId = null
+        }
+        const result = await this.postsRepository.getAllPostsDB(PaginationCriteria, userId)
         res.send(result).status(200)
     }
     async changeLikeStatusOfPost(req: Request, res: Response) {

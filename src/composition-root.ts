@@ -17,10 +17,11 @@ import {UsersController} from "./users/usersController";
 import {PostsController} from "./posts/postsController";
 import {LikesRepository} from "./likesRepositoryMongoDB";
 
-export const common = new Common()
+export const likesRepository = new LikesRepository()
+export const common = new Common(likesRepository)
 export const jwtService = new JwtService()
 export const commentsRepository = new CommentsRepository()
-export const likesRepository = new LikesRepository()
+
 export const emailAdapter = new EmailAdapter()
 export const securityDevicesRepository = new SecurityDevicesRepository()
 export const postsRepository = new PostsRepository(common, jwtService, likesRepository)
