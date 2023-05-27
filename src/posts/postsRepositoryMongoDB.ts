@@ -37,7 +37,7 @@ export class PostsRepository {
                 const foundPost = this.common.mongoPostSlicing(result)
 
                 foundPost.extendedLikesInfo.myStatus = myStatus
-                res.status(200).send()
+                res.status(200).send(foundPost)
             } else {
                 res.sendStatus(404)
             }
