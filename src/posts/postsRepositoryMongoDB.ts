@@ -72,7 +72,7 @@ export class PostsRepository {
             if(foundLikesForSpecificPost[i].status === statusType.Like)  likesCounter++ ;
             if(foundLikesForSpecificPost[i].status === statusType.Dislike)  dislikesCounter++ ;
         }
-        foundPost!.extendedLikesInfo.likesCount = 1000//likesCounter
+        foundPost!.extendedLikesInfo.likesCount = likesCounter
         foundPost!.extendedLikesInfo.dislikesCount = dislikesCounter
         await postsModel.updateOne({_id : postId}, {
             $set:
