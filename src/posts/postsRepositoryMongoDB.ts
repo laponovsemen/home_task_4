@@ -101,9 +101,10 @@ export class PostsRepository {
         const likesFilter = {$and :[{parentId : new ObjectId(postId)}, {parentType : parentModel.post}]}
         const newestLikesToUpdate = await likesModel.find(likesFilter).sort({addedAt : "asc"}).limit(3)
 
-        foundPost!.extendedLikesInfo.newestLikes = newestLikesToUpdate.map((like) => {return this.common.NewestLikesTypeSlicing(like)
+        //foundPost!.extendedLikesInfo.newestLikes = newestLikesToUpdate.map((like) => {return this.common.NewestLikesTypeSlicing(like)
+        newestLikesToUpdate.forEach(like => foundPost!.extendedLikesInfo.newestLikes.push(this.common.NewestLikesTypeSlicing(like)))
 
-        })
+        //})
         await foundPost!.save()
         console.log(newestLikesToUpdate, " newestLikesToUpdate")
         console.log(foundPost!.extendedLikesInfo.newestLikes + "newestLikes")
