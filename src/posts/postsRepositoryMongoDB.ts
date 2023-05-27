@@ -97,7 +97,7 @@ export class PostsRepository {
         })
     }
     async updateNewestLikes( postId : string) {
-        const foundPost = await postsModel.findOne({_id : new ObjectId(postId)})
+        const foundPost = await postsModel.findOne({_id : new ObjectId(postId)},{"_id" : 0})
         const likesFilter = {$and :[{parentId : new ObjectId(postId)}, {parentType : parentModel.post}]}
         const newestLikesToUpdate = await likesModel.find(likesFilter).sort({addedAt : "asc"}).limit(3)
 
