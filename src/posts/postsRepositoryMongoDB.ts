@@ -98,7 +98,7 @@ export class PostsRepository {
     }
     async updateNewestLikes( postId : string) {
         const foundPost = await postsModel.findOne({_id : new ObjectId(postId)})
-        const likesFilter = {$and :[{parentId : new ObjectId(postId)}, {parentType : parentModel.post}]}
+        const likesFilter = {$and :[{parentId : new ObjectId(postId)}, {parentType : parentModel.post}, {status: statusType.Like}]}
         const newestLikesToUpdate = await likesModel.find(likesFilter, {_id: 0}).sort({addedAt : "desc"}).limit(3)
         foundPost!.extendedLikesInfo.newestLikes = []
         //foundPost!.extendedLikesInfo.newestLikes = newestLikesToUpdate.map((like) => {return this.common.NewestLikesTypeSlicing(like)
