@@ -29,11 +29,13 @@ export class Common{
     }
     NewestLikesTypeSlicing = (Obj2: NewestLikesType) => {
         return {
-            addedAt : Obj2.addedAt.toString(),
+            addedAt : Obj2.addedAt,
             userId : Obj2.userId,
             login : Obj2.login
         }
     }
+
+
     mongoPostSlicing = (Obj2: WithMongoId<PostDBModel>) => {
         return {
             id: Obj2._id,
@@ -117,6 +119,7 @@ export class Common{
             }
         }
         return {
+            id : postId,
             title:	Obj2.title,
             shortDescription:	Obj2.shortDescription,
             content:	Obj2.content,
